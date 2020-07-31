@@ -1,4 +1,4 @@
-= Kismet Packaging
+# Kismet Packaging
 
 Packaging scripts, makefiles, and configurations for building Kismet packages on various platforms.
 
