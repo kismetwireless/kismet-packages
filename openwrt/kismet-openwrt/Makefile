@@ -41,7 +41,8 @@ CONFIGURE_ARGS += \
 	--bindir=/usr/bin \
 	--disable-python-tools \
 	--with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc \
-	--enable-protobuflite
+	--enable-protobuflite \
+	--disable-element-typesafety
 
 # Override libs to force lpthread because we don't detect it properly on openwrt
 CONFIGURE_VARS += \
@@ -62,7 +63,7 @@ define Package/kismet/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_bluetooth/kismet_cap_linux_bluetooth $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/kismet/
-	$(INSTALL_CONF) ./files/kismet_site.conf $(1)/etc/kismet/
+	$(INSTALL_CONF) ./files/kismet_package.conf $(1)/etc/kismet/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_80211.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_alerts.conf $(1)/etc/kismet
@@ -73,10 +74,19 @@ define Package/kismet/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_storage.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_uav.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_manuf.txt.gz $(1)/etc/kismet
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_adsb_icao.txt.gz $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_bluetooth_ids.txt.gz $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_bluetooth_manuf.txt.gz $(1)/etc/kismet
 	cp -Rv $(PKG_BUILD_DIR)/http_data $(1)/etc/kismet/
+endef
+
+define Package/kismet-adsb-icao/description
+    Kismet wireless capture and IDS ADSB ICAO database
+	Large database of ICAO values for ADSB plane spotting
+endef
+
+define Package/kismet-adsb-icao/install
+	$(INSTALL_DIR) $(1)/etc/kismet/
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_adsb_icao.txt.gz $(1)/etc/kismet
 endef
 
 $(eval $(call BuildPackage,kismet))
