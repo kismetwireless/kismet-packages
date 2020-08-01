@@ -26,10 +26,24 @@ define Package/kismet
   SUBMENU:=wireless
 endef
 
+define Package/kismet-kismet_adsb_icao
+  SECTION:=net
+  CATEGORY:=Network
+  TITLE:=Kismet ICAO Data
+  URL:=https://www.kismetwireless.net
+  DEPENDS:=kismet 
+  SUBMENU:=wireless
+endef
+
 define Package/kismet/description
 	Kismet wireless capture and IDS
 	Latest web UI based Kismet
 	Linux Wi-Fi and Bluetooth capture tools
+endef
+
+define Package/kismet-adsb-icao/description
+    Kismet wireless capture and IDS ADSB ICAO database
+	Large database of ICAO values for ADSB plane spotting
 endef
 
 define Build/Configure
@@ -77,11 +91,6 @@ define Package/kismet/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_bluetooth_ids.txt.gz $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_bluetooth_manuf.txt.gz $(1)/etc/kismet
 	cp -Rv $(PKG_BUILD_DIR)/http_data $(1)/etc/kismet/
-endef
-
-define Package/kismet-adsb-icao/description
-    Kismet wireless capture and IDS ADSB ICAO database
-	Large database of ICAO values for ADSB plane spotting
 endef
 
 define Package/kismet-adsb-icao/install
