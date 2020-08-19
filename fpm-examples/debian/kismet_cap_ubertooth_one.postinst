@@ -6,7 +6,7 @@ set -e
 
 . /usr/share/debconf/confmodule
 
-PROGRAM=/usr/bin/kismet_cap_linux_wifi
+PROGRAM=kismet_cap_ubertooth_one
 
 GROUP=kismet
 
