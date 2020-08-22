@@ -125,81 +125,81 @@ define Build/Configure
 endef
 
 CONFIGURE_ARGS += \
-  $(if $(CONFIG_PACKAGE_kismet),,--enable-capture-tools-only) \
-  --sysconfdir=/etc/kismet \
-  --bindir=/usr/bin \
-  --disable-python-tools \
-  --with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc \
-  --enable-protobuflite \
-  --disable-element-typesafety \
-  --disable-libusb \
-  --disable-debuglibs
+	$(if $(CONFIG_PACKAGE_kismet),,--enable-capture-tools-only) \
+	--sysconfdir=/etc/kismet \
+	--bindir=/usr/bin \
+	--disable-python-tools \
+	--with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc \
+	--enable-protobuflite \
+	--disable-element-typesafety \
+	--disable-libusb \
+	--disable-debuglibs
 
 # Override libs to force lpthread because we don't detect it properly on openwrt
 CONFIGURE_VARS += \
-  CXXFLAGS="$$$$CXXFLAGS"  \
-  LIBS="-lm -lpthread" 
+	CXXFLAGS="$$$$CXXFLAGS"  \
+	LIBS="-lm -lpthread" 
 
 define Build/Compile
-  $(MAKE) -C $(PKG_BUILD_DIR) \
-  LD="$(TARGET_CXX)" \
-  $(if $(CONFIG_PACKAGE_kismet),all,datasources)
+	$(MAKE) -C $(PKG_BUILD_DIR) \
+	LD="$(TARGET_CXX)" \
+	$(if $(CONFIG_PACKAGE_kismet),all,datasources)
 endef
 
 
 
 define Package/kismet/install
-  $(INSTALL_DIR) $(1)/usr/bin
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet $(1)/usr/bin/
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet_cap_pcapfile $(1)/usr/bin/
-  
-  $(INSTALL_DIR) $(1)/etc/kismet/
-  $(INSTALL_CONF) ./files/kismet_package.conf $(1)/etc/kismet/
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet.conf $(1)/etc/kismet
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_80211.conf $(1)/etc/kismet
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_alerts.conf $(1)/etc/kismet
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_filter.conf $(1)/etc/kismet
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_httpd.conf $(1)/etc/kismet
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_logging.conf $(1)/etc/kismet
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_memory.conf $(1)/etc/kismet
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_storage.conf $(1)/etc/kismet
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_uav.conf $(1)/etc/kismet
-  cp -Rv $(PKG_BUILD_DIR)/http_data $(1)/etc/kismet/
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet_cap_pcapfile $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/etc/kismet/
+	$(INSTALL_CONF) ./files/kismet_package.conf $(1)/etc/kismet/
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_80211.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_alerts.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_filter.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_httpd.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_logging.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_memory.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_storage.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_uav.conf $(1)/etc/kismet
+	cp -Rv $(PKG_BUILD_DIR)/http_data $(1)/etc/kismet/
 endef
 
 
 
 define Package/kismet-adsb-database/install
-  $(INSTALL_DIR) $(1)/etc/kismet/
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_adsb_icao.txt.gz $(1)/etc/kismet
+	$(INSTALL_DIR) $(1)/etc/kismet/
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_adsb_icao.txt.gz $(1)/etc/kismet
 endef
 
 
 define Package/kismet-manuf-database/install
-  $(INSTALL_DIR) $(1)/etc/kismet/
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_manuf.txt.gz $(1)/etc/kismet
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_bluetooth_ids.txt.gz $(1)/etc/kismet
-  $(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_bluetooth_manuf.txt.gz $(1)/etc/kismet
+	$(INSTALL_DIR) $(1)/etc/kismet/
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_manuf.txt.gz $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_bluetooth_ids.txt.gz $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_bluetooth_manuf.txt.gz $(1)/etc/kismet
 endef
 
 
 define Package/kismet-tools/install
-  $(INSTALL_DIR) $(1)/usr/bin
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/kismet_discovery $(1)/usr/bin/
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_clean $(1)/usr/bin/
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_dump_devices $(1)/usr/bin/
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_statistics $(1)/usr/bin/
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_strip_packets $(1)/usr/bin/
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_gpx $(1)/usr/bin/
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_kml $(1)/usr/bin/
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_pcap $(1)/usr/bin/
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_wiglecsv $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/kismet_discovery $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_clean $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_dump_devices $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_statistics $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_strip_packets $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_gpx $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_kml $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_pcap $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_wiglecsv $(1)/usr/bin/
 endef
 
 
 define Package/kismet-capture-linux-wifi/install
-  $(INSTALL_DIR) $(1)/usr/bin
-  $(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_wifi/kismet_cap_linux_wifi $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_wifi/kismet_cap_linux_wifi $(1)/usr/bin/
 endef
 
 
