@@ -78,7 +78,7 @@ define Package/kismet-tools
   CATEGORY:=Network
   TITLE:=Kismet server and log tools
   URL:=https://www.kismetwireless.net
-  DEPENDS:=+kismet +libpthread +libpcap +libpcre +libstdcpp +libsqlite3 +zlib
+  DEPENDS:=kismet +libpthread +libpcap +libpcre +libstdcpp +libsqlite3 +zlib
   SUBMENU:=wireless
 endef
 
@@ -162,7 +162,6 @@ define Package/kismet/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_httpd.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_logging.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_memory.conf $(1)/etc/kismet
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_storage.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_uav.conf $(1)/etc/kismet
 	cp -Rv $(PKG_BUILD_DIR)/http_data $(1)/etc/kismet/
 endef
