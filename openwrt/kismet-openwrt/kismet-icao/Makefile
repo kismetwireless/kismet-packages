@@ -22,6 +22,14 @@ define Package/kismet-icao-database/description
   airlines detected via ADSB.
 endef
 
+define Build/Configure
+	echo "No configuration needed"
+endef
+
+define Build/Compile
+	echo "No compilation needed"
+endef
+
 define Package/kismet-manuf-database/install
 	$(INSTALL_DIR) $(1)/etc/kismet/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_adsb_icao.txt.gz $(1)/etc/kismet

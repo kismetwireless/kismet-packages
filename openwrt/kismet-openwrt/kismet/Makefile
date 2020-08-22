@@ -11,7 +11,7 @@ define Package/kismet
   CATEGORY:=Network
   TITLE:=Kismet 2020
   URL:=https://www.kismetwireless.net/
-  DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c
+  DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c
   SUBMENU:=wireless
 endef
 
@@ -41,7 +41,7 @@ CONFIGURE_VARS += \
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 	LD="$(TARGET_CXX)" \
-	all
+	kismet
 endef
 
 define Package/kismet/install
@@ -60,19 +60,6 @@ define Package/kismet/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_memory.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_uav.conf $(1)/etc/kismet
 	cp -Rv $(PKG_BUILD_DIR)/http_data $(1)/etc/kismet/
-endef
-
-define Package/kismet-tools/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/kismet_discovery $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_clean $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_dump_devices $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_statistics $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_strip_packets $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_gpx $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_kml $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_pcap $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_wiglecsv $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,kismet))
