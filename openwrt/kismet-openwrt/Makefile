@@ -73,6 +73,23 @@ endef
 
 
 
+define Package/kismet-tools
+  SECTION:=net
+  CATEGORY:=Network
+  TITLE:=Kismet server and log tools
+  URL:=https://www.kismetwireless.net
+  DEPENDS:=+kismet +libpthread +libpcap +libpcre +libstdcpp +libsqlite3 +zlib
+  SUBMENU:=wireless
+endef
+
+define Package/kismet-tools/description
+  Kismet server and log manipulation tools for monitoring for announcing
+  servers and converting kismetdb logs to wigle, csv, json, pcap, etc.
+endef
+
+
+
+
 define Package/kismet-capture-linux-wifi
   SECTION:=net
   CATEGORY:=Network
@@ -166,6 +183,20 @@ define Package/kismet-manuf-database/install
 endef
 
 
+define Package/kismet-tools/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/kismet_discovery $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_clean $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_dump_devices $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_statistics $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_strip_packets $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_gpx $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_kml $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_pcap $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/log_tools/kismetdb_to_wiglecsv $(1)/usr/bin/
+endef
+
+
 define Package/kismet-capture-linux-wifi/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_wifi/kismet_cap_linux_wifi $(1)/usr/bin/
@@ -175,6 +206,7 @@ endef
 $(eval $(call BuildPackage,kismet))
 $(eval $(call BuildPackage,kismet-manuf-database))
 $(eval $(call BuildPackage,kismet-adsb-database))
+$(eval $(call BuildPackage,kismet-tools))
 $(eval $(call BuildPackage,kismet-capture-linux-wifi))
 $(eval $(call BuildPackage,kismet-capture-linux-bluetooth))
 
