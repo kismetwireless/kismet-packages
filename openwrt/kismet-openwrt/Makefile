@@ -108,6 +108,7 @@ define Build/Configure
 endef
 
 CONFIGURE_ARGS += \
+	$(if $(CONFIG_PACKAGE_kismet),,--enable-capture-tools-only) \
 	--sysconfdir=/etc/kismet \
 	--bindir=/usr/bin \
 	--disable-python-tools \
@@ -124,8 +125,8 @@ CONFIGURE_VARS += \
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
-		LD="$(TARGET_CXX)" \
-		all
+	LD="$(TARGET_CXX)" \
+	$(if $(CONFIG_PACKAGE_kismet),all,datasources)
 endef
 
 
