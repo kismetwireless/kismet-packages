@@ -41,13 +41,12 @@ CONFIGURE_VARS += \
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 	LD="$(TARGET_CXX)" \
-	kismet
+	kismet 
 endef
 
 define Package/kismet/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet_cap_pcapfile $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/kismet/
 	$(INSTALL_CONF) ./files/kismet_package.conf $(1)/etc/kismet/
