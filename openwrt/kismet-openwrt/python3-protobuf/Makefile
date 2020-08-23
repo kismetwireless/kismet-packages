@@ -12,9 +12,8 @@ PKG_HASH:=6a82e0c8bb2bf58f606040cc5814e07715b2094caeba281e2e7d0b0e2e397db5
 PKG_BUILD_DIR:=$(BUILD_DIR)/protobuf-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
-
-include files/python3-host.mk
-include files/python3-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/python3-protobuf
   SECTION:=lang
@@ -24,7 +23,8 @@ define Package/python3-protobuf
   URL:=https://developers.google.com/protocol-buffers/
   DEPENDS:= \
 	+python3-light \
-	+python3-setuptools 
+	+python3-setuptools \
+	+python3-six
   VARIANT:=python3
 endef
 
