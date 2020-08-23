@@ -44,8 +44,8 @@ define Build/Compile
 	LD="$(TARGET_CXX)" \
 	tools/kismet_discovery \
 	log_tools/kismetdb_clean \
-	log_tools/kismetdb_dump_services \
-	log_tools/kismetdb_sttistics \
+	log_tools/kismetdb_dump_devices \
+	log_tools/kismetdb_statistics \
 	log_tools/kismetdb_strip_packets \
 	log_tools/kismetdb_to_gpx \
 	log_tools/kismetdb_to_kml \

@@ -31,7 +31,8 @@ CONFIGURE_ARGS += \
 	--enable-protobuflite \
 	--disable-element-typesafety \
 	--disable-libusb \
-	--disable-debuglibs
+	--disable-debuglibs \
+	--disable-libcap
 
 # Override libs to force lpthread because we don't detect it properly on openwrt
 CONFIGURE_VARS += \
