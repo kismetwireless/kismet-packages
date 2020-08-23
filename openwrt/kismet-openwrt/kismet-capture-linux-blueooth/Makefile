@@ -46,7 +46,7 @@ define Build/Compile
 	capture_linux_bluetooth/kismet_cap_linux_bluetooth
 endef
 
-define Package/kismet-tools/install
+define Package/kismet-capture-linux-bluetooth/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_bluetooth/kismet_cap_linux_bluetooth $(1)/usr/bin/
 endef

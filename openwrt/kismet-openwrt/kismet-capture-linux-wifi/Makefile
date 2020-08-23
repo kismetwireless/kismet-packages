@@ -46,7 +46,7 @@ define Build/Compile
 	capture_linux_wifi/kismet_cap_linux_wifi 
 endef
 
-define Package/kismet-tools/install
+define Package/kismet-capture-linux-wifi/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_wifi/kismet_cap_linux_wifi $(1)/usr/bin/
 endef
