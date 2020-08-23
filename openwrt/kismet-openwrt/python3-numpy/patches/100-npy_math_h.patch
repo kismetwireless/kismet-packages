@@ -1,0 +1,24 @@
+--- a/numpy/core/include/numpy/npy_math.h
++++ b/numpy/core/include/numpy/npy_math.h
+@@ -22,6 +22,21 @@
+ #define NPY_INPLACE
+ #endif
+ 
++#ifndef FE_UNDERFLOW
++#define FE_UNDERFLOW    0
++#endif
++
++#ifndef FE_OVERFLOW
++#define FE_OVERFLOW     0
++#endif
++
++#ifndef FE_DIVBYZERO
++#define FE_DIVBYZERO    0
++#endif
++
++#ifndef FE_INVALID
++#define FE_INVALID      0
++#endif
+ 
+ /*
+  * NAN and INFINITY like macros (same behavior as glibc for NAN, same as C99
