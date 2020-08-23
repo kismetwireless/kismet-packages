@@ -12,9 +12,8 @@ PKG_HASH:=e57acb89bd55943c8d8bf813763d20b9099cc7165c0f16b707631a7654be9cad
 PKG_BUILD_DIR:=$(BUILD_DIR)/Cython-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
-
-include files/python3-host.mk
-include files/python3-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/python3-cython
   SECTION:=lang

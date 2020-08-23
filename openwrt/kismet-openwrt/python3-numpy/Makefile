@@ -14,9 +14,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/numpy-$(PKG_VERSION)
 HOST_PYTHON3_PACKAGE_BUILD_DEPENDS:=cython
 
 include $(INCLUDE_DIR)/package.mk
-
-include files/python3-host.mk
-include files/python3-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/python3-numpy
   SECTION:=lang

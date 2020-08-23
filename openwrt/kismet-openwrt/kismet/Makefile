@@ -2,6 +2,9 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=kismet
 
+PKG_BUILD_PARALLEL:=1
+HOST_BUILD_PARALLEL:=1
+
 include ../kismet.mk
 
 include $(INCLUDE_DIR)/package.mk

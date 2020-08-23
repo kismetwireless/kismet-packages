@@ -6,17 +6,11 @@ PKG_NAME:=kismet-capture-sdr-rtladsb
 
 include ../kismet.mk
 
-#PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)/capture_sdr_rtladsb/
-#PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-
-#PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/capture_sdr_rtladsb/
-
 include $(INCLUDE_DIR)/package.mk
-# include files/python3-host.mk
-# include files/python3-package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+
+KISMET_MODULE:=KismetCaptureRtladsb
 
 define Package/kismet-capture-sdr-rtladsb
   SECTION:=net
@@ -40,7 +34,18 @@ define Package/kismet-capture-sdr-rtladsb/description
 endef
 
 define Build/Prepare
-	(cd $(PKG_BUILD_DIR) && tar -xzf $(DL_DIR)/$(PKG_SOURCE) $(PKG_NAME)-$(PKG_VERSION)/capture_sdr_rtladsb/ --strip-components 2)
+	(cd $(PKG_BUILD_DIR) && \
+		tar -xzf $(DL_DIR)/$(PKG_SOURCE) $(PKG_NAME)-$(PKG_VERSION)/capture_sdr_rtladsb/ --strip-components 2 && \
+		tar -xzf $(DL_DIR)/$(PKG_SOURCE) $(PKG_NAME)-$(PKG_VERSION)/protobuf_definitions/ --strip-components 1 && \
+	$(STAGING_DIR_HOSTPKG)/bin/protoc -I protobuf_definitions/ --python_out=$(KISMET_MODULE)/kismetexternal protobuf_definitions/kismet.proto && \
+	$(STAGING_DIR_HOSTPKG)/bin/protoc -I protobuf_definitions/ --python_out=$(KISMET_MODULE)/kismetexternal protobuf_definitions/http.proto && \
+	$(STAGING_DIR_HOSTPKG)/bin/protoc -I protobuf_definitions/ --python_out=$(KISMET_MODULE)/kismetexternal protobuf_definitions/eventbus.proto && \
+	$(STAGING_DIR_HOSTPKG)/bin/protoc -I protobuf_definitions/ --python_out=$(KISMET_MODULE)/kismetexternal protobuf_definitions/datasource.proto && \
+	sed -i -E 's/^import kismet_/from . import kismet_/' $(KISMET_MODULE)/kismetexternal/kismet_pb2.py && \
+	sed -i -E 's/^import kismet_/from . import kismet_/' $(KISMET_MODULE)/kismetexternal/http_pb2.py && \
+	sed -i -E 's/^import kismet_/from . import kismet_/' $(KISMET_MODULE)/kismetexternal/eventbus_pb2.py && \
+	sed -i -E 's/^import kismet_/from . import kismet_/' $(KISMET_MODULE)/kismetexternal/datasource_pb2.py \
+	)
 endef
 
 $(eval $(call Py3Package,kismet-capture-sdr-rtladsb))
