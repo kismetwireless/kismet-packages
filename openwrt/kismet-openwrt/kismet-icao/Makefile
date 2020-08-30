@@ -12,7 +12,7 @@ define Package/kismet-icao-database
   TITLE:=Kismet ICAO airplane database
   URL:=https://www.kismetwireless.net
   DEPENDS:=kismet 
-  SUBMENU:=wireless
+  SUBMENU:=kismet
 endef
 
 define Package/kismet-icao-database/description

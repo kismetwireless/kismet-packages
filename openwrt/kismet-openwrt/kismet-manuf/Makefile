@@ -12,7 +12,7 @@ define Package/kismet-manuf-database
   TITLE:=Kismet IEEE manufacturers
   URL:=https://www.kismetwireless.net
   DEPENDS:=kismet 
-  SUBMENU:=wireless
+  SUBMENU:=kismet
 endef
 
 define Package/kismet-manuf-database/description

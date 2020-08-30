@@ -24,7 +24,7 @@ define Package/kismet-capture-sdr-rtlamr
 	  +python3-numpy \
 	  +python3-protobuf \
 	  +librtlsdr
-  SUBMENU:=wireless
+  SUBMENU:=kismet
   VARIANT:=python3
 endef
 
@@ -50,4 +50,4 @@ endef
 
 $(eval $(call Py3Package,kismet-capture-sdr-rtlamr))
 $(eval $(call BuildPackage,kismet-capture-sdr-rtlamr))
-$(eval $(call BuildPackage,kismet-capture-sdr-rtlamr-src))
+#$(eval $(call BuildPackage,kismet-capture-sdr-rtlamr-src))

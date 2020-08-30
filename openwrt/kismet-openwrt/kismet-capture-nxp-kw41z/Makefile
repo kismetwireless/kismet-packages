@@ -1,23 +1,23 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=kismet-capture-linux-wifi
+PKG_NAME:=kismet-capture-nxp-kw41z
 
 include ../kismet.mk
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/kismet-capture-linux-wifi
+define Package/kismet-capture-nxp-kw41z
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=Kismet Wi-Fi Capture Support
+  TITLE:=Kismet NXPKW41Z Capture Support
   URL:=https://www.kismetwireless.net
-  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c
+  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0
   SUBMENU:=kismet
 endef
 
-define Package/kismet-capture-linux-wifi/description
-  Helper binary to capture Wi-Fi packets from a monitor mode adapter.
-  Enables local and remote Wi-Fi capture with Kismet
+define Package/kismet-capture-nxp-kw41z/description
+  Helper binary to capture BTLE from a NXPKW41Z adapter.
+  Enables local and remote 802.15.4 packet capture with Kismet
 endef
 
 define Build/Configure
@@ -32,7 +32,6 @@ CONFIGURE_ARGS += \
 	--with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc \
 	--enable-protobuflite \
 	--disable-element-typesafety \
-	--disable-libusb \
 	--disable-debuglibs
 
 # Override libs to force lpthread because we don't detect it properly on openwrt
@@ -43,13 +42,13 @@ CONFIGURE_VARS += \
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 	LD="$(TARGET_CXX)" \
-	capture_linux_wifi/kismet_cap_linux_wifi 
+	capture_nxp_kw41z/kismet_cap_nxp_kw41z
 endef
 
-define Package/kismet-capture-linux-wifi/install
+define Package/kismet-capture-nxp-kw41z/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_wifi/kismet_cap_linux_wifi $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_nxp_kw41z/kismet_cap_nxp_kw41z $(1)/usr/bin/
 endef
 
 
-$(eval $(call BuildPackage,kismet-capture-linux-wifi))
+$(eval $(call BuildPackage,kismet-capture-nxp-kw41z))

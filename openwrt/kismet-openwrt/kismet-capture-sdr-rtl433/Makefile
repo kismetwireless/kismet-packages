@@ -25,7 +25,7 @@ define Package/kismet-capture-sdr-rtl433
 	  +python3-protobuf \
 	  +librtlsdr \
 	  +rtl_433
-  SUBMENU:=wireless
+  SUBMENU:=kismet
   VARIANT:=python3
 endef
 
@@ -51,4 +51,4 @@ endef
 
 $(eval $(call Py3Package,kismet-capture-sdr-rtl433))
 $(eval $(call BuildPackage,kismet-capture-sdr-rtl433))
-$(eval $(call BuildPackage,kismet-capture-sdr-rtl433-src))
+#$(eval $(call BuildPackage,kismet-capture-sdr-rtl433-src))

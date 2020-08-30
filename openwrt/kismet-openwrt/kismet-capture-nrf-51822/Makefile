@@ -12,7 +12,7 @@ define Package/kismet-capture-nrf-51822
   TITLE:=Kismet NRF51822 BTLE
   URL:=https://www.kismetwireless.net
   DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0
-  SUBMENU:=wireless
+  SUBMENU:=kismet
 endef
 
 define Package/kismet-capture-nrf-51822/description
