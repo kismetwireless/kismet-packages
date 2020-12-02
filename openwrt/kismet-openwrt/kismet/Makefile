@@ -14,7 +14,7 @@ define Package/kismet
   CATEGORY:=Network
   TITLE:=Kismet 2020
   URL:=https://www.kismetwireless.net/
-  DEPENDS:=+libpthread +libpcap +libpcre +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c
+  DEPENDS:=+libpthread +libpcap +libpcre +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libwebsockets-full
   SUBMENU:=kismet
 endef
 
@@ -35,7 +35,8 @@ CONFIGURE_ARGS += \
 	--disable-element-typesafety \
 	--disable-libusb \
 	--disable-debuglibs \
-	--disable-libcap
+	--disable-libcap \
+	--disable-libwebsockets 
 
 # Override libs to force lpthread because we don't detect it properly on openwrt
 CONFIGURE_VARS += \
