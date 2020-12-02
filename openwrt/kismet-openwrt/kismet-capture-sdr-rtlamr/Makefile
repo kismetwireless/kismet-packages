@@ -23,6 +23,7 @@ define Package/kismet-capture-sdr-rtlamr
 	  +python3-cffi \
 	  +python3-numpy \
 	  +python3-protobuf \
+	  +python3-websockets \
 	  +librtlsdr
   SUBMENU:=kismet
   VARIANT:=python3

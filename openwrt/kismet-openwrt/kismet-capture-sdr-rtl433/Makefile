@@ -23,6 +23,7 @@ define Package/kismet-capture-sdr-rtl433
 	  +python3-cffi \
 	  +python3-numpy \
 	  +python3-protobuf \
+	  +python3-websockets \
 	  +librtlsdr \
 	  +rtl_433
   SUBMENU:=kismet

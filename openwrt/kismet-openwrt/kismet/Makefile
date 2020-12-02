@@ -9,12 +9,14 @@ include ../kismet.mk
 
 include $(INCLUDE_DIR)/package.mk
 
+# We need libwebsockets 3.2 or higher, which apparently is nonfunctional on openwrt
+
 define Package/kismet
   SECTION:=net
   CATEGORY:=Network
   TITLE:=Kismet 2020
   URL:=https://www.kismetwireless.net/
-  DEPENDS:=+libpthread +libpcap +libpcre +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libwebsockets-full +libsensors
+  DEPENDS:=+libpthread +libpcap +libpcre +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libsensors
   SUBMENU:=kismet
 endef
 
@@ -27,16 +29,8 @@ define Build/Configure
 endef
 
 CONFIGURE_ARGS += \
-	--sysconfdir=/etc/kismet \
-	--bindir=/usr/bin \
-	--disable-python-tools \
-	--with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc \
-	--enable-protobuflite \
-	--disable-element-typesafety \
-	--disable-libusb \
-	--disable-debuglibs \
-	--disable-libcap \
-	--disable-libwebsockets 
+	$(CONFIGURE_OPTS) \
+	--disable-libusb 
 
 # Override libs to force lpthread because we don't detect it properly on openwrt
 CONFIGURE_VARS += \

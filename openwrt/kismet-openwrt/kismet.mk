@@ -1,13 +1,24 @@
-PKG_VERSION:=2020-10-RX
+PKG_VERSION:=2020-12-RX
 PKG_RELEASE:=1
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/kismetwireless/kismet.git
-PKG_SOURCE_VERSION:=b4b34e1a3a53cbe1d49bd654846e2512e96c678c
+PKG_SOURCE_VERSION:=0a5fdfca0bb960efd3effa285bc192fafd9af5cb
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_USE_MIPS16:=0
 
 PKG_BUILD_DEPENDS:=protobuf-c/host
+
+CONFIGURE_OPTS := \
+	--sysconfdir=/etc/kismet \
+	--bindir=/usr/bin \
+	--disable-python-tools \
+	--with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc \
+	--enable-protobuflite \
+	--disable-element-typesafety \
+	--disable-debuglibs \
+	--disable-libcap \
+	--disable-libwebsockets 
