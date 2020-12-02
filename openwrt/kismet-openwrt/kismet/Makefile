@@ -14,7 +14,7 @@ define Package/kismet
   CATEGORY:=Network
   TITLE:=Kismet 2020
   URL:=https://www.kismetwireless.net/
-  DEPENDS:=+libpthread +libpcap +libpcre +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libwebsockets-full
+  DEPENDS:=+libpthread +libpcap +libpcre +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libwebsockets-full +libsensors
   SUBMENU:=kismet
 endef
 
