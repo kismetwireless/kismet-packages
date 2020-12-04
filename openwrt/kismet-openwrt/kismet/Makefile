@@ -3,7 +3,9 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=kismet
 
 PKG_BUILD_PARALLEL:=1
-HOST_BUILD_PARALLEL:=1
+HOST_BUILD_PARALLEL:=1 
+
+PKG_BUILD_DEPENDS += protobuf/host
 
 include ../kismet.mk
 
