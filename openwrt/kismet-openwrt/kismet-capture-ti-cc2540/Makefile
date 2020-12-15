@@ -26,7 +26,6 @@ endef
 
 CONFIGURE_ARGS += \
 	$(CONFIGURE_OPTS) \
-	--disable-libusb \
 	--enable-capture-tools-only
 
 # Override libs to force lpthread because we don't detect it properly on openwrt
