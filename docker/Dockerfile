@@ -1,9 +1,9 @@
-FROM ubuntu:bionic
+FROM ubuntu:focal
 
 COPY build-kismet.sh /opt/build-kismet.sh
 COPY kismet_site.conf /usr/local/etc/kismet_site.conf
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 	sudo \
 	build-essential \
 	git \
@@ -25,13 +25,15 @@ RUN apt-get update && apt-get install -y \
 	python3 \
 	python3-setuptools \
 	python3-protobuf \
-    python3-usb \
-    python3-numpy \
-    python3-dev \
+	python3-usb \
+	python3-numpy \
+	python3-dev \
 	python3-pip \
-    python3-serial \
+	python3-serial \
 	librtlsdr0 \
-	libusb-1.0-0-dev 
+	libusb-1.0-0-dev \
+	libwebsockets-dev \
+	python3-websockets
 
 RUN /bin/bash /opt/build-kismet.sh
 
