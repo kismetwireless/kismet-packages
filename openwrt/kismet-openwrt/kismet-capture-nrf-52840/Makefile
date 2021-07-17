@@ -1,23 +1,22 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=kismet-capture-ti-cc2540
+PKG_NAME:=kismet-capture-nrf-52840
 
 include ../kismet.mk
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/kismet-capture-ti-cc2540
+define Package/kismet-capture-nrf-52840
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=Kismet TI CC2540 BTLE Capture Support
+  TITLE:=Kismet NRF52840 Bluetooth Source
   URL:=https://www.kismetwireless.net
   DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 +libwebsockets-full
   SUBMENU:=kismet
 endef
 
-define Package/kismet-capture-ti-cc2540/description
-  Helper binary to capture BTLE packets from a TI CC2540 adapter.
-  Enables local and remote BTLE capture with Kismet
+define Package/kismet-capture-nrf-52840/description
+  Helper binary to use an NRF52840 serial adapter as a Bluetooth capture source.
 endef
 
 define Build/Configure
@@ -36,13 +35,13 @@ CONFIGURE_VARS += \
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 	LD="$(TARGET_CXX)" \
-	capture_ti_cc_2540/kismet_cap_ti_cc_2540
+	capture_nrf_52840/kismet_cap_nrf_52840
 endef
 
-define Package/kismet-capture-ti-cc2540/install
+define Package/kismet-capture-nrf-52840/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_ti_cc_2540/kismet_cap_ti_cc_2540 $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_nrf_52840/kismet_cap_nrf_52840 $(1)/usr/bin/
 endef
 
 
-$(eval $(call BuildPackage,kismet-capture-ti-cc2540))
+$(eval $(call BuildPackage,kismet-capture-nrf-52840))

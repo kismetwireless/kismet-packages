@@ -16,7 +16,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/kismet
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=Kismet 2020
+  TITLE:=Kismet 2021
   URL:=https://www.kismetwireless.net/
   DEPENDS:=+libpthread +libpcap +libpcre +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libsensors
   SUBMENU:=kismet

@@ -1,23 +1,23 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=kismet-capture-ti-cc2540
+PKG_NAME:=kismet-capture-rz-killerbee
 
 include ../kismet.mk
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/kismet-capture-ti-cc2540
+define Package/kismet-capture-rz-killerbee
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=Kismet TI CC2540 BTLE Capture Support
+  TITLE:=Kismet Killerbee Capture Support
   URL:=https://www.kismetwireless.net
   DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 +libwebsockets-full
   SUBMENU:=kismet
 endef
 
-define Package/kismet-capture-ti-cc2540/description
-  Helper binary to capture BTLE packets from a TI CC2540 adapter.
-  Enables local and remote BTLE capture with Kismet
+define Package/kismet-capture-rz-killerbee/description
+  Helper binary to capture Zigbee from a Killerbee adapter.
+  Enables local and remote 802.15.4 packet capture with Kismet
 endef
 
 define Build/Configure
@@ -36,13 +36,13 @@ CONFIGURE_VARS += \
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 	LD="$(TARGET_CXX)" \
-	capture_ti_cc_2540/kismet_cap_ti_cc_2540
+	capture_rz_killerbee/kismet_cap_rz_killerbee
 endef
 
-define Package/kismet-capture-ti-cc2540/install
+define Package/kismet-capture-rz-killerbee/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_ti_cc_2540/kismet_cap_ti_cc_2540 $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_rz_killerbee/kismet_cap_rz_killerbee $(1)/usr/bin/
 endef
 
 
-$(eval $(call BuildPackage,kismet-capture-ti-cc2540))
+$(eval $(call BuildPackage,kismet-capture-rz-killerbee))
