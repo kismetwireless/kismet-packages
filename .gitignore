@@ -15,3 +15,37 @@ centos/el7/kismet-git.spec
 # Packages
 *.deb
 
+reprepro_signing_wrapper
+
+media/*
+
+id_rsa
+id_rsa.pub
+ssh_config
+
+passphrase
+kismet.pub
+kismet.key
+
+aptly/*-aptly
+
+repos-aptly/*
+
+Release.gpg
+InRelease
+Release
+Packages
+Packages.gz
+version
+*.deb
+*.db
+
+kali-debootstrap
+
+dpkgs-*/*
+logs/*
+
+docker-staging/*
+aptly-staging/*
+logs/*
+
