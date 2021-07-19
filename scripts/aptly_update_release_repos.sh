@@ -19,7 +19,10 @@ for dist in bionic buster bullseye cosmic disco focal eoan groovy hirsute kali s
 	aptly --config ${BASE_DIR}/aptly/${dist}-release-aptly.conf repo create ${dist}
 
 	aptly --config ${BASE_DIR}/aptly/${dist}-release-aptly.conf \
-		repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*$RELEASEMATCH*.deb
+		repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*$RELEASEMATCH*.deb 
+
+	aptly --config ${BASE_DIR}/aptly/${dist}-release-aptly.conf \
+		repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*python3-bluepy\*.deb
 
 	aptly --config ${BASE_DIR}/aptly/${dist}-release-aptly.conf \
         -batch \

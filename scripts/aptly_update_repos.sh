@@ -12,7 +12,10 @@ for dist in bionic buster bullseye cosmic eoan focal disco kali stretch tara xen
 	aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf repo create ${dist}
 
 	aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
-		repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*git*.deb
+		repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*git*.deb 
+
+	aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
+		repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*python3-bluepy*.deb
 
 	aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
         -batch \
