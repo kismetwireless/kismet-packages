@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 BASE_DIR=${BASE_DIR:-'.'}
 
