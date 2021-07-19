@@ -57,13 +57,28 @@ fpm -t deb -s python --python-bin python3 --python-pip pip3 -v ${PACKAGE} \
     --python-disable-dependency pyserial \
     ./capture_freaklabs_zigbee &
 
-# Generate package from public bluepy
-fpm -t deb -s python --python-bin python3 --python-pip pip3 -v 1.3.0 \
-    --depends python3 \
-    --python-package-name-prefix python3 \
-    --python-setup-py-arguments '--prefix=/usr' \
-    --python-install-lib /usr/lib/python3/dist-packages \
-    bluepy 
+# Generate package from public bluepy; something is broken on at least ubuntu-hirsute so
+# we need to jump through some hoops to do some of it manually; maybe the new pip doesn't
+# play nice with fpm?
+( 
+    pip3 download \
+        --no-clean \
+        --no-deps \
+        --no-binary \
+        :all: \
+        -i https://pypi.python.org/simple \
+        -d /tmp \
+        bluepy==1.3.0
+
+    tar xf /tmp/bluepy-1.3.0.tar.gz --directory=/tmp
+
+    fpm -t deb -s python --python-bin python3 --python-pip pip3 -v 1.3.0 \
+        --depends python3 \
+        --python-package-name-prefix python3 \
+        --python-setup-py-arguments '--prefix=/usr' \
+        --python-install-lib /usr/lib/python3/dist-packages \
+        /tmp/bluepy-1.3.0
+) &
 
 fpm -t deb -s python --python-bin python3 --python-pip pip3 -v ${PACKAGE} \
     --replaces python-kismetcapturebtgeiger \
