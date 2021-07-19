@@ -1,15 +1,20 @@
 #!/bin/bash -e
 
-if test $# -ne 2; then
-	echo "Expected [tag] [version]"
+BASE_DIR=${BASE_DIR:-$1}
+SRC_DIR=${SRC_DIR:-$2}
+export BASE_DIR
+export SRC_DIR
+
+if test $# -ne 4; then
+	echo "Expected [builddir] [srcdir] [tag] [version]"
 	exit
 fi
 
 
 # rm -vf ${BASE_DIR}/dpkgs-*/*.deb
 
-export CHECKOUT=$1
-export VERSION=$2
+export CHECKOUT=$3
+export VERSION=$4
 
 export NCORES=$(nproc)
 
