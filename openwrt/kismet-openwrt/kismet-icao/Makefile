@@ -30,7 +30,7 @@ define Build/Compile
 	echo "No compilation needed"
 endef
 
-define Package/kismet-manuf-database/install
+define Package/kismet-icao-database/install
 	$(INSTALL_DIR) $(1)/etc/kismet/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_adsb_icao.txt.gz $(1)/etc/kismet
 endef
