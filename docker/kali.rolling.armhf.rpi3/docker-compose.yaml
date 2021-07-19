@@ -13,7 +13,7 @@ services:
             - /build:exec,mode=777
 
         volumes:
-            - /home/dragorn/src/kismet-packaging/dpkgs-kali:/dpkgs
-            - /home/dragorn/src/kismet-packaging/scripts:/scripts:ro
+            - ${BASE_DIR}/dpkgs-kali:/dpkgs
+            - ${BASE_DIR}/scripts:/scripts:ro
             - /etc/ssl/certs:/certs:ro
-            - /home/dragorn/src/kismet:/kismet:ro
+            - ${SRC_DIR}:/kismet:ro

@@ -13,9 +13,9 @@ services:
             - /build:exec,mode=777
 
         volumes:
-            - /home/dragorn/src/kismet-packaging/dpkgs-bullseye:/dpkgs
-            - /home/dragorn/src/kismet-packaging/scripts:/scripts:ro
-            - /home/dragorn/src/kismet:/kismet:ro
+            - ${BASE_DIR}/dpkgs-bullseye:/dpkgs
+            - ${BASE_DIR}/scripts:/scripts:ro
+            - ${SRC_DIR}:/kismet:ro
     test:
         build: .
         command: /bin/sh
