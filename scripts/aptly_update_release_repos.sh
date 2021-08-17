@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash 
 
 if test $# -ne 1; then
     echo "Expected [version]"
@@ -7,12 +7,14 @@ fi
 
 BASE_DIR=${BASE_DIR:-'.'}
 
-export GPG_TTY=$(tty)
+export gpg_tty=$(tty)
 
 RELEASEMATCH=$1
 
 for dist in bionic buster bullseye cosmic disco focal eoan groovy hirsute kali stretch tara xenial; do
-	( echo "Working on ${dist}"
+       	( 
+	cd ${BASE_DIR}
+	echo "Working on ${dist}"
 	rm -rfv ${BASE_DIR}/aptly/${dist}-release-aptly
 	rm -rfv ${BASE_DIR}/repos-aptly/apt/release/${dist}
 
