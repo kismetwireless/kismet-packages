@@ -3,7 +3,9 @@
 BASE_DIR=${BASE_DIR:-'.'}
 
 for dist in bionic buster bullseye cosmic eoan focal disco kali stretch tara xenial groovy hirsute; do
-	( echo "Working on ${dist}"
+	( 
+    	cd ${BASE_DIR}
+	echo "Working on ${dist}"
 	rm -rfv ${BASE_DIR}/aptly/${dist}-git-aptly
 	rm -rfv ${BASE_DIR}/repos-aptly/apt/git/${dist}
 
