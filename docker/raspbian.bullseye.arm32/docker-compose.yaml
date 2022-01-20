@@ -7,7 +7,7 @@ services:
             - CHECKOUT=HEAD
             - VERSION
 
-        command: /scripts/build_bullseye.sh
+        command: /scripts/build_raspbian_bullseye.sh
 
         tmpfs: 
             - /build:exec,mode=777

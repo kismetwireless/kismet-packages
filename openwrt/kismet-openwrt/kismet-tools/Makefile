@@ -11,12 +11,12 @@ define Package/kismet-tools
   CATEGORY:=Network
   TITLE:=Kismet server and log tools
   URL:=https://www.kismetwireless.net
-  DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c kismet
+  DEPENDS:=+libpthread +libpcap +libpcre +libstdcpp +libsqlite3 +zlib
   SUBMENU:=kismet
 endef
 
 define Package/kismet-tools/description
-  Kismet server and log manipulation tools for monitoring for announcing
+  Kismet server and log manipulation tools for discovering Kismet
   servers and converting kismetdb logs to wigle, csv, json, pcap, etc.
 endef
 
