@@ -1,18 +1,17 @@
 #!/bin/bash -e
 
-if test $# -ne 3; then
-    echo "Expected [docker] [distro] [platform]"
+if test $# -ne 5; then
+    echo "Expected [base] [src] [docker] [distro] [platform]"
 	exit
 fi
 
-BASE_DIR=${BASE_DIR:-'.'}
-
-rm -vf ${BASE_DIR}/dpkgs-${2}/*git*${3}.deb
-
+export BASE_DIR=${BASE_DIR:-$1}
+export SRC_DIR=${SRC_DIR:-$2}
 export NCORES=$(nproc)
 
-pushd ${BASE_DIR}/docker/$(basename "${1}")
-echo $d
-/usr/bin/time docker-compose run -e NCORES kismet-build 2>&1
+rm -vf ${BASE_DIR}/dpkgs-${4}/*git*${5}.deb
+
+pushd ${BASE_DIR}/docker/$(basename "${3}")
+/usr/bin/time docker-compose run -e NCORES -e BASE_DIR -e SRC_DIR kismet-build 2>&1
 popd
 

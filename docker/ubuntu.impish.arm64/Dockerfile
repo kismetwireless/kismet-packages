@@ -1,4 +1,7 @@
-FROM arm32v7/debian:bullseye
+FROM arm64v8/ubuntu:impish
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERMINAL linux
 
 ENV CHECKOUT HEAD NCORES
 
@@ -8,8 +11,8 @@ RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
+	libmicrohttpd-dev \
     libwebsockets-dev \
-    libmicrohttpd-dev \
 	pkg-config \
 	zlib1g-dev \
 	libnl-3-dev \
@@ -31,10 +34,10 @@ RUN apt-get update && apt-get install -y \
     python3-simplejson \
 	librtlsdr0 \
 	libusb-1.0-0-dev \
-    libubertooth1 \
-    libbtbb1 \
     libubertooth-dev \
     libbtbb-dev \
+    libubertooth1 \
+    libbtbb1 \
 	ruby \
 	ruby-dev \
 	rubygems && \
