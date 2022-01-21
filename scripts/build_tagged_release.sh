@@ -32,6 +32,7 @@ for d in ${BASE_DIR}/docker/*; do
 	echo $d
 	pushd $d
     docker-compose run -e CHECKOUT -e VERSION -e NCORES kismet-build 2>&1 | tee ${BASE_DIR}/logs/$(basename ${d}.release)
+    docker-compose rm
 	popd
 done
 

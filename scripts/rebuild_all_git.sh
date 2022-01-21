@@ -11,6 +11,7 @@ for d in ${BASE_DIR}/docker/*; do
 	echo $d
 	pushd $d
 	/usr/bin/time docker-compose run -e NCORES kismet-build 2>&1 | tee ${BASE_DIR}/logs/$(basename ${d}.last)
+    docker-compose rm
 	popd
 done
 
