@@ -13,5 +13,6 @@ rm -vf ${BASE_DIR}/dpkgs-${4}/*git*${5}.deb
 
 pushd ${BASE_DIR}/docker/$(basename "${3}")
 /usr/bin/time docker-compose run -e NCORES -e BASE_DIR -e SRC_DIR kismet-build 2>&1
+docker-compose rm
 popd
 

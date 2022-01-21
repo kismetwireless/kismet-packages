@@ -20,5 +20,6 @@ export NCORES=$(nproc)
 
 pushd ${BASE_DIR}/docker/$(basename "${5}")
 docker-compose run -e CHECKOUT -e VERSION -e NCORES kismet-build 2>&1 | tee ${BASE_DIR}/logs/$(basename ${5}.release)
+docker-compose rm
 popd
 
