@@ -9,7 +9,7 @@ services:
             - ARCH=armhf
             - ABI=arm-linux-gnueabihf
 
-        command: /scripts/launch/kali.sh
+        command: /scripts/launch/kali_cross.sh
 
         tmpfs: 
             - /build:exec,mode=777

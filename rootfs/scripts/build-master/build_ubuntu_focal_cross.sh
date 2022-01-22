@@ -36,8 +36,8 @@ if [ "${NCORES}" = "" ]; then
 fi
 make -j${NCORES}
 
-/tmp/fpm/kali.sh
-/tmp/fpm/noarch_python3_deb.sh
+/tmp/fpm/fpm_ubuntu_focal.sh
+/tmp/fpm/fpm_noarch_python3_deb.sh
 
 mv -v *.deb /dpkgs
 
