@@ -31,6 +31,7 @@ RUN apt update && \
             rubygems \
             git \
             python3-setuptools \
+            pip3 \
             pkg-config \
             make \
             protobuf-c-compiler \
