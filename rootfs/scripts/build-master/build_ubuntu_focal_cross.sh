@@ -21,14 +21,14 @@ export CXX=${ABI}-g++
 
 ./configure \
     --build=x86_64-linux \
-    --host=arm-linux \
+    --host=${ABI} \
     CFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
     CPPFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
     CXXFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
     LDFLAGS="-L/sysroot/usr/lib/${ABI} --sysroot=/sysroot" \
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
-    --disable-element-typesafety \
+    --disable-element-typesafety 
 
 
 if [ "${NCORES}" = "" ]; then 

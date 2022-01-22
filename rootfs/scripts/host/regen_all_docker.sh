@@ -2,6 +2,8 @@
 
 for x in docker/*; do
     pushd "$x"
-    docker-compose build --no-cache
+    docker-compose build --no-cache &
     popd
 done
+
+wait

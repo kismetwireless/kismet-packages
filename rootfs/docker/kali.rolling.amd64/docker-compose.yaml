@@ -2,14 +2,14 @@ version: '2'
 services:
     kismet-build:
         build: .
-        
+
         environment:
             - CHECKOUT=HEAD
             - VERSION
-            - ARCH=arm64
-            - ABI=aarch64-linux-gnu
+            - ARCH=amd64
+            - ABI=x86_64-linux-gnu
 
-        command: /scripts/launch/kali_cross.sh
+        command: /scripts/launch/kali.sh
 
         tmpfs: 
             - /build:exec,mode=777

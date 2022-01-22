@@ -37,7 +37,7 @@ RUN apt update && \
         gem install --no-document fpm 
 
 RUN curl "https://gitlab.com/kalilinux/packages/debootstrap/raw/kali/master/scripts/kali" > kali-debootstrap && \
-        debootstrap --arch=${ARCH} kali-rolling /sysroot https://http.kali.org/kali ./kali-debootstrap && \
+        debootstrap --arch=${ARCH} --components=main,contrib,non-free kali-rolling /sysroot https://http.kali.org/kali ./kali-debootstrap && \
         chroot /sysroot sh -c \
             "echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
                 apt update && \
