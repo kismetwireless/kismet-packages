@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:hirsute
 
 # Derive from kali to get the matching gcc attributes
 
@@ -7,13 +7,13 @@ ENV CHECKOUT HEAD NCORES
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERMINAL linux
 
-ENV DISTRO focal
+ENV DISTRO hirsute
 
-ENV ARCH arm64
-ENV ABI aarch64-linux-gnu
+ENV ARCH armhf
+ENV ABI arm-linux-gnueabihf
 
 ENV PB https://github.com/protocolbuffers/protobuf/releases/download/
-ENV PBV 3.6.1
+ENV PBV 3.12.4
 
 # Prep host
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
