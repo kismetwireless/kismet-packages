@@ -38,9 +38,7 @@ RUN apt update && \
         && \
         gem install --no-document fpm 
 
-#COPY focal.ports.sources /focal.sources    
-# cp /focal.sources /sysroot/etc/apt/sources.list && \
-RUN /usr/sbin/debootstrap --arch=${ARCH} --components=main,contrib,non-free ${DISTRO} /sysroot && \
+RUN /usr/sbin/debootstrap --arch=${ARCH} --components=main,contrib,non-free,restricted,universe,multiverse ${DISTRO} /sysroot && \
         chroot /sysroot sh -c \
             'echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections && \
                 apt update && \
