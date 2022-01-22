@@ -36,8 +36,7 @@ RUN apt update && \
             make \
             protobuf-c-compiler \
         && \
-        gem install --no-document fpm && \
-        ln -s /usr/bin/${ABI}-ar /usr/bin/ar
+        gem install --no-document fpm 
 
 COPY focal.ports.sources /focal.sources    
 RUN /usr/sbin/debootstrap --arch=${ARCH} ${DISTRO} /sysroot && \
