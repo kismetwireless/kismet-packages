@@ -40,8 +40,7 @@ RUN apt update && \
             make \
             protobuf-c-compiler \
         && \
-        gem install --no-document fpm && \
-        ln -s /usr/bin/${ABI}-ar /usr/bin/ar
+        gem install --no-document fpm 
 
 #COPY bullseye.ports.sources /bullseye.sources    
 #cp /bullseye.sources /sysroot/etc/apt/sources.list && \

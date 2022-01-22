@@ -34,8 +34,7 @@ RUN apt update && \
             make \
             protobuf-c-compiler \
         && \
-        gem install --no-document fpm && \
-        ln -s /usr/bin/${ABI}-ar /usr/bin/ar 
+        gem install --no-document fpm 
 
 RUN curl "https://gitlab.com/kalilinux/packages/debootstrap/raw/kali/master/scripts/kali" > kali-debootstrap && \
         debootstrap --arch=${ARCH} kali-rolling /sysroot https://http.kali.org/kali ./kali-debootstrap && \
