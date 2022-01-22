@@ -8,4 +8,4 @@ else
     ln -s /scripts/build-master /tmp/build
 fi
 
-exec /tmp/build/build_kali_cross.sh
+exec /tmp/build/build_kali.sh
