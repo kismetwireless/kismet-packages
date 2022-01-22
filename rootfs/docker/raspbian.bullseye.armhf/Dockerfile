@@ -36,7 +36,7 @@ RUN apt update && \
             git \
             python3-setuptools \
             pkg-config \
-            pip3 \
+            python3-pip \
             make \
             protobuf-c-compiler \
         && \
