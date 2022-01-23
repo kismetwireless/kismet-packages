@@ -1,12 +1,12 @@
-FROM arm64v8/ubuntu:focal
+FROM ubuntu:bionic
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERMINAL linux
 
 ENV CHECKOUT HEAD NCORES
 
-ENV ARCH arm64
-ENV ABI aarch64-linux-gnu
+ENV ARCH amd64
+ENV ABI x86_64-linux-gnu
 
 RUN apt-get update && apt-get install -y \
 	sudo \

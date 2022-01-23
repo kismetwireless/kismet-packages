@@ -6,19 +6,15 @@ services:
         environment:
             - CHECKOUT=HEAD
             - VERSION
-            - ARCH=arm64
+            - ARCH=rm64
             - ABI=aarch64-linux-gnu
 
-        command: /scripts/launch/ubuntu_focal.sh
+        command: /scripts/launch/kali.sh
 
         tmpfs: 
             - /build:exec,mode=777
 
         volumes:
-            - ${BASE_DIR}/dpkgs-focal:/dpkgs
+            - ${BASE_DIR}/dpkgs-kali:/dpkgs
             - ${BASE_DIR}/scripts:/scripts:ro
             - ${SRC_DIR}:/kismet:ro
-
-    shell:
-      build: .
-      command: /bin/sh

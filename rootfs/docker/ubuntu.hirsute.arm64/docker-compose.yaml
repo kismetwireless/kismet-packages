@@ -9,13 +9,13 @@ services:
             - ARCH=arm64
             - ABI=aarch64-linux-gnu
 
-        command: /scripts/launch/ubuntu_focal.sh
+        command: /scripts/launch/ubuntu_hirsute.sh
 
         tmpfs: 
             - /build:exec,mode=777
 
         volumes:
-            - ${BASE_DIR}/dpkgs-focal:/dpkgs
+            - ${BASE_DIR}/dpkgs-hirsute:/dpkgs
             - ${BASE_DIR}/scripts:/scripts:ro
             - ${SRC_DIR}:/kismet:ro
 
