@@ -42,14 +42,8 @@ RUN /usr/sbin/debootstrap --arch=${ARCH} --components=main,contrib,non-free,rest
         chroot /sysroot sh -c \
             'echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections && \
                 apt update && \
-                rm -rf /etc/ssl/certs/*.pem && \
-                apt install --reinstall -y ssl-cert && \
-                apt install --reinstall -y ca-certificates && \
                 apt-get install -y \
-                    sudo \
-                    build-essential \
-                    git \
-                    libmicrohttpd-dev \
+                    libc6-dev \
                     libwebsockets-dev \
                     pkg-config \
                     zlib1g-dev \
@@ -62,14 +56,7 @@ RUN /usr/sbin/debootstrap --arch=${ARCH} --components=main,contrib,non-free,rest
                     libsqlite3-dev \
                     libprotobuf-dev \
                     libprotobuf-c-dev \
-                    protobuf-compiler \
-                    protobuf-c-compiler \
                     libsensors4-dev \
-                    python3 \
-                    python3-setuptools \
-                    python3-protobuf \
-                    python3-pip \
-                    python3-simplejson \
                     librtlsdr0 \
                     libusb-1.0-0-dev \
                     libubertooth-dev \

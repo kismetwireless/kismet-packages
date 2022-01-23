@@ -45,12 +45,8 @@ RUN curl "https://gitlab.com/kalilinux/packages/debootstrap/raw/kali/master/scri
                 apt install --reinstall -y ssl-cert && \
                 apt install --reinstall -y ca-certificates && \
                 apt-get install -y \
-                    sudo \
-                    build-essential \
-                    git \
+                    libc6-dev \
                     libwebsockets-dev \
-                    libmicrohttpd-dev \
-                    pkg-config \
                     zlib1g-dev \
                     libnl-3-dev \
                     libnl-genl-3-dev \
@@ -62,14 +58,7 @@ RUN curl "https://gitlab.com/kalilinux/packages/debootstrap/raw/kali/master/scri
                     libsqlite3-dev \
                     libprotobuf-dev \
                     libprotobuf-c-dev \
-                    protobuf-compiler \
-                    protobuf-c-compiler \
                     libsensors4-dev \
-                    python3 \
-                    python3-setuptools \
-                    python3-protobuf \
-                    python3-pip \
-                    python3-simplejson \
                     librtlsdr0 \
                     libusb-1.0-0-dev \
                     libubertooth-dev \
