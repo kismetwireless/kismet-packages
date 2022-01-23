@@ -8,4 +8,4 @@ else
     ln -s /scripts/build-master /tmp/build
 fi
 
-exec /tmp/build/build_ubuntu_focal.sh
+exec /tmp/build/build_ubuntu_focal_cross.sh
