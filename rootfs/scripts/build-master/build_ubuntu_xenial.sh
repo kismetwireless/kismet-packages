@@ -15,7 +15,9 @@ fi
 ./configure \
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
-    --disable-element-typesafety 
+    --disable-element-typesafety \
+    --disable-python-tools \
+    --disable-libwebsockets
 
 
 if [ "${NCORES}" = "" ]; then 
@@ -24,7 +26,6 @@ fi
 make -j${NCORES}
 
 /tmp/fpm/fpm_ubuntu_xenial.sh
-/tmp/fpm/fpm_noarch_python3_deb.sh
 
 mv -v *.deb /dpkgs
 
