@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
-	libmicrohttpd-dev \
     libwebsockets-dev \
 	pkg-config \
 	zlib1g-dev \

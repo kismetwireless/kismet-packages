@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
-	libmicrohttpd-dev \
     libwebsockets-dev \
 	pkg-config \
 	zlib1g-dev \
@@ -28,17 +27,6 @@ RUN apt-get update && apt-get install -y \
 	protobuf-compiler \
 	protobuf-c-compiler \
 	libsensors4-dev \
-	python3 \
-	python3-setuptools \
-	python3-protobuf \
-	python3-pip \
-    python3-simplejson \
-	librtlsdr0 \
-	libusb-1.0-0-dev \
-    libubertooth-dev \
-    libbtbb-dev \
-    libubertooth1 \
-    libbtbb1 \
 	ruby \
 	ruby-dev \
 	rubygems && \
