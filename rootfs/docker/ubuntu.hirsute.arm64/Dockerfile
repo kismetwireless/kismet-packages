@@ -1,4 +1,4 @@
-FROM arm64v8/ubuntu:focal
+FROM arm64v8/ubuntu:hirsute
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERMINAL linux
