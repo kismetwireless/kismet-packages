@@ -15,7 +15,7 @@ container:
 	docker run --rm \
 		--mount source=kismet_${DISTRO}_${ARCH}_sysroot,target=/mnt/sysroot \
 		kismet/${DISTRO}_${ARCH}:latest \
-		sh -c "/usr/bin/tar \
+		sh -c "tar \
 		--exclude=/mnt \
 		--exclude=/dev \
 		--exclude=/proc \
