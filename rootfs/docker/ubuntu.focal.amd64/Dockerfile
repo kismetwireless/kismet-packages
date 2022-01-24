@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     libwebsockets-dev \
 	pkg-config \
 	zlib1g-dev \
+    libglib2.0-dev \
 	libnl-3-dev \
 	libnl-genl-3-dev \
 	libcap-dev \

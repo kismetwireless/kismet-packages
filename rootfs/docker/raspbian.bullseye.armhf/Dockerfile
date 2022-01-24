@@ -31,6 +31,7 @@ RUN apt update && \
             ruby-dev \
             rubygems \
             git \
+            libglib2.0-dev \
             python3-setuptools \
             pkg-config \
             python3-pip \

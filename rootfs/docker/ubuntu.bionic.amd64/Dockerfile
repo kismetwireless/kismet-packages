@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
 	libsqlite3-dev \
 	libprotobuf-dev \
 	libprotobuf-c-dev \
+    libglib2.0-dev \
 	protobuf-compiler \
 	protobuf-c-compiler \
 	libsensors4-dev \

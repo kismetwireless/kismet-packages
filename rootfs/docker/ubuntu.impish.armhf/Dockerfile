@@ -22,6 +22,7 @@ RUN apt update && \
             gcc-${ABI} \
             g++-${ABI} \
             qemu-user-static \
+            libglib2.0-dev \
             curl \
             ruby \
             ruby-dev \
