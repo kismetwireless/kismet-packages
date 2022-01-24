@@ -28,14 +28,16 @@ export CXX=${ABI}-g++
     LDFLAGS="-L/sysroot/usr/lib/${ABI} --sysroot=/sysroot" \
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
-    --disable-element-typesafety 
+    --disable-element-typesafety \
+    --disable-python-tools \
+    --disable-libwebsockets
 
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(($(nproc) / 2))
 fi
 make -j${NCORES}
 
-/tmp/fpm/fpm_debian_bullseye.sh
+/tmp/fpm/fpm_debian_stretch.sh
 /tmp/fpm/fpm_noarch_python3_deb.sh
 
 mv -v *.deb /dpkgs
