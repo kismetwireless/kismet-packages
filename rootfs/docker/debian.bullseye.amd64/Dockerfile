@@ -1,4 +1,4 @@
-FROM kalilinux/kali-rolling
+FROM debian:bullseye
 
 ENV CHECKOUT HEAD NCORES
 
@@ -7,9 +7,6 @@ ENV TERMINAL linux
 
 ENV ARCH amd64
 ENV ABI x86_64-linux-gnu
-
-#ENV PB https://github.com/protocolbuffers/protobuf/releases/download/
-#ENV PBV 3.12.4
 
 RUN apt-get update && apt-get install -y \
 	sudo \
@@ -22,7 +19,6 @@ RUN apt-get update && apt-get install -y \
 	libnl-genl-3-dev \
 	libcap-dev \
 	libpcap-dev \
-	libncurses5-dev \
 	libnm-dev \
 	libdw-dev \
 	libsqlite3-dev \
@@ -38,6 +34,8 @@ RUN apt-get update && apt-get install -y \
     python3-simplejson \
 	librtlsdr0 \
 	libusb-1.0-0-dev \
+    libubertooth1 \
+    libbtbb1 \
     libubertooth-dev \
     libbtbb-dev \
 	ruby \
