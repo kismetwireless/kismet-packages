@@ -1,24 +1,26 @@
 version: '2'
+
+volumes:
+  kismet_debian_buster_arm64_sysroot:
+    external: true
+
 services:
-    kismet-build:
-        build: .
+  kismet-build:
+    build: .
 
-        environment:
-            - CHECKOUT=HEAD
-            - VERSION
-            - ARCH=arm64
-            - ABI=aarch64-linux-gnu
+    environment:
+      - CHECKOUT=HEAD
+      - VERSION
+      - ARCH=arm64
+      - ABI=aarch64-linux-gnu
 
-        command: /scripts/launch/debian_buster.sh
+    command: /scripts/launch/debian_buster_cross.sh
 
-        tmpfs: 
+    tmpfs: 
             - /build:exec,mode=777
 
-        volumes:
-            - ${BASE_DIR}/dpkgs-buster:/dpkgs
-            - ${BASE_DIR}/scripts:/scripts:ro
-            - ${SRC_DIR}:/kismet:ro
-
-    shell:
-      build: .
-      command: /bin/sh
+    volumes:
+      - ${BASE_DIR}/dpkgs-buster:/dpkgs
+      - ${BASE_DIR}/scripts:/scripts:ro
+      - ${SRC_DIR}:/kismet:ro
+      - kismet_debian_buster_arm64_sysroot:/sysroot:ro

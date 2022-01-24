@@ -2,7 +2,7 @@
 
 for x in docker/*; do
     pushd "$x"
-    docker-compose build --no-cache &
+    make container &
     popd
 done
 
