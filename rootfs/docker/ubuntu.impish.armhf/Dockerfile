@@ -12,9 +12,6 @@ ENV DISTRO impish
 ENV ARCH armhf
 ENV ABI arm-linux-gnueabihf
 
-ENV PB https://github.com/protocolbuffers/protobuf/releases/download/
-ENV PBV 3.12.4
-
 # Prep host
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
@@ -35,6 +32,7 @@ RUN apt update && \
             pkg-config \
             make \
             protobuf-c-compiler \
+            protobuf-compiler \
         && \
         gem install --no-document fpm 
 
@@ -65,10 +63,4 @@ RUN /usr/sbin/debootstrap --arch=${ARCH} --components=main,contrib,non-free,rest
                     libbtbb1 \
                 ' && \
         cd /sysroot/lib/${ABI} && find ./ -name '*.so*' -lname '/*' -exec sh -c 'export TARGET=$(basename $(readlink $0)); rm $0; ln -snf "$TARGET" "$(basename "$0")";' {} \; 
-
- RUN cd /tmp && \
-         curl -LO ${PB}/v${PBV}/protoc-${PBV}-linux-x86_64.zip && \
-         cd /usr/ && \
-         unzip /tmp/protoc-${PBV}-linux-x86_64.zip
-	
 

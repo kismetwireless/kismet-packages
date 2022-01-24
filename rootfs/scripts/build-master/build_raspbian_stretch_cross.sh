@@ -30,7 +30,8 @@ export CXX=${ABI}-g++
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
     --disable-python-tools \
-    --disable-libwebsockets
+    --disable-libwebsockets \
+    --disable-libusb
 
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(($(nproc) / 2))

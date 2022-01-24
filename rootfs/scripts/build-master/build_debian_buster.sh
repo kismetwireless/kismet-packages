@@ -14,7 +14,8 @@ fi
 ./configure \
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
-    --disable-element-typesafety 
+    --disable-element-typesafety \
+    --disable-libwebsockets 
 
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(($(nproc) / 2))

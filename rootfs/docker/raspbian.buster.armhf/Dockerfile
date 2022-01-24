@@ -36,12 +36,13 @@ RUN apt update && \
             python3-pip \
             make \
             protobuf-c-compiler \
+            protobuf-compiler \
         && \
         gem install --no-document fpm 
 
 RUN curl -LO ${KEYSRC}{$KEYFILE} && \
         dpkg -i ${KEYFILE} && \
-        /usr/sbin/debootstrap --keyring=/usr/share/keyrings/raspbian-archive-keyring.gpg --arch=${ARCH} ${DISTRO} /sysroot ${DEBOOT} && \
+        /usr/sbin/debootstrap --keyring=/usr/share/keyrings/raspbian-archive-keyring.gpg --components=main,contrib,non-free,restricted,universe,multiverse --arch=${ARCH} ${DISTRO} /sysroot ${DEBOOT} && \
         chroot /sysroot sh -c \
             'echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections && \
                 apt update && \
@@ -50,7 +51,6 @@ RUN curl -LO ${KEYSRC}{$KEYFILE} && \
                 apt install --reinstall -y ca-certificates && \
                 apt-get install -y \
                     libc6-dev \
-                    libwebsockets-dev \
                     zlib1g-dev \
                     libnl-3-dev \
                     libnl-genl-3-dev \
