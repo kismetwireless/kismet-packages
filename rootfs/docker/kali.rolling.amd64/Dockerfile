@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
 	git \
     libwebsockets-dev \
 	pkg-config \
+    libglib2.0-dev \
 	zlib1g-dev \
 	libnl-3-dev \
 	libnl-genl-3-dev \

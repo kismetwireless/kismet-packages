@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
 	libnm-dev \
 	libdw-dev \
 	libsqlite3-dev \
+    libglib2.0-dev \
 	libprotobuf-dev \
 	libprotobuf-c-dev \
 	protobuf-compiler \
