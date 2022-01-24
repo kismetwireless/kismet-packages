@@ -36,6 +36,7 @@ RUN apt update && \
             python3-pip \
             make \
             protobuf-c-compiler \
+            protobuf-compiler \
         && \
         gem install --no-document fpm 
 
@@ -43,7 +44,7 @@ RUN apt update && \
 #cp /bullseye.sources /sysroot/etc/apt/sources.list && \
 RUN curl -LO ${KEYSRC}{$KEYFILE} && \
         dpkg -i ${KEYFILE} && \
-        /usr/sbin/debootstrap --keyring=/usr/share/keyrings/raspbian-archive-keyring.gpg --arch=${ARCH} ${DISTRO} /sysroot ${DEBOOT} && \
+        /usr/sbin/debootstrap --keyring=/usr/share/keyrings/raspbian-archive-keyring.gpg --arch=${ARCH} --components=main,contrib,non-free,restricted,universe,multiverse ${DISTRO} /sysroot ${DEBOOT} && \
         chroot /sysroot sh -c \
             'echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections && \
                 apt update && \

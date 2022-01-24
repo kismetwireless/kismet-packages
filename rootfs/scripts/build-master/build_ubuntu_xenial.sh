@@ -17,7 +17,8 @@ fi
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
     --disable-python-tools \
-    --disable-libwebsockets
+    --disable-libwebsockets \
+    --disable-libusb
 
 
 if [ "${NCORES}" = "" ]; then 

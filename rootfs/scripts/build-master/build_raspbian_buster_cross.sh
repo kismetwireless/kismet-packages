@@ -28,7 +28,8 @@ export CXX=${ABI}-g++
     LDFLAGS="-L/sysroot/usr/lib/${ABI} --sysroot=/sysroot" \
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
-    --disable-element-typesafety 
+    --disable-element-typesafety \
+    --disable-libwebsockets
 
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(($(nproc) / 2))
