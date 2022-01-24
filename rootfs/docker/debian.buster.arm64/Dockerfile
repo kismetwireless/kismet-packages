@@ -1,20 +1,18 @@
-FROM kalilinux/kali-rolling
-
-ENV CHECKOUT HEAD NCORES
+FROM arm64v8/debian:buster
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERMINAL linux
 
-ENV ARCH amd64
-ENV ABI x86_64-linux-gnu
+ENV CHECKOUT HEAD NCORES
 
-#ENV PB https://github.com/protocolbuffers/protobuf/releases/download/
-#ENV PBV 3.12.4
+ENV ARCH arm64
+ENV ABI aarch64-linux-gnu
 
 RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
+	libmicrohttpd-dev \
     libwebsockets-dev \
 	pkg-config \
 	zlib1g-dev \
@@ -22,7 +20,6 @@ RUN apt-get update && apt-get install -y \
 	libnl-genl-3-dev \
 	libcap-dev \
 	libpcap-dev \
-	libncurses5-dev \
 	libnm-dev \
 	libdw-dev \
 	libsqlite3-dev \
@@ -40,6 +37,8 @@ RUN apt-get update && apt-get install -y \
 	libusb-1.0-0-dev \
     libubertooth-dev \
     libbtbb-dev \
+    libubertooth1 \
+    libbtbb1 \
 	ruby \
 	ruby-dev \
 	rubygems && \
