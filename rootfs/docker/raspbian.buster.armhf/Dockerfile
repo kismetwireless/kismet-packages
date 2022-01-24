@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:buster
 
 # Derive from kali to get the matching gcc attributes
 
@@ -7,7 +7,7 @@ ENV CHECKOUT HEAD NCORES
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERMINAL linux
 
-ENV DISTRO bullseye
+ENV DISTRO buster
 ENV DEBOOT http://raspbian.raspberrypi.org/raspbian/
 
 ENV ARCH armhf
@@ -39,8 +39,6 @@ RUN apt update && \
         && \
         gem install --no-document fpm 
 
-#COPY bullseye.ports.sources /bullseye.sources    
-#cp /bullseye.sources /sysroot/etc/apt/sources.list && \
 RUN curl -LO ${KEYSRC}{$KEYFILE} && \
         dpkg -i ${KEYFILE} && \
         /usr/sbin/debootstrap --keyring=/usr/share/keyrings/raspbian-archive-keyring.gpg --arch=${ARCH} ${DISTRO} /sysroot ${DEBOOT} && \

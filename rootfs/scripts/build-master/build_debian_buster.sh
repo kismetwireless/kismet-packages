@@ -21,7 +21,7 @@ if [ "${NCORES}" = "" ]; then
 fi
 make -j${NCORES}
 
-/tmp/fpm/fpm_buster.sh
+/tmp/fpm/fpm_debian_buster.sh
 /tmp/fpm/fpm_noarch_python3_deb.sh
 
 mv -v *.deb /dpkgs
