@@ -1,6 +1,27 @@
+# Modified to generate an arm64 container on the host, so we can map it into
+# the docker.
+#
+# There is a long-standing bug in qemu-aarch64 that makes it segv python
+# when running inside an environment like a docker, making it impossible
+# to do the sysroot install inside the docker
+#
+
+DISTRO=debian_bullseye
+ARCH=arm64
 
 container:
-	@docker-compose build --no-cache
+	docker build -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
+	docker volume create kismet_${DISTRO}_${ARCH}_sysroot
+	docker run --rm \
+		--mount source=kismet_${DISTRO}_${ARCH}_sysroot,target=/mnt/sysroot \
+		kismet/${DISTRO}_${ARCH}:latest \
+		sh -c "/usr/bin/tar \
+		--exclude=/mnt \
+		--exclude=/dev \
+		--exclude=/proc \
+		--exclude=/sys \
+		-chv / | tar x -C /mnt/sysroot/"
+	docker-compose build --no-cache
 
 kismet:
 	@docker-compose run --rm kismet-build
