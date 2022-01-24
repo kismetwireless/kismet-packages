@@ -1,4 +1,4 @@
-FROM ubuntu:impish
+FROM kalilinux/kali-rolling
 
 # Derive from kali to get the matching gcc attributes
 
