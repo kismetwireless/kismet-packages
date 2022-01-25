@@ -1,16 +1,23 @@
-FROM kali-rolling-amd64
+FROM kalilinux/kali-rolling
 
 ENV CHECKOUT HEAD NCORES
 
-COPY easy_install /usr/bin/easy_install
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERMINAL linux
+
+ENV ARCH amd64
+ENV ABI x86_64-linux-gnu
+
+#ENV PB https://github.com/protocolbuffers/protobuf/releases/download/
+#ENV PBV 3.12.4
 
 RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
     libwebsockets-dev \
-	libmicrohttpd-dev \
 	pkg-config \
+    libglib2.0-dev \
 	zlib1g-dev \
 	libnl-3-dev \
 	libnl-genl-3-dev \

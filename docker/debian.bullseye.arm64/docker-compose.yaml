@@ -1,22 +1,26 @@
 version: '2'
+
+volumes:
+  kismet_debian_bullseye_arm64_sysroot:
+    external: true
+
 services:
-    kismet-build:
-        build: .
+  kismet-build:
+    build: .
 
-        environment:
-            - CHECKOUT=HEAD
-            - VERSION
+    environment:
+      - CHECKOUT=HEAD
+      - VERSION
+      - ARCH=arm64
+      - ABI=aarch64-linux-gnu
 
-        command: /scripts/build_bullseye.sh
+    command: /scripts/launch/debian_bullseye_cross.sh
 
-        tmpfs: 
+    tmpfs: 
             - /build:exec,mode=777
 
-        volumes:
-            - ${BASE_DIR}/dpkgs-bullseye:/dpkgs
-            - ${BASE_DIR}/scripts:/scripts:ro
-            - ${SRC_DIR}:/kismet:ro
-    test:
-        build: .
-        command: /bin/sh
-
+    volumes:
+      - ${BASE_DIR}/dpkgs-bullseye:/dpkgs
+      - ${BASE_DIR}/scripts:/scripts:ro
+      - ${SRC_DIR}:/kismet:ro
+      - kismet_debian_bullseye_arm64_sysroot:/sysroot:ro

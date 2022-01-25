@@ -1,16 +1,20 @@
-FROM i386/debian:bullseye
+FROM debian:bullseye
 
 ENV CHECKOUT HEAD NCORES
 
-COPY easy_install /usr/bin/easy_install
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERMINAL linux
+
+ENV ARCH i386
+ENV ABI i386-linux-gnu
 
 RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
     libwebsockets-dev \
-    libmicrohttpd-dev \
 	pkg-config \
+    libglib2.0-dev \
 	zlib1g-dev \
 	libnl-3-dev \
 	libnl-genl-3-dev \

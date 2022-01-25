@@ -6,8 +6,10 @@ services:
         environment:
             - CHECKOUT=HEAD
             - VERSION
+            - ARCH=amd64
+            - ABI=x86_64-linux-gnu
 
-        command: /scripts/build_bionic.sh
+        command: /scripts/launch/ubuntu_bionic.sh
 
         tmpfs: 
             - /build:exec,mode=777
@@ -16,3 +18,7 @@ services:
             - ${BASE_DIR}/dpkgs-bionic:/dpkgs
             - ${BASE_DIR}/scripts:/scripts:ro
             - ${SRC_DIR}:/kismet:ro
+
+    shell:
+      build: .
+      command: /bin/sh

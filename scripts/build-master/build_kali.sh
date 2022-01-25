@@ -2,7 +2,6 @@
 
 cd /build
 
-#git clone --recursive https://www.kismetwireless.net/git/kismet.git
 git clone --recursive /kismet
 cd kismet
 git checkout master
@@ -12,7 +11,10 @@ if [ "${CHECKOUT}"x != "x" ]; then
 	git checkout ${CHECKOUT}
 fi
 
-./configure --prefix=/usr --sysconfdir=/etc/kismet
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc/kismet \
+    --disable-element-typesafety 
 
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(($(nproc) / 2))

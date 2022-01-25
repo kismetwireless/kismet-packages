@@ -1,24 +1,28 @@
 FROM i386/ubuntu:bionic
 
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERMINAL linux
+
 ENV CHECKOUT HEAD NCORES
 
-COPY easy_install /usr/bin/easy_install
+ENV ARCH i386
+ENV ABI i386-linux-gnu
 
 RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
-    libwebsockets-dev \
+	libwebsockets-dev \
 	pkg-config \
 	zlib1g-dev \
 	libnl-3-dev \
 	libnl-genl-3-dev \
 	libcap-dev \
 	libpcap-dev \
-	libncurses5-dev \
 	libnm-dev \
 	libdw-dev \
 	libsqlite3-dev \
+    libglib2.0-dev \
 	libprotobuf-dev \
 	libprotobuf-c-dev \
 	protobuf-compiler \
@@ -28,15 +32,15 @@ RUN apt-get update && apt-get install -y \
 	python3-setuptools \
 	python3-protobuf \
 	python3-pip \
-    python3-simplejson \
+	python3-simplejson \
 	librtlsdr0 \
 	libusb-1.0-0-dev \
-    libubertooth1 \
-    libbtbb1 \
-    libubertooth-dev \
-    libbtbb-dev \
+	libubertooth-dev \
+	libbtbb-dev \
+	libubertooth1 \
+	libbtbb1 \
 	ruby \
 	ruby-dev \
 	rubygems && \
-	gem install --no-ri --no-rdoc fpm
+	gem install --no-document fpm
 

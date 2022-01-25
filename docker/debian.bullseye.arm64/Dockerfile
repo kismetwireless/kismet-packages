@@ -1,42 +1,39 @@
-FROM arm64v8/debian:bullseye
+FROM debian:bullseye
+
+# Derive from kali to get the matching gcc attributes
 
 ENV CHECKOUT HEAD NCORES
 
-COPY easy_install /usr/bin/easy_install
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERMINAL linux
 
-RUN apt-get update && apt-get install -y \
-	sudo \
-	build-essential \
-	git \
-    libwebsockets-dev \
-    libmicrohttpd-dev \
-	pkg-config \
-	zlib1g-dev \
-	libnl-3-dev \
-	libnl-genl-3-dev \
-	libcap-dev \
-	libpcap-dev \
-	libnm-dev \
-	libdw-dev \
-	libsqlite3-dev \
-	libprotobuf-dev \
-	libprotobuf-c-dev \
-	protobuf-compiler \
-	protobuf-c-compiler \
-	libsensors4-dev \
-	python3 \
-	python3-setuptools \
-	python3-protobuf \
-	python3-pip \
-    python3-simplejson \
-	librtlsdr0 \
-	libusb-1.0-0-dev \
-    libubertooth1 \
-    libbtbb1 \
-    libubertooth-dev \
-    libbtbb-dev \
-	ruby \
-	ruby-dev \
-	rubygems && \
-	gem install --no-document fpm
+ENV DISTRO bullseye
+
+ENV ARCH arm64
+ENV ABI aarch64-linux-gnu
+
+# Prep host
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+# Install host deps
+RUN apt update && \
+        apt install -y \
+            debootstrap \
+            gcc-${ABI} \
+            g++-${ABI} \
+            qemu-user-static \
+            libglib2.0-dev \
+            curl \
+            ruby \
+            ruby-dev \
+            rubygems \
+            git \
+            python3-setuptools \
+            python3-pip \
+            pkg-config \
+            make \
+            protobuf-c-compiler \
+            protobuf-compiler \
+        && \
+        gem install --no-document fpm 
 
