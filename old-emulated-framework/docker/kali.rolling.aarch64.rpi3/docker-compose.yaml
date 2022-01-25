@@ -1,0 +1,18 @@
+version: '2'
+services:
+    kismet-build:
+        build: .
+
+        environment:
+            - CHECKOUT=HEAD
+            - VERSION
+
+        command: /scripts/build_kali_rpi.sh
+
+        tmpfs: 
+            - /build:exec,mode=777
+
+        volumes:
+            - ${BASE_DIR}/dpkgs-kali:/dpkgs
+            - ${BASE_DIR}/scripts:/scripts:ro
+            - ${SRC_DIR}:/kismet:ro
