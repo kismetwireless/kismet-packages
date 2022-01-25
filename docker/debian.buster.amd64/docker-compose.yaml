@@ -6,13 +6,15 @@ services:
         environment:
             - CHECKOUT=HEAD
             - VERSION
+            - ARCH=amd64
+            - ABI=x86_64-linux-gnu
 
-        command: /scripts/build_buster.sh
+        command: /scripts/launch/debian_buster.sh
 
         tmpfs: 
             - /build:exec,mode=777
 
         volumes:
-            - ${BASE_DIR}/dpkgs-buster:/dpkgs
+            - ${BASE_DIR}/dpkgs-bullseye:/dpkgs
             - ${BASE_DIR}/scripts:/scripts:ro
             - ${SRC_DIR}:/kismet:ro

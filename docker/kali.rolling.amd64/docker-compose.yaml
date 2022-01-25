@@ -6,8 +6,10 @@ services:
         environment:
             - CHECKOUT=HEAD
             - VERSION
+            - ARCH=amd64
+            - ABI=x86_64-linux-gnu
 
-        command: /scripts/build_kali.sh
+        command: /scripts/launch/kali.sh
 
         tmpfs: 
             - /build:exec,mode=777

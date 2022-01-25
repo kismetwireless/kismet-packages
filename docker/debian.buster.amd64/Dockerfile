@@ -2,14 +2,17 @@ FROM debian:buster
 
 ENV CHECKOUT HEAD NCORES
 
-COPY easy_install /usr/bin/easy_install
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERMINAL linux
+
+ENV ARCH amd64
+ENV ABI x86_64-linux-gnu
 
 RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
     libwebsockets-dev \
-    libmicrohttpd-dev \
 	pkg-config \
 	zlib1g-dev \
 	libnl-3-dev \
@@ -38,5 +41,5 @@ RUN apt-get update && apt-get install -y \
 	ruby \
 	ruby-dev \
 	rubygems && \
-	gem install --no-ri --no-rdoc fpm
+	gem install --no-document fpm
 

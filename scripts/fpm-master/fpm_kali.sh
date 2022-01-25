@@ -9,9 +9,9 @@ else
 fi
 
 cp kismet kismet_stripped
-strip kismet_stripped
+${ABI}-strip kismet_stripped
 
-sudo fpm -t deb -s dir -n kismet-core-debug -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-core-debug -v ${PACKAGE} \
     --description "Kismet core, full debug symbols" \
     --replaces kismet \
     --replaces kismet-plugins \
@@ -58,7 +58,7 @@ sudo fpm -t deb -s dir -n kismet-core-debug -v ${PACKAGE} \
     ./packaging/systemd/kismet.service=/lib/systemd/system/kismet.service \
     ./http_data/=/usr/share/kismet/httpd &
 
-sudo fpm -t deb -s dir -n kismet-core -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --description "Kismet core" \
     --replaces kismet \
     --replaces kismet-plugins \
@@ -105,7 +105,7 @@ sudo fpm -t deb -s dir -n kismet-core -v ${PACKAGE} \
     ./packaging/systemd/kismet.service=/lib/systemd/system/kismet.service \
     ./http_data/=/usr/share/kismet/httpd &
 
-sudo fpm -t deb -s dir -n kismet-capture-linux-wifi -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-linux-wifi -v ${PACKAGE} \
     --description "Kismet Linux Wi-Fi capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
@@ -120,7 +120,7 @@ sudo fpm -t deb -s dir -n kismet-capture-linux-wifi -v ${PACKAGE} \
     --depends libwebsockets16 \
     ./capture_linux_wifi/kismet_cap_linux_wifi=/usr/bin/kismet_cap_linux_wifi &
 
-sudo fpm -t deb -s dir -n kismet-capture-linux-bluetooth -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-linux-bluetooth -v ${PACKAGE} \
     --description "Kismet Linux Bluetooth capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
@@ -132,7 +132,7 @@ sudo fpm -t deb -s dir -n kismet-capture-linux-bluetooth -v ${PACKAGE} \
     --depends libwebsockets16 \
     ./capture_linux_bluetooth/kismet_cap_linux_bluetooth=/usr/bin/kismet_cap_linux_bluetooth &
     
-sudo fpm -t deb -s dir -n kismet-capture-nrf-mousejack -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-mousejack -v ${PACKAGE} \
     --description "Kismet nRF MouseJack capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
@@ -144,7 +144,7 @@ sudo fpm -t deb -s dir -n kismet-capture-nrf-mousejack -v ${PACKAGE} \
     --depends libwebsockets16 \
     ./capture_nrf_mousejack/kismet_cap_nrf_mousejack=/usr/bin/kismet_cap_nrf_mousejack &
 
-sudo fpm -t deb -s dir -n kismet-capture-ti-cc-2540 -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2540 -v ${PACKAGE} \
     --description "Kismet TICC2540 BTLE Sniffer capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
@@ -157,7 +157,7 @@ sudo fpm -t deb -s dir -n kismet-capture-ti-cc-2540 -v ${PACKAGE} \
     ./packaging/udev/99-kismet-ticc2540.rules=/etc/udev/rules.d/99-kismet-ticc2540.rules \
     ./capture_ti_cc_2540/kismet_cap_ti_cc_2540=/usr/bin/kismet_cap_ti_cc_2540 &
 
-sudo fpm -t deb -s dir -n kismet-capture-ti-cc-2531 -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2531 -v ${PACKAGE} \
     --description "Kismet TICC2531 802.15.4 Zigbee Sniffer capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
@@ -170,7 +170,7 @@ sudo fpm -t deb -s dir -n kismet-capture-ti-cc-2531 -v ${PACKAGE} \
     ./packaging/udev/99-kismet-ticc2531.rules=/etc/udev/rules.d/99-kismet-ticc2531.rules \
     ./capture_ti_cc_2531/kismet_cap_ti_cc_2531=/usr/bin/kismet_cap_ti_cc_2531 &
 
-sudo fpm -t deb -s dir -n kismet-capture-rz-killerbee -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-rz-killerbee -v ${PACKAGE} \
     --description "Kismet Killerbee Sniffer capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
@@ -182,7 +182,7 @@ sudo fpm -t deb -s dir -n kismet-capture-rz-killerbee -v ${PACKAGE} \
     --depends libwebsockets16 \
     ./capture_rz_killerbee/kismet_cap_rz_killerbee=/usr/bin/kismet_cap_rz_killerbee &
 
-sudo fpm -t deb -s dir -n kismet-capture-nrf-51822 -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-51822 -v ${PACKAGE} \
     --description "Kismet NRF51822 BTLE Sniffer capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
@@ -192,7 +192,7 @@ sudo fpm -t deb -s dir -n kismet-capture-nrf-51822 -v ${PACKAGE} \
     --depends libwebsockets16 \
     ./capture_nrf_51822/kismet_cap_nrf_51822=/usr/bin/kismet_cap_nrf_51822 &
 
-sudo fpm -t deb -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
     --description "Kismet NRF52840 BTLE Sniffer capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
@@ -202,7 +202,7 @@ sudo fpm -t deb -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
     --depends libwebsockets16 \
     ./capture_nrf_52840/kismet_cap_nrf_52840=/usr/bin/kismet_cap_nrf_52840 &
 
-sudo fpm -t deb -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
     --description "Kismet NXP KW41Z BTLE and Zigbee Sniffer capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
@@ -212,7 +212,7 @@ sudo fpm -t deb -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
     --depends libwebsockets16 \
     ./capture_nxp_kw41z/kismet_cap_nxp_kw41z=/usr/bin/kismet_cap_nxp_kw41z &
 
-sudo fpm -t deb -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \
     --description "Kismet Ubertooth One BT Sniffer capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
@@ -226,7 +226,7 @@ sudo fpm -t deb -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \
     --depends libwebsockets16 \
     ./capture_ubertooth_one/kismet_cap_ubertooth_one=/usr/bin/kismet_cap_ubertooth_one &
 
-sudo fpm -t deb -s dir -n kismet-logtools -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-logtools -v ${PACKAGE} \
 	--description "Kismet kismetdb log tools (kismetdb)" \
 	--depends libpcap0.8 \
 	--depends libsqlite3-0 \
@@ -239,11 +239,11 @@ sudo fpm -t deb -s dir -n kismet-logtools -v ${PACKAGE} \
     ./log_tools/kismetdb_to_kml=/usr/bin/kismetdb_to_kml \
     ./log_tools/kismetdb_to_pcap=/usr/bin/kismetdb_to_pcap &
 
-sudo fpm -t deb -s dir -n kismet-adsb-icao-data -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s dir -n kismet-adsb-icao-data -v ${PACKAGE} \
     --description "Kismet ADSB ICAO data" \
     ./conf/kismet_adsb_icao.txt.gz=/usr/share/kismet/kismet_adsb_icao.txt.gz &
 
-sudo fpm -t deb -s empty -n kismet -v ${PACKAGE} \
+fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
     --description "Kismet metapackage" \
     --depends kismet-core \
     --depends kismet-adsb-icao-data \

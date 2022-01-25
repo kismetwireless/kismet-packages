@@ -5,16 +5,17 @@ ENV TERMINAL linux
 
 ENV CHECKOUT HEAD NCORES
 
-COPY easy_install /usr/bin/easy_install
+ENV ARCH amd64
+ENV ABI x86_64-linux-gnu
 
 RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
-	libmicrohttpd-dev \
     libwebsockets-dev \
 	pkg-config \
 	zlib1g-dev \
+    libglib2.0-dev \
 	libnl-3-dev \
 	libnl-genl-3-dev \
 	libcap-dev \

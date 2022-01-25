@@ -6,8 +6,10 @@ services:
         environment:
             - CHECKOUT=HEAD
             - VERSION
+            - ARCH=amd64
+            - ABI=x86_64-linux-gnu
 
-        command: /scripts/build_bullseye.sh
+        command: /scripts/launch/debian_bullseye.sh
 
         tmpfs: 
             - /build:exec,mode=777
@@ -16,7 +18,3 @@ services:
             - ${BASE_DIR}/dpkgs-bullseye:/dpkgs
             - ${BASE_DIR}/scripts:/scripts:ro
             - ${SRC_DIR}:/kismet:ro
-    test:
-        build: .
-        command: /bin/sh
-

@@ -6,8 +6,10 @@ services:
         environment:
             - CHECKOUT=HEAD
             - VERSION
+            - ARCH=i386
+            - ABI=i386-linux-gnu
 
-        command: /scripts/build_xenial.sh
+        command: /scripts/launch/ubuntu_xenial.sh
 
         tmpfs: 
             - /build:exec,mode=777

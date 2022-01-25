@@ -1,15 +1,18 @@
 FROM ubuntu:bionic
 
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERMINAL linux
+
 ENV CHECKOUT HEAD NCORES
 
-COPY easy_install /usr/bin/easy_install
+ENV ARCH amd64
+ENV ABI x86_64-linux-gnu
 
 RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
     libwebsockets-dev \
-    libmicrohttpd-dev \
 	pkg-config \
 	zlib1g-dev \
 	libnl-3-dev \
@@ -21,6 +24,7 @@ RUN apt-get update && apt-get install -y \
 	libsqlite3-dev \
 	libprotobuf-dev \
 	libprotobuf-c-dev \
+    libglib2.0-dev \
 	protobuf-compiler \
 	protobuf-c-compiler \
 	libsensors4-dev \
@@ -31,12 +35,12 @@ RUN apt-get update && apt-get install -y \
     python3-simplejson \
 	librtlsdr0 \
 	libusb-1.0-0-dev \
-    libubertooth1 \
-    libbtbb1 \
     libubertooth-dev \
     libbtbb-dev \
+    libubertooth1 \
+    libbtbb1 \
 	ruby \
 	ruby-dev \
 	rubygems && \
-	gem install --no-ri --no-rdoc fpm
+	gem install --no-document fpm
 

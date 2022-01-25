@@ -1,14 +1,17 @@
 FROM ubuntu:xenial
 
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERMINAL linux
+
 ENV CHECKOUT HEAD NCORES
 
-COPY easy_install /usr/bin/easy_install
+ENV ARCH amd64
+ENV ABI x86_64-linux-gnu
 
 RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
-	libmicrohttpd-dev \
     libwebsockets-dev \
 	pkg-config \
 	zlib1g-dev \
@@ -16,7 +19,6 @@ RUN apt-get update && apt-get install -y \
 	libnl-genl-3-dev \
 	libcap-dev \
 	libpcap-dev \
-	libncurses5-dev \
 	libnm-dev \
 	libdw-dev \
 	libsqlite3-dev \
@@ -25,14 +27,8 @@ RUN apt-get update && apt-get install -y \
 	protobuf-compiler \
 	protobuf-c-compiler \
 	libsensors4-dev \
-	python \
-	python-setuptools \
-	python-protobuf \
-	python-pip \
-	librtlsdr0 \
-	libusb-1.0-0-dev \
 	ruby \
 	ruby-dev \
 	rubygems && \
-	gem install --no-ri --no-rdoc fpm
+	gem install --no-document fpm
 
