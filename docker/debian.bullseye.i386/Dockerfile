@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM i386/debian:bullseye
 
 ENV CHECKOUT HEAD NCORES
 
