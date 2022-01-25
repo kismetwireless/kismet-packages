@@ -27,6 +27,7 @@ RUN apt-get update && apt-get install -y \
 	protobuf-compiler \
 	protobuf-c-compiler \
 	libsensors4-dev \
+    libusb-1.0-0-dev \
 	ruby \
 	ruby-dev \
 	rubygems && \
