@@ -1,6 +1,13 @@
 #!/bin/bash -e
 
-BASE_DIR=${BASE_DIR:-'.'}
+if test $# -ne 2; then
+    echo "Expected [base] [src]"
+	exit
+fi
+
+export BASE_DIR=${$1}
+export SRC_DIR=${$2}
+export NCORES=$(nproc)
 
 rm -vf ${BASE_DIR}/dpkgs-*/*git*.deb
 rm -vf ${BASE_DIR}/logs/*.last
