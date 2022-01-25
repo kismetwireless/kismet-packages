@@ -2,7 +2,7 @@
 
 BASE_DIR=${BASE_DIR:-'.'}
 
-for dist in kali bionic buster bullseye cosmic eoan focal disco xenial groovy hirsute impish; do
+for dist in kali bionic buster bullseye focal disco xenial hirsute impish; do
 	( 
     	cd ${BASE_DIR}
         echo "Working on ${dist}"
