@@ -8,8 +8,10 @@ else
     PACKAGE="${VERSION}"
 fi
 
+# Use native 'strip' tool because bionic packages don't seem to install
+# the cross-arch links
 cp kismet kismet_stripped
-${ABI}-strip kismet_stripped
+strip kismet_stripped
 
 #fpm -t deb -a ${ARCH} -s dir -n kismet-core-debug -v ${PACKAGE} \
 #    --description "Kismet core, full debug symbols" \
