@@ -11,7 +11,7 @@ export gpg_tty=$(tty)
 
 RELEASEMATCH=$1
 
-for dist in kali bionic buster bullseye cosmic disco focal eoan groovy hirsute impish kali xenial; do
+for dist in kali bionic buster bullseye disco focal hirsute impish kali xenial; do
     ( 
         cd ${BASE_DIR}
         echo "Working on ${dist}"

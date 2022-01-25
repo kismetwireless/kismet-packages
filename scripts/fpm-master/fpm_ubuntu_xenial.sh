@@ -8,8 +8,9 @@ else
     PACKAGE="${VERSION}"
 fi
 
+# Xenial doesn't seem to label strip properly
 cp kismet kismet_stripped
-${ABI}-strip kismet_stripped
+strip kismet_stripped
 
 #fpm -t deb -a ${ARCH} -s dir -n kismet-core-debug -v ${PACKAGE} \
 #    --description "Kismet core, full debug symbols" \
