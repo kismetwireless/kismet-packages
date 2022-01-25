@@ -11,52 +11,52 @@ fi
 cp kismet kismet_stripped
 ${ABI}-strip kismet_stripped
 
-fpm -t deb -a ${ARCH} -s dir -n kismet-core-debug -v ${PACKAGE} \
-    --description "Kismet core, full debug symbols" \
-    --replaces kismet \
-    --replaces kismet-plugins \
-    --deb-recommends kismet-capture-linux-wifi \
-    --deb-recommends kismet-capture-linux-bluetooth \
-    --deb-recommends kismet-capture-nrf-mousejack \
-    --deb-recommends kismet-capture-ti-cc-2540 \
-    --deb-recommends kismet-capture-ti-cc-2531 \
-    --deb-recommends kismet-capture-ubertooth-one \
-    --deb-recommends kismet-capture-nrf-51822 \
-    --deb-recommends kismet-capture-nrf-52840 \
-    --deb-recommends kismet-capture-rz-killerbee \
-    --deb-recommends kismet-capture-nxp-kw41z \
-    --deb-recommends python3-kismetcapturertl433 \
-    --deb-recommends python3-kismetcapturertladsb \
-    --deb-recommends python3-kismetcapturertlamr \
-    --deb-recommends python3-kismetcapturefreaklabszigbee \
-    --deb-recommends kismet-logtools \
-    --deb-recommends kismet-adsb-icao-data \
-    --deb-templates /tmp/fpm/debian/kismet.templates \
-    --deb-config /tmp/fpm/debian/kismet.config \
-    --depends zlib1g \
-    --depends libpcap0.8 \
-    --depends libdw1 \
-    --depends libsqlite3-0 \
-    --depends libprotobuf23 \
-    --depends libprotobuf-c1 \
-    --depends libsensors5 \
-    ./conf/kismet.conf=/etc/kismet/kismet.conf \
-    ./conf/kismet_alerts.conf=/etc/kismet/kismet_alerts.conf \
-    ./conf/kismet_httpd.conf=/etc/kismet/kismet_httpd.conf \
-    ./conf/kismet_logging.conf=/etc/kismet/kismet_logging.conf \
-    ./conf/kismet_memory.conf=/etc/kismet/kismet_memory.conf \
-    ./conf/kismet_uav.conf=/etc/kismet/kismet_uav.conf \
-    ./conf/kismet_80211.conf=/etc/kismet/kismet_80211.conf \
-    ./conf/kismet_filter.conf=/etc/kismet/kismet_filter.conf \
-    ./conf/kismet_manuf.txt.gz=/usr/share/kismet/kismet_manuf.txt.gz \
-    ./conf/kismet_bluetooth_ids.txt.gz=/usr/share/kismet/kismet_bluetooth_ids.txt.gz \
-    ./conf/kismet_bluetooth_manuf.txt.gz=/usr/share/kismet/kismet_bluetooth_manuf.txt.gz \
-    ./kismet=/usr/bin/kismet \
-    ./kismet_cap_pcapfile=/usr/bin/kismet_cap_pcapfile \
-    ./kismet_cap_kismetdb=/usr/bin/kismet_cap_kismetdb \
-    ./packaging/kismet.pc=/usr/share/pkgconfig/kismet.pc \
-    ./packaging/systemd/kismet.service=/lib/systemd/system/kismet.service \
-    ./http_data/=/usr/share/kismet/httpd &
+#fpm -t deb -a ${ARCH} -s dir -n kismet-core-debug -v ${PACKAGE} \
+#    --description "Kismet core, full debug symbols" \
+#    --replaces kismet \
+#    --replaces kismet-plugins \
+#    --deb-recommends kismet-capture-linux-wifi \
+#    --deb-recommends kismet-capture-linux-bluetooth \
+#    --deb-recommends kismet-capture-nrf-mousejack \
+#    --deb-recommends kismet-capture-ti-cc-2540 \
+#    --deb-recommends kismet-capture-ti-cc-2531 \
+#    --deb-recommends kismet-capture-ubertooth-one \
+#    --deb-recommends kismet-capture-nrf-51822 \
+#    --deb-recommends kismet-capture-nrf-52840 \
+#    --deb-recommends kismet-capture-rz-killerbee \
+#    --deb-recommends kismet-capture-nxp-kw41z \
+#    --deb-recommends python3-kismetcapturertl433 \
+#    --deb-recommends python3-kismetcapturertladsb \
+#    --deb-recommends python3-kismetcapturertlamr \
+#    --deb-recommends python3-kismetcapturefreaklabszigbee \
+#    --deb-recommends kismet-logtools \
+#    --deb-recommends kismet-adsb-icao-data \
+#    --deb-templates /tmp/fpm/debian/kismet.templates \
+#    --deb-config /tmp/fpm/debian/kismet.config \
+#    --depends zlib1g \
+#    --depends libpcap0.8 \
+#    --depends libdw1 \
+#    --depends libsqlite3-0 \
+#    --depends libprotobuf23 \
+#    --depends libprotobuf-c1 \
+#    --depends libsensors5 \
+#    ./conf/kismet.conf=/etc/kismet/kismet.conf \
+#    ./conf/kismet_alerts.conf=/etc/kismet/kismet_alerts.conf \
+#    ./conf/kismet_httpd.conf=/etc/kismet/kismet_httpd.conf \
+#    ./conf/kismet_logging.conf=/etc/kismet/kismet_logging.conf \
+#    ./conf/kismet_memory.conf=/etc/kismet/kismet_memory.conf \
+#    ./conf/kismet_uav.conf=/etc/kismet/kismet_uav.conf \
+#    ./conf/kismet_80211.conf=/etc/kismet/kismet_80211.conf \
+#    ./conf/kismet_filter.conf=/etc/kismet/kismet_filter.conf \
+#    ./conf/kismet_manuf.txt.gz=/usr/share/kismet/kismet_manuf.txt.gz \
+#    ./conf/kismet_bluetooth_ids.txt.gz=/usr/share/kismet/kismet_bluetooth_ids.txt.gz \
+#    ./conf/kismet_bluetooth_manuf.txt.gz=/usr/share/kismet/kismet_bluetooth_manuf.txt.gz \
+#    ./kismet=/usr/bin/kismet \
+#    ./kismet_cap_pcapfile=/usr/bin/kismet_cap_pcapfile \
+#    ./kismet_cap_kismetdb=/usr/bin/kismet_cap_kismetdb \
+#    ./packaging/kismet.pc=/usr/share/pkgconfig/kismet.pc \
+#    ./packaging/systemd/kismet.service=/lib/systemd/system/kismet.service \
+#    ./http_data/=/usr/share/kismet/httpd &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --description "Kismet core" \
