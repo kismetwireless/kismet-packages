@@ -1,6 +1,11 @@
 #!/bin/bash
 
-BASE_DIR=${BASE_DIR:-'.'}
+if test $# -ne 1; then
+    echo "Expected [basedir]"
+    exit
+fi
+
+BASE_DIR=$1
 
 for dist in kali bionic buster bullseye focal disco xenial hirsute impish; do
 	( 

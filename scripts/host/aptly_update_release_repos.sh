@@ -1,15 +1,15 @@
 #!/bin/bash 
 
-if test $# -ne 1; then
-    echo "Expected [version]"
+if test $# -ne 2; then
+    echo "Expected [basedir] [version]"
     exit
 fi
 
-BASE_DIR=${BASE_DIR:-'.'}
+BASE_DIR=$1
 
 export gpg_tty=$(tty)
 
-RELEASEMATCH=$1
+RELEASEMATCH=$2
 
 for dist in kali bionic buster bullseye disco focal hirsute impish kali xenial; do
     ( 
