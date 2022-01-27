@@ -33,3 +33,4 @@ RUN apt-get update && apt-get install -y \
 	rubygems && \
 	gem install --no-document fpm
 
+RUN ln -s /usr/bin/strip /usr/bin/i386-linux-gnu-strip
