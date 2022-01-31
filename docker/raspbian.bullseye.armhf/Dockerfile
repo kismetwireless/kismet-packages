@@ -16,6 +16,9 @@ ENV ABI arm-linux-gnueabihf
 ENV KEYSRC http://raspbian.raspberrypi.org/raspbian/pool/main/r/raspbian-archive-keyring/
 ENV KEYFILE raspbian-archive-keyring_20120528.2_all.deb
 
+ENV XTOOL https://sourceforge.net/projects/raspberry-pi-cross-compilers/files/Raspberry%20Pi%20GCC%20Cross-Compiler%20Toolchains/Bullseye/GCC%2010.2.0/Raspberry%20Pi%201%2C%20Zero
+ENV XTOOLTGZ cross-gcc-10.2.0-pi_0-1
+
 # Prep host
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
@@ -23,8 +26,6 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 RUN apt update && \
         apt install -y \
             debootstrap \
-            gcc-${ABI} \
-            g++-${ABI} \
             qemu-user-static \
             curl \
             ruby \
@@ -74,4 +75,11 @@ RUN curl -LO ${KEYSRC}{$KEYFILE} && \
                     libbtbb1 \
                 ' && \
         cd /sysroot/lib/${ABI} && find ./ -name '*.so*' -lname '/*' -exec sh -c 'export TARGET=$(basename $(readlink $0)); rm $0; ln -snf "$TARGET" "$(basename "$0")";' {} \; 
+
+# Get the armv6 toolchain
+RUN curl -LO "${XTOOL}/${XTOOLTGZ}.tar.gz" && \
+        tar xvf ${XTOOLTGZ}.tar.gz -C /opt && \
+        ln -s /sysroot/usr/lib/${ABI} /sysroot/usr/lib/${ABI}/10.2.0 && \
+        echo "/lib/${ABI}" > /etc/ld.so.conf.d/sysroot.conf && \
+        echo "/usr/lib/${ABI}" > /etc/ld.so.conf.d/sysroot.conf 
 
