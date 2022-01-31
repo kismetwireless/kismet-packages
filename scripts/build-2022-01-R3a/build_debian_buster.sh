@@ -11,21 +11,19 @@ if [ "${CHECKOUT}"x != "x" ]; then
 	git checkout ${CHECKOUT}
 fi
 
-
 ./configure \
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
-    --disable-python-tools \
     --disable-libwebsockets 
 
-
 if [ "${NCORES}" = "" ]; then 
-	NCORES=$(nproc)
+	NCORES=$(($(nproc) / 2))
 fi
 make -j${NCORES}
 
-/tmp/fpm/fpm_ubuntu_xenial.sh
+/tmp/fpm/fpm_debian_buster.sh
+/tmp/fpm/fpm_noarch_python3_deb.sh
 
 mv -v *.deb /dpkgs
 
