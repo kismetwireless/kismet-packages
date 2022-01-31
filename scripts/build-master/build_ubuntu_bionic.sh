@@ -20,7 +20,7 @@ fi
 
 
 if [ "${NCORES}" = "" ]; then 
-	NCORES=$(($(nproc) / 2))
+	NCORES=$(nproc)
 fi
 make -j${NCORES}
 

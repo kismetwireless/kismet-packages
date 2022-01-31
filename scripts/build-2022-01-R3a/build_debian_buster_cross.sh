@@ -31,8 +31,9 @@ export CXX=${ABI}-g++
     --disable-element-typesafety \
     --disable-libwebsockets
 
+
 if [ "${NCORES}" = "" ]; then 
-	NCORES=$(nproc)
+	NCORES=$(($(nproc) / 2))
 fi
 make -j${NCORES}
 

@@ -34,7 +34,7 @@ export CXX=${ABI}-g++
     --disable-libusb
 
 if [ "${NCORES}" = "" ]; then 
-	NCORES=$(($(nproc) / 2))
+	NCORES=$(nproc)
 fi
 make -j${NCORES}
 
