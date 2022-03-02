@@ -5,11 +5,11 @@ if test $# -ne 2; then
     exit
 fi
 
-BASE_DIR=$1
+export BASE_DIR=$1
 
 export gpg_tty=$(tty)
 
-RELEASEMATCH=$2
+export RELEASEMATCH=$2
 
 for dist in kali bionic buster bullseye disco focal hirsute impish kali xenial; do
     ( 
