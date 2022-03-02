@@ -11,9 +11,6 @@ if [ "${CHECKOUT}"x != "x" ]; then
 	git checkout ${CHECKOUT}
 fi
 
-# Kluge the path
-export PATH=$PATH:/opt/cross-pi-gcc-10.2.0-0/bin/
-
 export PKG_CONFIG_DIR=""
 export PKG_CONFIG_PATH="/sysroot/usr/lib/pkgconfig:/sysroot/usr/share/pkgconfig:/sysroot/usr/lib/${ABI}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR="/sysroot"
@@ -28,17 +25,18 @@ export CXX=${ABI}-g++
     CFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
     CPPFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
     CXXFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
-    LDFLAGS="--sysroot=/sysroot" \
+    LDFLAGS="-L/sysroot/usr/lib/${ABI} --sysroot=/sysroot" \
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety 
+
 
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(nproc)
 fi
 make -j${NCORES}
 
-/tmp/fpm/fpm_debian_bullseye.sh
+/tmp/fpm/fpm_ubuntu_focal.sh
 /tmp/fpm/fpm_noarch_python3_deb.sh
 
 mv -v *.deb /dpkgs

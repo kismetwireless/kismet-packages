@@ -11,6 +11,9 @@ if [ "${CHECKOUT}"x != "x" ]; then
 	git checkout ${CHECKOUT}
 fi
 
+# Kluge the path
+export PATH=$PATH:/opt/cross-pi-gcc-8.3.0-0/bin/
+
 export PKG_CONFIG_DIR=""
 export PKG_CONFIG_PATH="/sysroot/usr/lib/pkgconfig:/sysroot/usr/share/pkgconfig:/sysroot/usr/lib/${ABI}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR="/sysroot"
@@ -32,7 +35,7 @@ export CXX=${ABI}-g++
     --disable-libwebsockets
 
 if [ "${NCORES}" = "" ]; then 
-	NCORES=$(($(nproc) / 2))
+	NCORES=$(nproc)
 fi
 make -j${NCORES}
 
