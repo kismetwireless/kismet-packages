@@ -11,7 +11,7 @@ define Package/kismet-capture-nrf-52840
   CATEGORY:=Network
   TITLE:=Kismet NRF52840 Bluetooth Source
   URL:=https://www.kismetwireless.net
-  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 +libwebsockets-full
+  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 
   SUBMENU:=kismet
 endef
 

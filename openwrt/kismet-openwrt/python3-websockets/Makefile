@@ -12,7 +12,6 @@ PKG_HASH:=5c65d2da8c6bce0fca2528f69f44b2f977e06954c8512a952222cea50dad430f
 PKG_BUILD_DIR:=$(BUILD_DIR)/websockets-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/python3-websockets

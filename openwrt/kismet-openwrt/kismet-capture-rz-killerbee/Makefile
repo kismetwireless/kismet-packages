@@ -11,7 +11,7 @@ define Package/kismet-capture-rz-killerbee
   CATEGORY:=Network
   TITLE:=Kismet Killerbee Capture Support
   URL:=https://www.kismetwireless.net
-  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 +libwebsockets-full
+  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 
   SUBMENU:=kismet
 endef
 

@@ -11,7 +11,7 @@ define Package/kismet-capture-nrf-51822
   CATEGORY:=Network
   TITLE:=Kismet NRF51822 BTLE
   URL:=https://www.kismetwireless.net
-  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 +libwebsockets-full
+  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 
   SUBMENU:=kismet
 endef
 

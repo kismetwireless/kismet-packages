@@ -12,7 +12,6 @@ PKG_HASH:=6a82e0c8bb2bf58f606040cc5814e07715b2094caeba281e2e7d0b0e2e397db5
 PKG_BUILD_DIR:=$(BUILD_DIR)/protobuf-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/python3-protobuf
@@ -34,4 +33,4 @@ endef
 
 $(eval $(call Py3Package,python3-protobuf))
 $(eval $(call BuildPackage,python3-protobuf))
-$(eval $(call BuildPackage,python3-protobuf-src))
+#$(eval $(call BuildPackage,python3-protobuf-src))

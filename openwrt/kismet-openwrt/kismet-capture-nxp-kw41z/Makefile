@@ -11,7 +11,7 @@ define Package/kismet-capture-nxp-kw41z
   CATEGORY:=Network
   TITLE:=Kismet NXPKW41Z Capture Support
   URL:=https://www.kismetwireless.net
-  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 +libwebsockets-full
+  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 
   SUBMENU:=kismet
 endef
 

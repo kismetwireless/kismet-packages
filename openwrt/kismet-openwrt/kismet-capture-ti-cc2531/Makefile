@@ -11,7 +11,7 @@ define Package/kismet-capture-ti-cc2531
   CATEGORY:=Network
   TITLE:=Kismet TI CC2531 802.15.4 Capture Support
   URL:=https://www.kismetwireless.net
-  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 +libwebsockets-full
+  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 
   SUBMENU:=kismet
 endef
 
