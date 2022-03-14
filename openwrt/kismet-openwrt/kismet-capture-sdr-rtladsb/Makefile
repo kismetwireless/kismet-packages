@@ -7,7 +7,6 @@ PKG_NAME:=kismet-capture-sdr-rtladsb
 include ../kismet.mk
 
 include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 KISMET_MODULE:=KismetCaptureRtladsb

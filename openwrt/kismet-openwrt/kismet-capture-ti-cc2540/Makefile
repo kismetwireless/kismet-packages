@@ -11,7 +11,7 @@ define Package/kismet-capture-ti-cc2540
   CATEGORY:=Network
   TITLE:=Kismet TI CC2540 BTLE Capture Support
   URL:=https://www.kismetwireless.net
-  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 +libwebsockets-full
+  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 
   SUBMENU:=kismet
 endef
 

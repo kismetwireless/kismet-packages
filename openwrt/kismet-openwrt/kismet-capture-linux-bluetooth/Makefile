@@ -11,7 +11,7 @@ define Package/kismet-capture-linux-bluetooth
   CATEGORY:=Network
   TITLE:=Kismet HCI Bluetooth Support
   URL:=https://www.kismetwireless.net
-  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libwebsockets-full
+  DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c
   SUBMENU:=kismet
 endef
 
