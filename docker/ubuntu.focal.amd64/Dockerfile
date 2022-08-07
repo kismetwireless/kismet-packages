@@ -38,7 +38,8 @@ RUN apt-get update && apt-get install -y \
     libubertooth-dev \
     libbtbb-dev \
     libubertooth1 \
-    libbtbb1 \
+    libtbb2 \
+    libtbb-dev \
 	ruby \
 	ruby-dev \
 	rubygems && \
