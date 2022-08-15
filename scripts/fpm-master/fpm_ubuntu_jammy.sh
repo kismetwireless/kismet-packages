@@ -180,6 +180,33 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \
     --depends libwebsockets16 \
     ./capture_ubertooth_one/kismet_cap_ubertooth_one=/usr/bin/kismet_cap_ubertooth_one &
 
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-hak5-wifi-coconut -v ${PACKAGE} \
+    --description "Kismet Hak5 WiFi Coconut capture helper" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --post-install /tmp/fpm/debian/kismet_cap_hak5_wifi_coconut.postinst \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libusb-1.0-0 \
+    --depends libwebsockets16 \
+    ./capture_hak5_wifi_coconut/libwifiuserspace/firmware/LICENSE-ralink-mediatek.txt=/usr/share/kismet/firmware/LICENSE-ralink-mediatek.txt \
+    ./capture_hak5_wifi_coconut/libwifiuserspace/firmware/rt2870.bin=/usr/share/kismet/firmware/rt2870.bin \
+    ./capture_hak5_wifi_coconut/kismet_cap_hak5_wifi_coconut=/usr/bin/kismet_cap_hak5_wifi_coconut &
+
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-bladerf-wiphy -v ${PACKAGE} \
+    --description "Kismet BladeRF WiPhy capture helper" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --post-install /tmp/fpm/debian/kismet_cap_bladerf_wiphy.postinst \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libusb-1.0-0 \
+    --depends libwebsockets16 \
+    --depends libbladerf2 \
+    ./capture_bladerf_wiphy/kismet_cap_bladerf_wiphy=/usr/bin/kismet_cap_bladerf_wiphy &
+
 fpm -t deb -a ${ARCH} -s dir -n kismet-logtools -v ${PACKAGE} \
 	--description "Kismet kismetdb log tools (kismetdb)" \
 	--depends libpcap0.8 \
@@ -215,6 +242,8 @@ fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
     --depends kismet-capture-nrf-52840 \
     --depends kismet-capture-rz-killerbee \
     --depends kismet-capture_nxp_kw41z \
+    --depends kismet-capture-bladerf-wiphy \
+    --depends kismet-capture-hak5-wifi-coconut \
     --depends kismet-logtools &
 
 wait

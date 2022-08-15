@@ -14,7 +14,9 @@ fi
 ./configure \
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
-    --disable-element-typesafety 
+    --disable-element-typesafety \
+    --enable-bladerf \
+    --enable-wifi-coconut
 
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(nproc)

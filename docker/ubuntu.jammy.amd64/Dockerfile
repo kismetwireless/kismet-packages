@@ -39,6 +39,8 @@ RUN apt-get update && apt-get install -y \
     libbtbb-dev \
     libubertooth1 \
     libbtbb1 \
+    libbladerf2 \
+    libbladerf-dev \
 	ruby \
 	ruby-dev \
 	rubygems && \

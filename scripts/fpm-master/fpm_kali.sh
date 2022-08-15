@@ -71,7 +71,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-linux-wifi -v ${PACKAGE} \
     --depends libpcap0.8 \
     --depends libnm0 \
     --depends libprotobuf-c1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets17 \
     ./capture_linux_wifi/kismet_cap_linux_wifi=/usr/bin/kismet_cap_linux_wifi &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-linux-bluetooth -v ${PACKAGE} \
@@ -83,7 +83,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-linux-bluetooth -v ${PACKAGE} \
     --depends libcap2 \
     --depends libnm0 \
     --depends libprotobuf-c1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets17 \
     ./capture_linux_bluetooth/kismet_cap_linux_bluetooth=/usr/bin/kismet_cap_linux_bluetooth &
     
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-mousejack -v ${PACKAGE} \
@@ -95,7 +95,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-mousejack -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
-    --depends libwebsockets16 \
+    --depends libwebsockets17 \
     ./capture_nrf_mousejack/kismet_cap_nrf_mousejack=/usr/bin/kismet_cap_nrf_mousejack &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2540 -v ${PACKAGE} \
@@ -107,7 +107,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2540 -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
-    --depends libwebsockets16 \
+    --depends libwebsockets17 \
     ./packaging/udev/99-kismet-ticc2540.rules=/etc/udev/rules.d/99-kismet-ticc2540.rules \
     ./capture_ti_cc_2540/kismet_cap_ti_cc_2540=/usr/bin/kismet_cap_ti_cc_2540 &
 
@@ -120,7 +120,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2531 -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
-    --depends libwebsockets16 \
+    --depends libwebsockets17 \
     ./packaging/udev/99-kismet-ticc2531.rules=/etc/udev/rules.d/99-kismet-ticc2531.rules \
     ./capture_ti_cc_2531/kismet_cap_ti_cc_2531=/usr/bin/kismet_cap_ti_cc_2531 &
 
@@ -133,7 +133,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-rz-killerbee -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
-    --depends libwebsockets16 \
+    --depends libwebsockets17 \
     ./capture_rz_killerbee/kismet_cap_rz_killerbee=/usr/bin/kismet_cap_rz_killerbee &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-51822 -v ${PACKAGE} \
@@ -143,7 +143,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-51822 -v ${PACKAGE} \
     --depends libcap2-bin \
     --depends libcap2 \
     --depends libprotobuf-c1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets17 \
     ./capture_nrf_51822/kismet_cap_nrf_51822=/usr/bin/kismet_cap_nrf_51822 &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
@@ -153,7 +153,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
     --depends libcap2-bin \
     --depends libcap2 \
     --depends libprotobuf-c1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets17 \
     ./capture_nrf_52840/kismet_cap_nrf_52840=/usr/bin/kismet_cap_nrf_52840 &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
@@ -163,7 +163,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
     --depends libcap2-bin \
     --depends libcap2 \
     --depends libprotobuf-c1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets17 \
     ./capture_nxp_kw41z/kismet_cap_nxp_kw41z=/usr/bin/kismet_cap_nxp_kw41z &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \
@@ -177,7 +177,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \
     --depends libusb-1.0-0 \
     --depends libubertooth1 \
     --depends libbtbb1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets17 \
     ./capture_ubertooth_one/kismet_cap_ubertooth_one=/usr/bin/kismet_cap_ubertooth_one &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-logtools -v ${PACKAGE} \
@@ -192,6 +192,33 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-logtools -v ${PACKAGE} \
     ./log_tools/kismetdb_clean=/usr/bin/kismetdb_clean \
     ./log_tools/kismetdb_to_kml=/usr/bin/kismetdb_to_kml \
     ./log_tools/kismetdb_to_pcap=/usr/bin/kismetdb_to_pcap &
+
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-hak5-wifi-coconut -v ${PACKAGE} \
+    --description "Kismet Hak5 WiFi Coconut capture helper" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --post-install /tmp/fpm/debian/kismet_cap_hak5_wifi_coconut.postinst \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libusb-1.0-0 \
+    --depends libwebsockets17 \
+    ./capture_hak5_wifi_coconut/libwifiuserspace/firmware/LICENSE-ralink-mediatek.txt=/usr/share/kismet/firmware/LICENSE-ralink-mediatek.txt \
+    ./capture_hak5_wifi_coconut/libwifiuserspace/firmware/rt2870.bin=/usr/share/kismet/firmware/rt2870.bin \
+    ./capture_hak5_wifi_coconut/kismet_cap_hak5_wifi_coconut=/usr/bin/kismet_cap_hak5_wifi_coconut &
+
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-bladerf-wiphy -v ${PACKAGE} \
+    --description "Kismet BladeRF WiPhy capture helper" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --post-install /tmp/fpm/debian/kismet_cap_bladerf_wiphy.postinst \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libusb-1.0-0 \
+    --depends libwebsockets17 \
+    --depends libbladerf2 \
+    ./capture_bladerf_wiphy/kismet_cap_bladerf_wiphy=/usr/bin/kismet_cap_bladerf_wiphy &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-adsb-icao-data -v ${PACKAGE} \
     --description "Kismet ADSB ICAO data" \
@@ -216,6 +243,8 @@ fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
     --depends kismet-capture-nxp-kw41z \
     --depends kismet-capture-nrf-52840 \
     --depends kismet-capture-rz-killerbee \
+    --depends kismet-capture-hak5-wifi-coconut \
+    --depends kismet-capture-bladerf-wiphy \
     --depends kismet-logtools &
 
 wait

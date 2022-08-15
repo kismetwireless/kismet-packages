@@ -14,7 +14,9 @@ fi
 ./configure \
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
-    --disable-element-typesafety 
+    --disable-element-typesafety \
+    --enable-bladerf \
+    --enable-hak5-coconut
 
 
 if [ "${NCORES}" = "" ]; then 
