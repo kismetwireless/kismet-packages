@@ -64,6 +64,8 @@ RUN curl "https://gitlab.com/kalilinux/packages/debootstrap/raw/kali/master/scri
                     libusb-1.0-0-dev \
                     libubertooth-dev \
                     libbtbb-dev \
+                    libbladerf2 \
+                    libbladerf-dev \
                 " && \
         cd /sysroot/lib/${ABI} && find ./ -name '*.so*' -lname '/*' -exec sh -c 'export TARGET=$(basename $(readlink $0)); rm $0; ln -snf "$TARGET" "$(basename "$0")";' {} \; 
 

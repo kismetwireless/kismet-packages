@@ -41,6 +41,8 @@ RUN apt-get update && apt-get install -y \
 	libusb-1.0-0-dev \
     libubertooth-dev \
     libbtbb-dev \
+    libbladerf2 \
+    libbladerf-dev \
 	ruby \
 	ruby-dev \
 	rubygems && \

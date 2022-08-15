@@ -167,6 +167,20 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-logtools -v ${PACKAGE} \
     ./log_tools/kismetdb_to_kml=/usr/bin/kismetdb_to_kml \
     ./log_tools/kismetdb_to_pcap=/usr/bin/kismetdb_to_pcap &
 
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-hak5-wifi-coconut -v ${PACKAGE} \
+    --description "Kismet Hak5 WiFi Coconut capture helper" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --post-install /tmp/fpm/debian/kismet_cap_hak5_wifi_coconut.postinst \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libusb-1.0-0 \
+    --depends libwebsockets15 \
+    ./capture_hak5_wifi_coconut/libwifiuserspace/firmware/LICENSE-ralink-mediatek.txt=/usr/share/kismet/firmware/LICENSE-ralink-mediatek.txt \
+    ./capture_hak5_wifi_coconut/libwifiuserspace/firmware/rt2870.bin=/usr/share/kismet/firmware/rt2870.bin \
+    ./capture_hak5_wifi_coconut/kismet_cap_hak5_wifi_coconut=/usr/bin/kismet_cap_hak5_wifi_coconut &
+
 fpm -t deb -a ${ARCH} -s dir -n kismet-adsb-icao-data -v ${PACKAGE} \
     --description "Kismet ADSB ICAO data" \
     ./conf/kismet_adsb_icao.txt.gz=/usr/share/kismet/kismet_adsb_icao.txt.gz &
@@ -187,6 +201,7 @@ fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
     --depends kismet-capture-ubertooth-one \
     --depends kismet-capture-nrf-51822 \
     --depends kismet-capture_nxp_kw41z \
+    --depends kismet-capture-hak5-wifi-coconut \
     --depends kismet-logtools &
 
 wait
