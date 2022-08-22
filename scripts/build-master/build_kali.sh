@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh 
 
 cd /build
 
@@ -27,4 +27,17 @@ make -j${NCORES}
 /tmp/fpm/fpm_noarch_python3_deb.sh
 
 mv -v *.deb /dpkgs
+
+# Build wifi coconut 
+
+cd /build 
+git clone https://github.com/hak5/hak5-wifi-coconut
+cd hak5-wifi-coconut 
+mkdir build 
+cd build 
+cmake ../ -DCMAKE_INSTALL_PREFIX=/usr
+make -j${NCORES} 
+/tmp/fpm/fpm_kali_coconut.sh
+mv -v *.deb /dpkgs
+
 
