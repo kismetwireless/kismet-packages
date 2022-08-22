@@ -11,6 +11,7 @@ ENV ABI x86_64-linux-gnu
 RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
+    cmake \
 	git \
     libwebsockets-dev \
 	pkg-config \

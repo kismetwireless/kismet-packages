@@ -43,6 +43,7 @@ RUN apt-get update && apt-get install -y \
     libbtbb-dev \
     libbladerf2 \
     libbladerf-dev \
+    cmake \
 	ruby \
 	ruby-dev \
 	rubygems && \

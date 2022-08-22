@@ -33,6 +33,7 @@ RUN apt update && \
             python3-pip \
             pkg-config \
             make \
+            cmake \
             protobuf-c-compiler \
         && \
         gem install --no-document fpm 

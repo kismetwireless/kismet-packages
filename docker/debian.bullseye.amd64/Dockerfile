@@ -13,9 +13,9 @@ RUN apt-get update && \
 	    sudo \
 	    build-essential \
 	    git \
+        cmake \
 	    libwebsockets-dev \
 	    pkg-config \
-	    libglib
 	    zlib1g-dev \
 	    libnl-3-dev \
 	    libnl-genl-3-dev \

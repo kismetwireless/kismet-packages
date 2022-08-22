@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
 	git \
+    cmake \
     libwebsockets-dev \
 	pkg-config \
 	zlib1g-dev \

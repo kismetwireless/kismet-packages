@@ -29,3 +29,15 @@ make -j${NCORES}
 
 mv -v *.deb /dpkgs
 
+# Build wifi coconut 
+
+cd /build 
+git clone https://github.com/hak5/hak5-wifi-coconut
+cd hak5-wifi-coconut 
+mkdir build 
+cd build 
+cmake ../ -DCMAKE_INSTALL_PREFIX=/usr
+make -j${NCORES} 
+/tmp/fpm/fpm_ubuntu_jammy_coconut.sh
+mv -v *.deb /dpkgs
+
