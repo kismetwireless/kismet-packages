@@ -1,0 +1,26 @@
+version: '2'
+
+volumes:
+  kismet_debian_bookworm_arm64_sysroot:
+    external: true
+
+services:
+  kismet-build:
+    build: .
+
+    environment:
+      - CHECKOUT=HEAD
+      - VERSION
+      - ARCH=arm64
+      - ABI=aarch64-linux-gnu
+
+    command: /scripts/launch/debian_bookworm_cross.sh
+
+    tmpfs: 
+            - /build:exec,mode=777
+
+    volumes:
+      - ${BASE_DIR}/dpkgs-bookworm:/dpkgs
+      - ${BASE_DIR}/scripts:/scripts:ro
+      - ${SRC_DIR}:/kismet:ro
+      - kismet_debian_bookworm_arm64_sysroot:/sysroot:ro
