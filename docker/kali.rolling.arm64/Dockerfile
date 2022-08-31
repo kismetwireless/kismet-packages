@@ -7,7 +7,7 @@ ENV CHECKOUT HEAD NCORES
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERMINAL linux
 
-ENV DISTRO impish
+ENV DISTRO kali
 
 ENV ARCH arm64
 ENV ABI aarch64-linux-gnu

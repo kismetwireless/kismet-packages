@@ -7,7 +7,7 @@ fi
 
 BASE_DIR=$1
 
-for dist in kali bionic buster bullseye focal disco xenial jammy; do
+for dist in kali bionic buster bullseye bookworm focal disco xenial jammy; do
 	( 
     	cd ${BASE_DIR}
         echo "Working on ${dist}"
@@ -23,6 +23,9 @@ for dist in kali bionic buster bullseye focal disco xenial jammy; do
 
         aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
             repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*python3-bluepy*.deb
+
+        aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
+            repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*hak5-wifi-coconut*.deb
 
         aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
             -batch \
