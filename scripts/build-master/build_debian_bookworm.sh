@@ -22,7 +22,7 @@ fi
 make -j${NCORES}
 
 /tmp/fpm/fpm_debian_bookworm.sh
-/tmp/fpm/fpm_noarch_python3_deb.sh
+/tmp/fpm/fpm_debian_bookworm_python3_deb.sh
 
 mv -v *.deb /dpkgs
 

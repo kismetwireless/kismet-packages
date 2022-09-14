@@ -30,7 +30,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --deb-recommends kismet-capture-rz-killerbee \
     --deb-recommends kismet-capture-nxp-kw41z \
     --deb-recommends kismet-logtools \
-    --deb-recommends kismet-adsb-icao-data \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
     --depends zlib1g \
@@ -40,6 +39,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --depends libprotobuf23 \
     --depends libprotobuf-c1 \
     --depends libsensors5 \
+    --depends libssl3 \
     ./conf/kismet.conf=/etc/kismet/kismet.conf \
     ./conf/kismet_alerts.conf=/etc/kismet/kismet_alerts.conf \
     ./conf/kismet_httpd.conf=/etc/kismet/kismet_httpd.conf \
@@ -52,6 +52,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     ./conf/kismet_manuf.txt.gz=/usr/share/kismet/kismet_manuf.txt.gz \
     ./conf/kismet_bluetooth_ids.txt.gz=/usr/share/kismet/kismet_bluetooth_ids.txt.gz \
     ./conf/kismet_bluetooth_manuf.txt.gz=/usr/share/kismet/kismet_bluetooth_manuf.txt.gz \
+    ./conf/kismet_adsb_icao.txt.gz=/usr/share/kismet/kismet_adsb_icao.txt.gz \
     ./kismet_stripped=/usr/bin/kismet \
     ./kismet_cap_pcapfile=/usr/bin/kismet_cap_pcapfile \
     ./kismet_cap_kismetdb=/usr/bin/kismet_cap_kismetdb \
@@ -221,13 +222,11 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-bladerf-wiphy -v ${PACKAGE} \
     ./capture_bladerf_wiphy/kismet_cap_bladerf_wiphy=/usr/bin/kismet_cap_bladerf_wiphy &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-adsb-icao-data -v ${PACKAGE} \
-    --description "Kismet ADSB ICAO data" \
-    ./conf/kismet_adsb_icao.txt.gz=/usr/share/kismet/kismet_adsb_icao.txt.gz &
+    --description "Kismet ADSB ICAO data (deprecated)" &
 
 fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
     --description "Kismet metapackage" \
     --depends kismet-core \
-    --depends kismet-adsb-icao-data \
     --depends kismet-capture-linux-wifi \
     --depends kismet-capture-linux-wifi \
     --depends kismet-capture-linux-bluetooth \
