@@ -38,7 +38,7 @@ fi
 make -j${NCORES}
 
 /tmp/fpm/fpm_kali.sh
-/tmp/fpm/fpm_noarch_python3_deb.sh
+/tmp/fpm/fpm_kali_python3_deb.sh
 
 mv -v *.deb /dpkgs
 

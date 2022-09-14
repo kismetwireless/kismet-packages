@@ -25,7 +25,7 @@ fi
 make -j${NCORES}
 
 /tmp/fpm/fpm_ubuntu_jammy.sh
-/tmp/fpm/fpm_noarch_python3_deb.sh
+/tmp/fpm/fpm_ububtu_jammy_python3_deb.sh
 
 mv -v *.deb /dpkgs
 
