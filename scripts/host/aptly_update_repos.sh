@@ -7,7 +7,7 @@ fi
 
 BASE_DIR=$1
 
-for dist in kali bionic buster bullseye bookworm focal disco xenial jammy; do
+for dist in kali bionic buster bullseye bookworm focal disco xenial jammy kinetic; do
 	( 
     	cd ${BASE_DIR}
         echo "Working on ${dist}"
