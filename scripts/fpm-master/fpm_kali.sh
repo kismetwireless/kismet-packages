@@ -36,7 +36,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --depends libpcap0.8 \
     --depends libdw1 \
     --depends libsqlite3-0 \
-    --depends libprotobuf23 \
+    --depends libprotobuf32 \
     --depends libprotobuf-c1 \
     --depends libsensors5 \
     --depends libssl3 \
