@@ -1,6 +1,6 @@
 
 container:
-	@docker-compose build --no-cache
+	@docker-compose build --pull --no-cache
 
 kismet:
 	@docker-compose run --rm -e NCORES kismet-build

@@ -81,6 +81,29 @@ fpm -t deb -s python --python-bin python3 --python-pip pip3 -v ${PACKAGE} \
         /tmp/bluepy-1.3.0
 ) &
 
+# Generate a new version of python3-websockets because ubuntu ships a broken one for 
+# python 3.10
+( 
+    pip3 download \
+        --no-clean \
+        --no-deps \
+        --no-binary \
+        :all: \
+        -i https://pypi.python.org/simple \
+        -d /tmp \
+        websockets==10.4
+
+    tar xf /tmp/websockets-10.4.tar.gz --directory=/tmp
+
+    fpm -t deb -s python --python-bin python3 --python-pip pip3 -v 10.4 \
+        --depends python3 \
+        --python-package-name-prefix python3 \
+        --python-setup-py-arguments '--prefix=/usr' \
+        --python-install-lib /usr/lib/python3/dist-packages \
+        /tmp/websockets-10.4
+) &
+
+
 fpm -t deb -s python --python-bin python3 --python-pip pip3 -v ${PACKAGE} \
     --replaces python-kismetcapturebtgeiger \
     --depends python3 \
