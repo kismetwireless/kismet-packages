@@ -30,6 +30,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --deb-recommends kismet-capture-rz-killerbee \
     --deb-recommends kismet-capture-nxp-kw41z \
     --deb-recommends kismet-logtools \
+    --deb-recommends kismet-adsb-icao-data \
     --deb-templates /tmp/fpm/debian/kismet.templates \
     --deb-config /tmp/fpm/debian/kismet.config \
     --depends zlib1g \
@@ -49,11 +50,10 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     ./conf/kismet_uav.conf=/etc/kismet/kismet_uav.conf \
     ./conf/kismet_80211.conf=/etc/kismet/kismet_80211.conf \
     ./conf/kismet_filter.conf=/etc/kismet/kismet_filter.conf \
-    ./conf/kismet_wardrive.conf=/etc/kismet/kismet_wardrive.conf \
     ./conf/kismet_manuf.txt.gz=/usr/share/kismet/kismet_manuf.txt.gz \
+    ./conf/kismet_wardrive.conf=/etc/kismet/kismet_wardrive.conf \
     ./conf/kismet_bluetooth_ids.txt.gz=/usr/share/kismet/kismet_bluetooth_ids.txt.gz \
     ./conf/kismet_bluetooth_manuf.txt.gz=/usr/share/kismet/kismet_bluetooth_manuf.txt.gz \
-    ./conf/kismet_adsb_icao.txt.gz=/usr/share/kismet/kismet_adsb_icao.txt.gz \
     ./kismet_stripped=/usr/bin/kismet \
     ./kismet_cap_pcapfile=/usr/bin/kismet_cap_pcapfile \
     ./kismet_cap_kismetdb=/usr/bin/kismet_cap_kismetdb \
@@ -123,7 +123,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2531 -v ${PACKAGE} \
     --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
     --depends libwebsockets17 \
-    ./packaging/udev/99-kismet-ticc2531.rules=/etc/udev/rules.d/99-kismet-ticc2531.rules \
+    ./packaging/udev/99-kismet-ticc2531.rules=/etc/udev/rules.d/99-kismet-ticc2521.rules \
     ./capture_ti_cc_2531/kismet_cap_ti_cc_2531=/usr/bin/kismet_cap_ti_cc_2531 &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-rz-killerbee -v ${PACKAGE} \
@@ -182,19 +182,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \
     --depends libwebsockets17 \
     ./capture_ubertooth_one/kismet_cap_ubertooth_one=/usr/bin/kismet_cap_ubertooth_one &
 
-fpm -t deb -a ${ARCH} -s dir -n kismet-logtools -v ${PACKAGE} \
-	--description "Kismet kismetdb log tools (kismetdb)" \
-	--depends libpcap0.8 \
-	--depends libsqlite3-0 \
-	./log_tools/kismetdb_strip_packets=/usr/bin/kismetdb_strip_packets \
-	./log_tools/kismetdb_to_wiglecsv=/usr/bin/kismetdb_to_wiglecsv \
-	./log_tools/kismetdb_statistics=/usr/bin/kismetdb_statistics \
-	./log_tools/kismetdb_dump_devices=/usr/bin/kismetdb_dump_devices \
-    ./log_tools/kismetdb_to_gpx=/usr/bin/kismetdb_to_gpx \
-    ./log_tools/kismetdb_clean=/usr/bin/kismetdb_clean \
-    ./log_tools/kismetdb_to_kml=/usr/bin/kismetdb_to_kml \
-    ./log_tools/kismetdb_to_pcap=/usr/bin/kismetdb_to_pcap &
-
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-hak5-wifi-coconut -v ${PACKAGE} \
     --description "Kismet Hak5 WiFi Coconut capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
@@ -222,12 +209,27 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-bladerf-wiphy -v ${PACKAGE} \
     --depends libbladerf2 \
     ./capture_bladerf_wiphy/kismet_cap_bladerf_wiphy=/usr/bin/kismet_cap_bladerf_wiphy &
 
-fpm -t deb -a ${ARCH} -s empty -n kismet-adsb-icao-data -v ${PACKAGE} \
-    --description "Kismet ADSB ICAO data (deprecated)" &
+fpm -t deb -a ${ARCH} -s dir -n kismet-logtools -v ${PACKAGE} \
+	--description "Kismet kismetdb log tools (kismetdb)" \
+	--depends libpcap0.8 \
+	--depends libsqlite3-0 \
+	./log_tools/kismetdb_strip_packets=/usr/bin/kismetdb_strip_packets \
+	./log_tools/kismetdb_to_wiglecsv=/usr/bin/kismetdb_to_wiglecsv \
+	./log_tools/kismetdb_statistics=/usr/bin/kismetdb_statistics \
+	./log_tools/kismetdb_dump_devices=/usr/bin/kismetdb_dump_devices \
+    ./log_tools/kismetdb_to_gpx=/usr/bin/kismetdb_to_gpx \
+    ./log_tools/kismetdb_clean=/usr/bin/kismetdb_clean \
+    ./log_tools/kismetdb_to_kml=/usr/bin/kismetdb_to_kml \
+    ./log_tools/kismetdb_to_pcap=/usr/bin/kismetdb_to_pcap &
+
+fpm -t deb -a ${ARCH} -s dir -n kismet-adsb-icao-data -v ${PACKAGE} \
+    --description "Kismet ADSB ICAO data" \
+    ./conf/kismet_adsb_icao.txt.gz=/usr/share/kismet/kismet_adsb_icao.txt.gz &
 
 fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
     --description "Kismet metapackage" \
     --depends kismet-core \
+    --depends kismet-adsb-icao-data \
     --depends kismet-capture-linux-wifi \
     --depends kismet-capture-linux-wifi \
     --depends kismet-capture-linux-bluetooth \
@@ -236,15 +238,14 @@ fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
     --depends python3-kismetcapturertladsb \
     --depends python3-kismetcapturertlamr \
     --depends python3-kismetcapturefreaklabszigbee \
-    --depends kismet-capture-ti-cc-2540 \
     --depends kismet-capture-ti-cc-2531 \
     --depends kismet-capture-ubertooth-one \
     --depends kismet-capture-nrf-51822 \
-    --depends kismet-capture-nxp-kw41z \
     --depends kismet-capture-nrf-52840 \
     --depends kismet-capture-rz-killerbee \
-    --depends kismet-capture-hak5-wifi-coconut \
+    --depends kismet-capture_nxp_kw41z \
     --depends kismet-capture-bladerf-wiphy \
+    --depends kismet-capture-hak5-wifi-coconut \
     --depends kismet-logtools &
 
 wait

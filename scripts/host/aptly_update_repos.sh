@@ -25,7 +25,7 @@ for dist in kali bionic buster bullseye bookworm focal disco xenial jammy kineti
             repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*python3-bluepy*.deb
 
         aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
-            repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*python3-websockets*.deb
+            repo add ${dist} ${BASE_DIR}/dpkgs-${dist}-static/*python3-websockets*.deb
 
         aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
             repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*hak5-wifi-coconut*.deb

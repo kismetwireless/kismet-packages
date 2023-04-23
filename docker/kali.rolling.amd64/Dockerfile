@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
 	libnl-genl-3-dev \
 	libcap-dev \
 	libpcap-dev \
+    libpcre2-dev \
 	libncurses5-dev \
 	libnm-dev \
 	libdw-dev \
