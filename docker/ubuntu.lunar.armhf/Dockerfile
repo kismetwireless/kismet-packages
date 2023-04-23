@@ -1,4 +1,4 @@
-FROM ubuntu:kinetic
+FROM ubuntu:lunar
 
 # Derive from kali to get the matching gcc attributes
 
@@ -7,7 +7,7 @@ ENV CHECKOUT HEAD NCORES
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERMINAL linux
 
-ENV DISTRO kinetic
+ENV DISTRO lunar
 
 ENV ARCH armhf
 ENV ABI arm-linux-gnueabihf

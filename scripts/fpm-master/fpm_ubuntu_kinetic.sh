@@ -41,6 +41,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --depends libprotobuf-c1 \
     --depends libsensors5 \
     --depends libssl3 \
+    --depends libpcre2-8-0 \
     ./conf/kismet.conf=/etc/kismet/kismet.conf \
     ./conf/kismet_alerts.conf=/etc/kismet/kismet_alerts.conf \
     ./conf/kismet_httpd.conf=/etc/kismet/kismet_httpd.conf \

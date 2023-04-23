@@ -1,22 +1,18 @@
-FROM ubuntu:kinetic
+FROM arm64v8/ubuntu:lunar
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERMINAL linux
 
 ENV CHECKOUT HEAD NCORES
 
-ENV ARCH amd64
-ENV ABI x86_64-linux-gnu
+ENV ARCH arm64
+ENV ABI aarch64-linux-gnu
 
 RUN apt-get update && apt-get install -y \
-	sudo \
-	build-essential \
-    cmake \
-	git \
+    libc6-dev \
     libwebsockets-dev \
 	pkg-config \
 	zlib1g-dev \
-    libglib2.0-dev \
 	libnl-3-dev \
 	libnl-genl-3-dev \
 	libcap-dev \
@@ -29,11 +25,6 @@ RUN apt-get update && apt-get install -y \
 	protobuf-compiler \
 	protobuf-c-compiler \
 	libsensors4-dev \
-	python3 \
-	python3-setuptools \
-	python3-protobuf \
-	python3-pip \
-    python3-simplejson \
 	librtlsdr0 \
 	libusb-1.0-0-dev \
     libubertooth-dev \
@@ -42,9 +33,5 @@ RUN apt-get update && apt-get install -y \
     libbtbb1 \
     libbladerf2 \
     libbladerf-dev \
-    libpcre2-dev \
-	ruby \
-	ruby-dev \
-	rubygems && \
-	gem install --no-document fpm
+    libpcre2-dev
 
