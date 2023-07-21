@@ -39,6 +39,7 @@ RUN apt update && \
             make \
             protobuf-c-compiler \
             protobuf-compiler \
+            cmake \
         && \
         gem install --no-document fpm 
 
@@ -69,12 +70,14 @@ RUN curl -LO ${KEYSRC}{$KEYFILE} && \
                     libsensors4-dev \
                     librtlsdr0 \
                     libusb-1.0-0-dev \
+                    libudev-dev \
                     libubertooth-dev \
                     libbtbb-dev \
                     libubertooth1 \
                     libbtbb1 \
                 ' && \
-        cd /sysroot/lib/${ABI} && find ./ -name '*.so*' -lname '/*' -exec sh -c 'export TARGET=$(basename $(readlink $0)); rm $0; ln -snf "$TARGET" "$(basename "$0")";' {} \; 
+        cd /sysroot/lib/${ABI} && find ./ -name '*.so*' -lname '/*' -exec sh -c 'export TARGET=$(basename $(readlink $0)); rm $0; ln -snf "$TARGET" "$(basename "$0")";' {} \; && \
+        cd /sysroot/usr/lib/${ABI} && find ./ -name '*.so*' -lname '/*' -exec sh -c 'export TARGET=$(basename $(readlink $0)); rm $0; ln -snf "$TARGET" "$(basename "$0")";' {} \;
 
 # Get the armv6 toolchain
 RUN curl -LO "${XTOOL}/${XTOOLTGZ}.tar.gz" && \

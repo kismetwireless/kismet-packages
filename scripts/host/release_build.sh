@@ -24,11 +24,16 @@ if [ ! -d scripts/fpm-${VERSION} ]; then
 fi
 
 for d in ${BASE_DIR}/docker/*; do
-	echo $d
+    echo
+    echo
+	echo BUILDING $d
+    echo
+    echo
+
 	pushd $d
     make kismet-release
 	popd
 done
 
-${BASE_DIR}/scripts/host/aptly_update_release_repos.sh "${BASEDIR}" "${VERSION}"
+${BASE_DIR}/scripts/host/aptly_update_release_repos.sh "${BASE_DIR}" "${VERSION}"
 

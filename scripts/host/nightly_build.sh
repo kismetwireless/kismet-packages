@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash 
 
 if test $# -ne 2; then
     echo "Expected [base] [src]"

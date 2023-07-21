@@ -20,15 +20,15 @@ RUN apt-get update && apt-get install -y \
 	libnm-dev \
 	libdw-dev \
 	libsqlite3-dev \
+    libprotobuf32 \
 	libprotobuf-dev \
 	libprotobuf-c-dev \
 	protobuf-compiler \
 	protobuf-c-compiler \
 	libsensors4-dev \
 	librtlsdr0 \
-	libusb-1.0-0-dev 
-
-    #libubertooth-dev \
-    #libbtbb-dev \
-    #libubertooth1 \
-    #libbtbb1 
+	libusb-1.0-0-dev  \
+    libubertooth-dev \
+    libbtbb-dev \
+    libubertooth1 \
+    libbtbb1 

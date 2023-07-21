@@ -33,6 +33,7 @@ RUN apt update && \
             python3-pip \
             pkg-config \
             make \
+            protobuf-compiler \
             protobuf-c-compiler \
         && \
         gem install --no-document fpm 
@@ -54,6 +55,7 @@ RUN curl "https://gitlab.com/kalilinux/packages/debootstrap/raw/kali/master/scri
                     libnm-dev \
                     libdw-dev \
                     libsqlite3-dev \
+                    libprotobuf32 \
                     libprotobuf-dev \
                     libprotobuf-c-dev \
                     libsensors4-dev \
@@ -67,9 +69,9 @@ RUN curl "https://gitlab.com/kalilinux/packages/debootstrap/raw/kali/master/scri
                     " && \
         cd /sysroot/lib/${ABI} && find ./ -name '*.so*' -lname '/*' -exec sh -c 'export TARGET=$(basename $(readlink $0)); rm $0; ln -snf "$TARGET" "$(basename "$0")";' {} \; 
 
-RUN cd /tmp && \
-        curl -LO ${PB}/v${PBV}/protoc-${PBV}-linux-x86_64.zip && \
-        cd /usr/ && \
-        unzip /tmp/protoc-${PBV}-linux-x86_64.zip
+# RUN cd /tmp && \
+#         curl -LO ${PB}/v${PBV}/protoc-${PBV}-linux-x86_64.zip && \
+#         cd /usr/ && \
+#         unzip /tmp/protoc-${PBV}-linux-x86_64.zip
 	
 

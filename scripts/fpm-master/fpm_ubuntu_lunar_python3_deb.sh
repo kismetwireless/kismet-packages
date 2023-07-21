@@ -8,7 +8,7 @@ else
     PACKAGE="${VERSION}"
 fi
 
-fpm -t deb -s python --python-bin python3 --python-pip pip3 -v ${PACKAGE} \
+fpm -t deb -s python --python-bin python3 --python-pip pip3 --python-install-bin /usr/bin/ -v ${PACKAGE} \
     --replaces python-kismetcapturertl433 \
     --depends python3 \
     --depends python3-protobuf \
@@ -21,7 +21,7 @@ fpm -t deb -s python --python-bin python3 --python-pip pip3 -v ${PACKAGE} \
     --python-install-lib /usr/lib/python3/dist-packages \
     ./capture_sdr_rtl433 &
  
-fpm -t deb -s python --python-bin python3 --python-pip pip3 -v ${PACKAGE} \
+fpm -t deb -s python --python-bin python3 --python-pip pip3 --python-install-bin /usr/bin/ -v ${PACKAGE} \
     --replaces python-kismetcapturertlamr \
     --depends python3 \
     --depends python3-protobuf \
@@ -33,7 +33,7 @@ fpm -t deb -s python --python-bin python3 --python-pip pip3 -v ${PACKAGE} \
     --python-install-lib /usr/lib/python3/dist-packages \
     ./capture_sdr_rtlamr &
 
-fpm -t deb -s python --python-bin python3 --python-pip pip3 -v ${PACKAGE} \
+fpm -t deb -s python --python-bin python3 --python-pip pip3 --python-install-bin /usr/bin/ -v ${PACKAGE} \
     --replaces python-kismetcapturertladsb \
     --depends python3 \
     --depends python3-protobuf \
@@ -46,7 +46,7 @@ fpm -t deb -s python --python-bin python3 --python-pip pip3 -v ${PACKAGE} \
     --python-install-lib /usr/lib/python3/dist-packages \
     ./capture_sdr_rtladsb &
 
-fpm -t deb -s python --python-bin python3 --python-pip pip3 -v ${PACKAGE} \
+fpm -t deb -s python --python-bin python3 --python-pip pip3 --python-install-bin /usr/bin/ -v ${PACKAGE} \
     --replaces python-kismetcapturefreaklabszigbee \
     --depends python3 \
     --depends python3-protobuf \
