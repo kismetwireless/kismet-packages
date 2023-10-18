@@ -37,10 +37,11 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --depends libpcap0.8 \
     --depends libdw1 \
     --depends libsqlite3-0 \
-    --depends libprotobuf23 \
+    --depends libprotobuf32 \
     --depends libprotobuf-c1 \
     --depends libsensors5 \
     --depends libssl3 \
+    --depends libpcre2-8-0 \
     --depends libmosquitto1 \
     ./conf/kismet.conf=/etc/kismet/kismet.conf \
     ./conf/kismet_alerts.conf=/etc/kismet/kismet_alerts.conf \
@@ -73,7 +74,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-linux-wifi -v ${PACKAGE} \
     --depends libpcap0.8 \
     --depends libnm0 \
     --depends libprotobuf-c1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     ./capture_linux_wifi/kismet_cap_linux_wifi=/usr/bin/kismet_cap_linux_wifi &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-linux-bluetooth -v ${PACKAGE} \
@@ -85,7 +86,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-linux-bluetooth -v ${PACKAGE} \
     --depends libcap2 \
     --depends libnm0 \
     --depends libprotobuf-c1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     ./capture_linux_bluetooth/kismet_cap_linux_bluetooth=/usr/bin/kismet_cap_linux_bluetooth &
     
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-mousejack -v ${PACKAGE} \
@@ -97,7 +98,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-mousejack -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     ./capture_nrf_mousejack/kismet_cap_nrf_mousejack=/usr/bin/kismet_cap_nrf_mousejack &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2540 -v ${PACKAGE} \
@@ -109,7 +110,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2540 -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     ./packaging/udev/99-kismet-ticc2540.rules=/etc/udev/rules.d/99-kismet-ticc2540.rules \
     ./capture_ti_cc_2540/kismet_cap_ti_cc_2540=/usr/bin/kismet_cap_ti_cc_2540 &
 
@@ -122,7 +123,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2531 -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     ./packaging/udev/99-kismet-ticc2531.rules=/etc/udev/rules.d/99-kismet-ticc2521.rules \
     ./capture_ti_cc_2531/kismet_cap_ti_cc_2531=/usr/bin/kismet_cap_ti_cc_2531 &
 
@@ -135,7 +136,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-rz-killerbee -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     ./capture_rz_killerbee/kismet_cap_rz_killerbee=/usr/bin/kismet_cap_rz_killerbee &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-51822 -v ${PACKAGE} \
@@ -145,7 +146,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-51822 -v ${PACKAGE} \
     --depends libcap2-bin \
     --depends libcap2 \
     --depends libprotobuf-c1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     ./capture_nrf_51822/kismet_cap_nrf_51822=/usr/bin/kismet_cap_nrf_51822 &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
@@ -155,7 +156,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
     --depends libcap2-bin \
     --depends libcap2 \
     --depends libprotobuf-c1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     ./capture_nrf_52840/kismet_cap_nrf_52840=/usr/bin/kismet_cap_nrf_52840 &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
@@ -165,7 +166,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
     --depends libcap2-bin \
     --depends libcap2 \
     --depends libprotobuf-c1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     ./capture_nxp_kw41z/kismet_cap_nxp_kw41z=/usr/bin/kismet_cap_nxp_kw41z &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \
@@ -179,7 +180,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \
     --depends libusb-1.0-0 \
     --depends libubertooth1 \
     --depends libbtbb1 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     ./capture_ubertooth_one/kismet_cap_ubertooth_one=/usr/bin/kismet_cap_ubertooth_one &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-hak5-wifi-coconut -v ${PACKAGE} \
@@ -191,7 +192,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-hak5-wifi-coconut -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     ./capture_hak5_wifi_coconut/libwifiuserspace/firmware/LICENSE-ralink-mediatek.txt=/usr/share/kismet/firmware/LICENSE-ralink-mediatek.txt \
     ./capture_hak5_wifi_coconut/libwifiuserspace/firmware/rt2870.bin=/usr/share/kismet/firmware/rt2870.bin \
     ./capture_hak5_wifi_coconut/kismet_cap_hak5_wifi_coconut=/usr/bin/kismet_cap_hak5_wifi_coconut &
@@ -205,7 +206,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-bladerf-wiphy -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
-    --depends libwebsockets16 \
+    --depends libwebsockets19 \
     --depends libbladerf2 \
     ./capture_bladerf_wiphy/kismet_cap_bladerf_wiphy=/usr/bin/kismet_cap_bladerf_wiphy &
 

@@ -29,8 +29,7 @@ export CXX=${ABI}-g++
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
-    --disable-libwebsockets \
-    --disable-wifi-coconut
+    --disable-libwebsockets 
 
 
 if [ "${NCORES}" = "" ]; then 

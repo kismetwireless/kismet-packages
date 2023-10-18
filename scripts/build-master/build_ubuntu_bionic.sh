@@ -17,7 +17,7 @@ fi
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
     --disable-libwebsockets \
-    --disable-wifi-coconut
+    --enable-wifi-coconut
 
 
 if [ "${NCORES}" = "" ]; then 

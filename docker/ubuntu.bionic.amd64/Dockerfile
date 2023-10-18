@@ -39,6 +39,7 @@ RUN apt-get update && apt-get install -y \
     libbtbb-dev \
     libubertooth1 \
     libbtbb1 \
+    libmosquitto-dev \
 	ruby \
 	ruby-dev \
 	rubygems && \

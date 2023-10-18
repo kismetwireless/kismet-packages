@@ -33,7 +33,7 @@ RUN apt-get update && apt-get install -y \
 	libprotobuf-c-dev \
 	protobuf-compiler \
 	protobuf-c-compiler \
-	libsensors4-dev \
+	libsensors-dev \
 	python3 \
 	python3-setuptools \
 	python3-protobuf \
@@ -45,6 +45,7 @@ RUN apt-get update && apt-get install -y \
     libbtbb-dev \
     libbladerf2 \
     libbladerf-dev \
+    libmosquitto-dev \
     cmake \
 	ruby \
 	ruby-dev \
