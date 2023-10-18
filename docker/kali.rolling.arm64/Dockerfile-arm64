@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y \
     libprotobuf32 \
 	libprotobuf-dev \
 	libprotobuf-c-dev \
-	libsensors4-dev \
+	libsensors-dev \
 	librtlsdr0 \
 	libusb-1.0-0-dev \
     libubertooth-dev \
@@ -32,5 +32,6 @@ RUN apt-get update && apt-get install -y \
     libbtbb1 \
     libbladerf2 \
     libbladerf-dev \ 
-    libpcre2-dev
+    libpcre2-dev \
+    libmosquitto-dev 
 

@@ -58,7 +58,7 @@ RUN curl "https://gitlab.com/kalilinux/packages/debootstrap/raw/kali/master/scri
                     libprotobuf32 \
                     libprotobuf-dev \
                     libprotobuf-c-dev \
-                    libsensors4-dev \
+                    libsensors-dev \
                     librtlsdr0 \
                     libusb-1.0-0-dev \
                     libubertooth-dev \
@@ -66,6 +66,7 @@ RUN curl "https://gitlab.com/kalilinux/packages/debootstrap/raw/kali/master/scri
                     libbladerf2 \
                     libbladerf-dev \
                     libpcre2-dev \
+                    libmosquitto-dev \
                     " && \
         cd /sysroot/lib/${ABI} && find ./ -name '*.so*' -lname '/*' -exec sh -c 'export TARGET=$(basename $(readlink $0)); rm $0; ln -snf "$TARGET" "$(basename "$0")";' {} \; 
 

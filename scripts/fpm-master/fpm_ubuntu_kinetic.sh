@@ -42,6 +42,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --depends libsensors5 \
     --depends libssl3 \
     --depends libpcre2-8-0 \
+    --depends libmosquitto1 \
     ./conf/kismet.conf=/etc/kismet/kismet.conf \
     ./conf/kismet_alerts.conf=/etc/kismet/kismet_alerts.conf \
     ./conf/kismet_httpd.conf=/etc/kismet/kismet_httpd.conf \

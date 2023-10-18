@@ -61,6 +61,7 @@ RUN /usr/sbin/debootstrap --arch=${ARCH} --components=main,contrib,non-free,rest
                     libbtbb-dev \
                     libubertooth1 \
                     libbtbb1 \
+                    libmosquitto-dev \
                 ' && \
         cd /sysroot/lib/${ABI} && find ./ -name '*.so*' -lname '/*' -exec sh -c 'export TARGET=$(basename $(readlink $0)); rm $0; ln -snf "$TARGET" "$(basename "$0")";' {} \; 
 

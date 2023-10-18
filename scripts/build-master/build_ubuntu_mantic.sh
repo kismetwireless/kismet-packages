@@ -24,8 +24,8 @@ if [ "${NCORES}" = "" ]; then
 fi
 make -j${NCORES}
 
-/tmp/fpm/fpm_ubuntu_lunar.sh
-/tmp/fpm/fpm_ubuntu_lunar_python3_deb.sh
+/tmp/fpm/fpm_ubuntu_mantic.sh
+/tmp/fpm/fpm_ubuntu_mantic_python3_deb.sh
 
 mv -v *.deb /dpkgs
 
@@ -38,7 +38,7 @@ mkdir build
 cd build 
 cmake ../ -DCMAKE_INSTALL_PREFIX=/usr
 make -j${NCORES} 
-/tmp/fpm/fpm_ubuntu_lunar_coconut.sh
+/tmp/fpm/fpm_ubuntu_mantic_coconut.sh
 
 mv -v *.deb /dpkgs
 

@@ -75,6 +75,7 @@ RUN curl -LO ${KEYSRC}{$KEYFILE} && \
                     libbtbb-dev \
                     libubertooth1 \
                     libbtbb1 \
+                    libmosquitto-dev \
                 ' && \
         cd /sysroot/lib/${ABI} && find ./ -name '*.so*' -lname '/*' -exec sh -c 'export TARGET=$(basename $(readlink $0)); rm $0; ln -snf "$TARGET" "$(basename "$0")";' {} \; && \
         cd /sysroot/usr/lib/${ABI} && find ./ -name '*.so*' -lname '/*' -exec sh -c 'export TARGET=$(basename $(readlink $0)); rm $0; ln -snf "$TARGET" "$(basename "$0")";' {} \;
