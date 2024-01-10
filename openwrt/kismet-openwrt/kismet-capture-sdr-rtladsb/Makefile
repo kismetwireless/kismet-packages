@@ -11,6 +11,9 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 KISMET_MODULE:=KismetCaptureRtladsb
 
+PYTHON3_PKG_WHEEL_NAME:=$(KISMET_MODULE)
+PYTHON3_PKG_WHEEL_VERSION:=2020.10.1
+
 define Package/kismet-capture-sdr-rtladsb
   SECTION:=net
   CATEGORY:=Network
