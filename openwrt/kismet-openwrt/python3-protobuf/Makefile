@@ -2,15 +2,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-protobuf
-PKG_VERSION:=3.13.0
+PKG_VERSION:=4.25.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=protobuf-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/p/protobuf/
-PKG_HASH:=6a82e0c8bb2bf58f606040cc5814e07715b2094caeba281e2e7d0b0e2e397db5
+PKG_HASH:=57d65074b4f5baa4ab5da1605c02be90ac20c8b40fb137d6a8df9f416b0d0ce2
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/protobuf-$(PKG_VERSION)
 
+PYPI_NAME=protobuf
+
+include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
