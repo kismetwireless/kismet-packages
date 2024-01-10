@@ -21,4 +21,6 @@ CONFIGURE_OPTS := \
 	--disable-element-typesafety \
 	--disable-debuglibs \
 	--disable-libcap \
-	--disable-libwebsockets 
+	--disable-libwebsockets \
+	--disable-libnm \
+	--disable-wifi-coconut
