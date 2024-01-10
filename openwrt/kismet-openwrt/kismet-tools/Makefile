@@ -11,7 +11,7 @@ define Package/kismet-tools
   CATEGORY:=Network
   TITLE:=Kismet server and log tools
   URL:=https://www.kismetwireless.net
-  DEPENDS:=+libpthread +libpcap +libpcre +libstdcpp +libsqlite3 +zlib +libatomic +libsensors
+  DEPENDS:=+libpthread +libpcap +libpcre2 +libstdcpp +libsqlite3 +zlib +libatomic +libsensors +libcap +libusb-1.0
   SUBMENU:=kismet
 endef
 
@@ -31,7 +31,6 @@ CONFIGURE_ARGS += \
 	--with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc \
 	--enable-protobuflite \
 	--disable-element-typesafety \
-	--disable-libusb \
 	--disable-debuglibs \
 	--disable-libwebsockets
 
