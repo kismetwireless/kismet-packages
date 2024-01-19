@@ -14,7 +14,7 @@ fpm -t deb -s python --python-bin python3 --python-pip pip3 --python-install-bin
     --depends python3-protobuf \
     --depends python3-usb \
     --depends python3-websockets \
-    --depends librtlsdr0 \
+    --depends 'librtlsdr0 | librtlsdr2' \
     --depends rtl-433 \
     --python-package-name-prefix python3 \
     --python-setup-py-arguments '--prefix=/usr' \
@@ -27,7 +27,7 @@ fpm -t deb -s python --python-bin python3 --python-pip pip3 --python-install-bin
     --depends python3-protobuf \
     --depends python3-usb \
     --depends python3-websockets \
-    --depends librtlsdr0 \
+    --depends 'librtlsdr0 | librtlsdr2' \
     --python-package-name-prefix python3 \
     --python-setup-py-arguments '--prefix=/usr' \
     --python-install-lib /usr/lib/python3/dist-packages \
@@ -40,7 +40,7 @@ fpm -t deb -s python --python-bin python3 --python-pip pip3 --python-install-bin
     --depends python3-usb \
     --depends python3-numpy \
     --depends python3-websockets \
-    --depends librtlsdr0 \
+    --depends 'librtlsdr0 | librtlsdr2' \
     --python-package-name-prefix python3 \
     --python-setup-py-arguments '--prefix=/usr' \
     --python-install-lib /usr/lib/python3/dist-packages \

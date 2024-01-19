@@ -146,6 +146,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-51822 -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libwebsockets17 \
+    ./packaging/udev/99-kismet-nrf51822.rules=/etc/udev/rules.d/99-kismet-nrf51822.rules \
     ./capture_nrf_51822/kismet_cap_nrf_51822=/usr/bin/kismet_cap_nrf_51822 &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
@@ -156,6 +157,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libwebsockets17 \
+    ./packaging/udev/99-kismet-nrf52840.rules=/etc/udev/rules.d/99-kismet-nrf52840.rules \
     ./capture_nrf_52840/kismet_cap_nrf_52840=/usr/bin/kismet_cap_nrf_52840 &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
