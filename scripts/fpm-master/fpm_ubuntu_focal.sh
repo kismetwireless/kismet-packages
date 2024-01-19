@@ -26,6 +26,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --deb-recommends kismet-capture-ti-cc-2531 \
     --deb-recommends kismet-capture-ubertooth-one \
     --deb-recommends kismet-capture-nrf-51822 \
+    --deb-recommends kismet-capture-nrf-52840 \
     --deb-recommends kismet-capture-nxp-kw41z \
     --deb-recommends kismet-logtools \
     --deb-recommends kismet-adsb-icao-data \
@@ -133,6 +134,17 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-51822 -v ${PACKAGE} \
     ./packaging/udev/99-kismet-nrf51822.rules=/etc/udev/rules.d/99-kismet-nrf51822.rules \
     ./capture_nrf_51822/kismet_cap_nrf_51822=/usr/bin/kismet_cap_nrf_51822 &
 
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
+    --description "Kismet NRF52840 BTLE/Zigbee Sniffer capture helper" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libwebsockets15 \
+    ./packaging/udev/99-kismet-nrf52840.rules=/etc/udev/rules.d/99-kismet-nrf52840.rules \
+    ./capture_nrf_52840/kismet_cap_nrf_52840=/usr/bin/kismet_cap_nrf_52840 &
+
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
     --description "Kismet NXP KW41Z BTLE and Zigbee Sniffer capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
@@ -141,7 +153,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libwebsockets15 \
-    ./packaging/udev/99-kismet-nrf52840.rules=/etc/udev/rules.d/99-kismet-nrf52840.rules \
+    ./packaging/udev/99-kismet-nxp-kw41z.rules=/etc/udev/rules.d/99-kismet-nxp-kw41z.rules \
     ./capture_nxp_kw41z/kismet_cap_nxp_kw41z=/usr/bin/kismet_cap_nxp_kw41z &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \

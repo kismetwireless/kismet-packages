@@ -184,6 +184,7 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
     --depends libcap2 \
     --depends libprotobuf-c1 \
     --depends libwebsockets8 \
+    ./packaging/udev/99-kismet-nxp-kw41z.rules=/etc/udev/rules.d/99-kismet-nxp-kw41z.rules \
     ./capture_nxp_kw41z/kismet_cap_nxp_kw41z=/usr/bin/kismet_cap_nxp_kw41z &
 
 fpm -t deb -a ${ARCH} -s dir -n kismet-logtools -v ${PACKAGE} \
