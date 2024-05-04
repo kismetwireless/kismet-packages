@@ -15,8 +15,8 @@ fi
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
-    --enable-bladerf \
     --enable-wifi-coconut
+    # --enable-bladerf \
 
 
 if [ "${NCORES}" = "" ]; then 
