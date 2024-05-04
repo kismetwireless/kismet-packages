@@ -197,6 +197,38 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-hak5-wifi-coconut -v ${PACKAGE} \
     ./capture_hak5_wifi_coconut/libwifiuserspace/firmware/rt2870.bin=/usr/share/kismet/firmware/rt2870.bin \
     ./capture_hak5_wifi_coconut/kismet_cap_hak5_wifi_coconut=/usr/bin/kismet_cap_hak5_wifi_coconut &
 
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-serial-radview -v ${PACKAGE} \
+    --description "Kismet Radview geiger counter capture helper" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libwebsockets15 \
+    ./capture_serial_radview/kismet_cap_serial_radview=/usr/bin/kismet_cap_serial_radview &
+
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-radiacode-usb -v ${PACKAGE} \
+    --description "Kismet Radiacode USB Geiger counter driver" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libusb-1.0-0 \
+    --depends libwebsockets15 \
+    ./packaging/udev/99-kismet-radiacode-usb.rules=/etc/udev/rules.d/99-kismet-radiacode-usb.rules \
+    ./capture_radiacode/kismet_cap_radiacode_usb=/usr/bin/kismet_cap_radiacode_usb &
+
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-antsdr-droneid -v ${PACKAGE} \
+    --description "Kismet AntSDR DJI DroneID driver" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libwebsockets15 \
+    ./capture_antsdr_droneid/kismet_cap_antsdr_droneid=/usr/bin/kismet_cap_antsdr_droneid &
+
 fpm -t deb -a ${ARCH} -s dir -n kismet-adsb-icao-data -v ${PACKAGE} \
     --description "Kismet ADSB ICAO data" \
     ./conf/kismet_adsb_icao.txt.gz=/usr/share/kismet/kismet_adsb_icao.txt.gz &
@@ -218,6 +250,9 @@ fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
     --depends kismet-capture-nrf-51822 \
     --depends kismet-capture_nxp_kw41z \
     --depends kismet-capture-hak5-wifi-coconut \
+    --depends kismet-capture-serial-radview \
+    --depends kismet-capture-radiacode-usb \
+    --depends kismet-capture-antsdr-droneid \
     --depends kismet-logtools &
 
 wait

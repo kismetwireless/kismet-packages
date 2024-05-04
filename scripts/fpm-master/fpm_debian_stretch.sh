@@ -170,6 +170,38 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
     ./packaging/udev/99-kismet-nxp-kw41z.rules=/etc/udev/rules.d/99-kismet-nxp-kw41z.rules \
     ./capture_nxp_kw41z/kismet_cap_nxp_kw41z=/usr/bin/kismet_cap_nxp_kw41z &
 
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-serial-radview -v ${PACKAGE} \
+    --description "Kismet Radview geiger counter capture helper" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libwebsockets8 \
+    ./capture_serial_radview/kismet_cap_serial_radview=/usr/bin/kismet_cap_serial_radview &
+
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-radiacode-usb -v ${PACKAGE} \
+    --description "Kismet Radiacode USB Geiger counter driver" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libusb-1.0-0 \
+    --depends libwebsockets8 \
+    ./packaging/udev/99-kismet-radiacode-usb.rules=/etc/udev/rules.d/99-kismet-radiacode-usb.rules \
+    ./capture_radiacode/kismet_cap_radiacode_usb=/usr/bin/kismet_cap_radiacode_usb &
+
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-antsdr-droneid -v ${PACKAGE} \
+    --description "Kismet AntSDR DJI DroneID driver" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libwebsockets8 \
+    ./capture_antsdr_droneid/kismet_cap_antsdr_droneid=/usr/bin/kismet_cap_antsdr_droneid &
+
 fpm -t deb -a ${ARCH} -s dir -n kismet-logtools -v ${PACKAGE} \
 	--description "Kismet kismetdb log tools (kismetdb)" \
 	--depends libpcap0.8 \
@@ -205,6 +237,9 @@ fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
     --depends kismet-capture-nxp-kw41z \
     --depends kismet-capture-nrf-52840 \
     --depends kismet-capture-rz-killerbee \
+    --depends kismet-capture-serial-radview \
+    --depends kismet-capture-radiacode-usb \
+    --depends kismet-capture-antsdr-droneid \
     --depends kismet-logtools &
 
 wait
