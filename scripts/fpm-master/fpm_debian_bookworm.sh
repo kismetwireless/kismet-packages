@@ -267,7 +267,7 @@ fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
     --depends kismet-capture-rz-killerbee \
     --depends kismet-capture-hak5-wifi-coconut \
     --depends kismet-capture-serial-radview \
-    --depends kismet-capture-radview-usb \
+    --depends kismet-capture-radiacode-usb \
     --depends kismet-capture-antsdr-droneid \
     --depends kismet-logtools &
 
