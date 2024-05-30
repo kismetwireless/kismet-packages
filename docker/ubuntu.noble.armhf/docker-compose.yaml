@@ -15,6 +15,6 @@ services:
             - /build:exec,mode=777
 
         volumes:
-            - ${BASE_DIR}/dpkgs-moble:/dpkgs
+            - ${BASE_DIR}/dpkgs-noble:/dpkgs
             - ${BASE_DIR}/scripts:/scripts:ro
             - ${SRC_DIR}:/kismet:ro
