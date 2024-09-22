@@ -2,6 +2,7 @@
 
 cd /build
 
+git config --global --add safe.directory /kismet/.git
 git clone --recursive /kismet
 cd kismet
 git checkout master

@@ -69,6 +69,7 @@ RUN curl -LO ${KEYSRC}{$KEYFILE} && \
                     libprotobuf-c-dev \
                     libsensors4-dev \
                     librtlsdr0 \
+                    librtlsdr-dev \
                     libusb-1.0-0-dev \
                     libudev-dev \
                     libubertooth-dev \

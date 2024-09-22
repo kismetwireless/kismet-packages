@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y \
 	libnm-dev \
 	libdw-dev \
 	libsqlite3-dev \
-    libprotobuf32 \
+    libprotobuf32t64 \
 	libprotobuf-dev \
 	libprotobuf-c-dev \
 	protobuf-compiler \
@@ -40,6 +40,7 @@ RUN apt-get update && apt-get install -y \
 	python3-pip \
     python3-simplejson \
 	librtlsdr0 \
+    librtlsdr-dev \
 	libusb-1.0-0-dev \
     libubertooth-dev \
     libbtbb-dev \

@@ -24,9 +24,11 @@ RUN apt-get update && apt-get install -y \
 	libprotobuf-c-dev \
 	libsensors4-dev \
 	librtlsdr0 \
+    librtlsdr-dev \
 	libusb-1.0-0-dev \
     libubertooth-dev \
     libbtbb-dev \
     libubertooth1 \
     libbtbb1 \
     libmosquitto-dev 
+

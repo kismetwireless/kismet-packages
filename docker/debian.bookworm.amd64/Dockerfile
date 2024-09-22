@@ -36,6 +36,7 @@ RUN apt-get update && \
 	    python3-pip \
 	    python3-simplejson \
 	    librtlsdr0 \
+        librtlsdr-dev \
 	    libusb-1.0-0-dev \
         libmosquitto-dev \
 	    ruby \

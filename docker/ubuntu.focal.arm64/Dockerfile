@@ -36,5 +36,6 @@ RUN apt update && \
             protobuf-c-compiler \
             protobuf-compiler \
         && \
+        gem install dotenv -v 2.8.1 && \
         gem install --no-document fpm 
 

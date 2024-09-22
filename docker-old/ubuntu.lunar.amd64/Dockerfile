@@ -44,6 +44,8 @@ RUN apt-get update && apt-get install -y \
     libbladerf-dev \
     libpcre2-dev \
     libmosquitto-dev \
+    librtlsdr0 \
+    librtlsdr-dev \
 	ruby \
 	ruby-dev \
 	rubygems && \

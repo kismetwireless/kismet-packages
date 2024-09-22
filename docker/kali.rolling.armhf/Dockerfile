@@ -29,7 +29,7 @@ RUN apt update && \
             rubygems \
             git \
             libglib2.0-dev \
-            libprotobuf32 \
+            libprotobuf32t64 \
             python3-setuptools \
             python3-pip \
             pkg-config \
@@ -60,11 +60,12 @@ RUN curl "https://gitlab.com/kalilinux/packages/debootstrap/raw/kali/master/scri
                     libnm-dev \
                     libdw-dev \
                     libsqlite3-dev \
-                    libprotobuf32 \
+                    libprotobuf32t64 \
                     libprotobuf-dev \
                     libprotobuf-c-dev \
                     libsensors-dev \
                     librtlsdr0 \
+                    librtlsdr-dev \
                     libusb-1.0-0-dev \
                     libubertooth-dev \
                     libbtbb-dev \

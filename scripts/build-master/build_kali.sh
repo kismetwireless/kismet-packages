@@ -2,6 +2,7 @@
 
 cd /build
 
+git config --global --add safe.directory /kismet/.git
 git clone --recursive /kismet
 cd kismet
 git checkout master
@@ -24,13 +25,14 @@ fi
 make -j${NCORES}
 
 /tmp/fpm/fpm_kali.sh
-/tmp/fpm/fpm_kali_python3_deb.sh
+#/tmp/fpm/fpm_kali_python3_deb.sh
 
 mv -v *.deb /dpkgs
 
 # Build wifi coconut 
 
 cd /build 
+git config --global --add safe.directory /build/hak5-wifi-coconut/.git
 git clone https://github.com/hak5/hak5-wifi-coconut
 cd hak5-wifi-coconut 
 mkdir build 

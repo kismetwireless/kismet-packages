@@ -19,10 +19,9 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --deb-recommends kismet-capture-linux-wifi \
     --deb-recommends kismet-capture-linux-bluetooth \
     --deb-recommends kismet-capture-nrf-mousejack \
-    --deb-recommends python3-kismetcapturertl433 \
-    --deb-recommends python3-kismetcapturertladsb \
-    --deb-recommends python3-kismetcapturertlamr \
-    --deb-recommends python3-kismetcapturefreaklabszigbee \
+    --deb-recommends kismet-capture-rtl433-v2 \
+    --deb-recommends kismet-capture-rtladsb-v2 \
+    --deb-recommends kismet-capture-freaklabs-zigbee-v2 \
     --deb-recommends kismet-capture-ti-cc-2540 \
     --deb-recommends kismet-capture-ti-cc-2531 \
     --deb-recommends kismet-capture-nrf-51822 \
@@ -231,6 +230,44 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-antsdr-droneid -v ${PACKAGE} \
     --depends libwebsockets17 \
     ./capture_antsdr_droneid/kismet_cap_antsdr_droneid=/usr/bin/kismet_cap_antsdr_droneid &
 
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-rtl433-v2 -v ${PACKAGE} \
+    --conflicts python3-kismetcapturertl433 \
+    --description "Kismet rtl_433 wrapper v2" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libwebsockets17 \
+    --depends libusb-1.0-0 \
+    --depends librtlsdr0 \
+    ./capture_sdr_rtl433_v2/kismet_cap_sdr_rtl433=/usr/bin/kismet_cap_sdr_rtl433 &
+
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-rtladsb-v2 -v ${PACKAGE} \
+    --conflicts python3-kismetcapturertladsb \
+    --description "Kismet rtlsdr ADSB capture v2" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libwebsockets17 \
+    --depends libusb-1.0-0 \
+    --depends librtlsdr0 \
+    ./capture_sdr_rtladsb_v2/kismet_cap_sdr_rtladsb=/usr/bin/kismet_cap_sdr_rtladsb &
+
+fpm -t deb -a ${ARCH} -s dir -n kismet-capture-freaklabs-zigbee-v2 -v ${PACKAGE} \
+    --conflicts python3-kismetcapturefreaklabszigbee \
+    --description "Kismet FreakLabs zigbee hardware capture v2" \
+    --deb-templates /tmp/fpm/debian/kismet.templates \
+    --deb-config /tmp/fpm/debian/kismet.config \
+    --depends libcap2-bin \
+    --depends libcap2 \
+    --depends libprotobuf-c1 \
+    --depends libwebsockets17 \
+    ./capture_freaklabs_zigbee_v2/kismet_cap_freaklabs_zigbee=/usr/bin/kismet_cap_freaklabs_zigbee &
+
+
 fpm -t deb -a ${ARCH} -s dir -n kismet-logtools -v ${PACKAGE} \
 	--description "Kismet kismetdb log tools (kismetdb)" \
 	--depends libpcap0.8 \
@@ -256,10 +293,9 @@ fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
     --depends kismet-capture-linux-wifi \
     --depends kismet-capture-linux-bluetooth \
     --depends kismet-capture-nrf-mousejack \
-    --depends python3-kismetcapturertl433 \
-    --depends python3-kismetcapturertladsb \
-    --depends python3-kismetcapturertlamr \
-    --depends python3-kismetcapturefreaklabszigbee \
+    --depends kismet-capture-rtl433-v2 \
+    --depends kismet-capture-rtladsb-v2 \
+    --depends kismet-capture-freaklabs-zigbee-v2 \
     --depends kismet-capture-ti-cc-2531 \
     --depends kismet-capture-nrf-51822 \
     --depends kismet-capture_nxp_kw41z \

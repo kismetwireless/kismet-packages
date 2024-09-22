@@ -35,6 +35,7 @@ RUN apt update && \
             protobuf-c-compiler \
             protobuf-compiler \
         && \
+        gem install dotenv -v 2.8.1 && \
         gem install --no-document fpm 
 
 RUN /usr/sbin/debootstrap --arch=${ARCH} --components=main,contrib,non-free,restricted,universe,multiverse ${DISTRO} /sysroot && \
@@ -56,6 +57,7 @@ RUN /usr/sbin/debootstrap --arch=${ARCH} --components=main,contrib,non-free,rest
                     libprotobuf-c-dev \
                     libsensors4-dev \
                     librtlsdr0 \
+                    librtlsdr-dev \
                     libusb-1.0-0-dev \
                     libubertooth-dev \
                     libbtbb-dev \

@@ -2,6 +2,7 @@
 
 cd /build
 
+git config --global --add safe.directory /kismet/.git
 git clone --recursive /kismet
 cd kismet
 git checkout master
@@ -32,6 +33,7 @@ mv -v *.deb /dpkgs
 # Build wifi coconut 
 
 cd /build 
+git config --global --add safe.directory /build/hak5-wifi-coconut/.git
 git clone https://github.com/hak5/hak5-wifi-coconut
 cd hak5-wifi-coconut 
 mkdir build 

@@ -2,6 +2,7 @@
 
 cd /build
 
+git config --global --add safe.directory /kismet/.git
 git clone --recursive /kismet
 cd kismet
 git checkout master
@@ -26,7 +27,7 @@ fi
 make -j${NCORES}
 
 /tmp/fpm/fpm_ubuntu_bionic.sh
-/tmp/fpm/fpm_noarch_python3_deb.sh
+#/tmp/fpm/fpm_noarch_python3_deb.sh
 
 mv -v *.deb /dpkgs
 
