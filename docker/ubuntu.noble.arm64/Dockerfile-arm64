@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y \
 	protobuf-c-compiler \
 	libsensors-dev \
 	librtlsdr2 \
+    librtlsdr-dev \
 	libusb-1.0-0-dev \
     libubertooth-dev \
     libbtbb-dev \

@@ -7,6 +7,7 @@
 #
 
 container:
+	-docker image rm kismet/noble_arm64
 	docker build -t kismet/noble_arm64 -f Dockerfile-arm64 .
 	docker volume create kismet_noble_arm64_sysroot
 	docker run --rm \
