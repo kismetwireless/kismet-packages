@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh 
 
 PACKAGE="1.1.0"
 

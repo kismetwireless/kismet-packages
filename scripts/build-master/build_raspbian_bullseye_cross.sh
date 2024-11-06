@@ -12,6 +12,20 @@ if [ "${CHECKOUT}"x != "x" ]; then
 	git checkout ${CHECKOUT}
 fi
 
+if test "${CHECKOUT}"x = "HEADx"; then
+    touch /dpkgs/last_git_${ARCH}
+
+    if test "$(cat /dpkgs/last_git_${ARCH})" = "$(git rev-parse --short HEAD)"; then
+        echo "*** No build required ***"
+        exit 0
+    fi
+
+    echo "*** Cleaning old git packages ***"
+    rm -vf ${BASE_DIR}/dpkgs/*git*${ARCH}.deb
+
+    echo -n "$(git rev-parse --short HEAD)" > /dpkgs/last_git_${ARCH}
+fi
+
 # Kluge the path
 export PATH=$PATH:/opt/cross-pi-gcc-10.2.0-0/bin/
 

@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh 
 
 if test "${CHECKOUT}"x = "HEADx"; then
     GITV="HEAD"
