@@ -21,16 +21,16 @@ container:
 		--exclude=/proc \
 		--exclude=/sys \
 		-chv / | tar x -C /mnt/sysroot/"
-	docker-compose build --pull --no-cache
+	docker compose build --pull --no-cache
 
 kismet:
-	@docker-compose run --rm -e NCORES kismet-build
+	@docker compose run --rm -e NCORES kismet-build
 
 kismet-release:
-	@docker-compose run --rm -e CHECKOUT -e VERSION -e NCORES kismet-build
+	@docker compose run --rm -e CHECKOUT -e VERSION -e NCORES kismet-build
 
 shell:
-	@docker-compose run --rm kismet-build /bin/bash
+	@docker compose run --rm kismet-build /bin/bash
 
 armshell:
 	docker build -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
