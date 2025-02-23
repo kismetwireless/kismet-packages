@@ -30,16 +30,16 @@ fi
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
+    --enable-protobuf \
     --enable-wifi-coconut
 
 
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(nproc)
 fi
-make -j${NCORES}
+make -j${NCORES} || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
 
-/tmp/fpm/fpm_ubuntu_focal.sh
-#/tmp/fpm/fpm_noarch_python3_deb.sh
+/tmp/fpm/fpm_ubuntu_focal.sh || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
 
 mv -v *.deb /dpkgs
 

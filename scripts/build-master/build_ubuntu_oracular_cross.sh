@@ -45,15 +45,16 @@ export CXX=${ABI}-g++
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
     --enable-wifi-coconut \
+    --enable-protobuf \
     --enable-bladerf
 
 
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(nproc)
 fi
-make -j${NCORES}
+make -j${NCORES} || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
 
-/tmp/fpm/fpm_ubuntu_oracular.sh
+/tmp/fpm/fpm_ubuntu_oracular.sh || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
 
 mv -v *.deb /dpkgs
 

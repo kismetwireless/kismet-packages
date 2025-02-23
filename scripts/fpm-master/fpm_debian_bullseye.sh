@@ -38,7 +38,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
     --depends libdw1 \
     --depends libsqlite3-0 \
     --depends libprotobuf23 \
-    --depends libprotobuf-c1 \
     --depends libsensors5 \
     --depends libssl1.1 \
     --depends libmosquitto1 \
@@ -72,7 +71,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-linux-wifi -v ${PACKAGE} \
     --depends libcap2 \
     --depends libpcap0.8 \
     --depends libnm0 \
-    --depends libprotobuf-c1 \
     --depends libwebsockets16 \
     ./capture_linux_wifi/kismet_cap_linux_wifi=/usr/bin/kismet_cap_linux_wifi &
 
@@ -84,10 +82,9 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-linux-bluetooth -v ${PACKAGE} \
     --depends libcap2-bin \
     --depends libcap2 \
     --depends libnm0 \
-    --depends libprotobuf-c1 \
     --depends libwebsockets16 \
     ./capture_linux_bluetooth/kismet_cap_linux_bluetooth=/usr/bin/kismet_cap_linux_bluetooth &
-    
+
 fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-mousejack -v ${PACKAGE} \
     --description "Kismet nRF MouseJack capture helper" \
     --deb-templates /tmp/fpm/debian/kismet.templates \
@@ -95,7 +92,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-mousejack -v ${PACKAGE} \
     --post-install /tmp/fpm/debian/kismet_cap_nrf_mousejack.postinst \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
     --depends libwebsockets16 \
     ./capture_nrf_mousejack/kismet_cap_nrf_mousejack=/usr/bin/kismet_cap_nrf_mousejack &
@@ -107,7 +103,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2540 -v ${PACKAGE} \
     --post-install /tmp/fpm/debian/kismet_cap_ti_cc_2540.postinst \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
     --depends libwebsockets16 \
     ./packaging/udev/99-kismet-ticc2540.rules=/etc/udev/rules.d/99-kismet-ticc2540.rules \
@@ -120,7 +115,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2531 -v ${PACKAGE} \
     --post-install /tmp/fpm/debian/kismet_cap_ti_cc_2531.postinst \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
     --depends libwebsockets16 \
     ./packaging/udev/99-kismet-ticc2531.rules=/etc/udev/rules.d/99-kismet-ticc2531.rules \
@@ -133,7 +127,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-rz-killerbee -v ${PACKAGE} \
     --post-install /tmp/fpm/debian/kismet_cap_rz_killerbee.postinst \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
     --depends libwebsockets16 \
     ./capture_rz_killerbee/kismet_cap_rz_killerbee=/usr/bin/kismet_cap_rz_killerbee &
@@ -144,7 +137,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-51822 -v ${PACKAGE} \
     --deb-config /tmp/fpm/debian/kismet.config \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libwebsockets16 \
     ./packaging/udev/99-kismet-nrf51822.rules=/etc/udev/rules.d/99-kismet-nrf51822.rules \
     ./capture_nrf_51822/kismet_cap_nrf_51822=/usr/bin/kismet_cap_nrf_51822 &
@@ -155,7 +147,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
     --deb-config /tmp/fpm/debian/kismet.config \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libwebsockets16 \
     ./packaging/udev/99-kismet-nrf52840.rules=/etc/udev/rules.d/99-kismet-nrf52840.rules \
     ./capture_nrf_52840/kismet_cap_nrf_52840=/usr/bin/kismet_cap_nrf_52840 &
@@ -166,7 +157,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nxp-kw41z -v ${PACKAGE} \
     --deb-config /tmp/fpm/debian/kismet.config \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libwebsockets16 \
     ./packaging/udev/99-kismet-nxp-kw41z.rules=/etc/udev/rules.d/99-kismet-nxp-kw41z.rules \
     ./capture_nxp_kw41z/kismet_cap_nxp_kw41z=/usr/bin/kismet_cap_nxp_kw41z &
@@ -178,7 +168,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \
     --post-install /tmp/fpm/debian/kismet_cap_ubertooth_one.postinst \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
     --depends libubertooth1 \
     --depends libbtbb1 \
@@ -192,7 +181,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-hak5-wifi-coconut -v ${PACKAGE} \
     --post-install /tmp/fpm/debian/kismet_cap_hak5_wifi_coconut.postinst \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
     --depends libwebsockets16 \
     ./capture_hak5_wifi_coconut/libwifiuserspace/firmware/LICENSE-ralink-mediatek.txt=/usr/share/kismet/firmware/LICENSE-ralink-mediatek.txt \
@@ -205,7 +193,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-serial-radview -v ${PACKAGE} \
     --deb-config /tmp/fpm/debian/kismet.config \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libwebsockets16 \
     ./capture_serial_radview/kismet_cap_serial_radview=/usr/bin/kismet_cap_serial_radview &
 
@@ -215,7 +202,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-radiacode-usb -v ${PACKAGE} \
     --deb-config /tmp/fpm/debian/kismet.config \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libusb-1.0-0 \
     --depends libwebsockets16 \
     ./packaging/udev/99-kismet-radiacode-usb.rules=/etc/udev/rules.d/99-kismet-radiacode-usb.rules \
@@ -227,7 +213,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-antsdr-droneid -v ${PACKAGE} \
     --deb-config /tmp/fpm/debian/kismet.config \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libwebsockets16 \
     ./capture_antsdr_droneid/kismet_cap_antsdr_droneid=/usr/bin/kismet_cap_antsdr_droneid &
 
@@ -238,7 +223,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-rtl433-v2 -v ${PACKAGE} \
     --deb-config /tmp/fpm/debian/kismet.config \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libwebsockets16 \
     --depends libusb-1.0-0 \
     --depends librtlsdr0 \
@@ -251,7 +235,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-rtladsb-v2 -v ${PACKAGE} \
     --deb-config /tmp/fpm/debian/kismet.config \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libwebsockets16 \
     --depends libusb-1.0-0 \
     --depends librtlsdr0 \
@@ -264,7 +247,6 @@ fpm -t deb -a ${ARCH} -s dir -n kismet-capture-freaklabs-zigbee-v2 -v ${PACKAGE}
     --deb-config /tmp/fpm/debian/kismet.config \
     --depends libcap2-bin \
     --depends libcap2 \
-    --depends libprotobuf-c1 \
     --depends libwebsockets16 \
     ./capture_freaklabs_zigbee_v2/kismet_cap_freaklabs_zigbee=/usr/bin/kismet_cap_freaklabs_zigbee &
 

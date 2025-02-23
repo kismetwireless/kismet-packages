@@ -20,7 +20,7 @@ fpm -t deb -s python --python-bin python3 --python-pip pip3 --python-install-bin
     --python-setup-py-arguments '--prefix=/usr' \
     --python-install-lib /usr/lib/python3/dist-packages \
     ./capture_sdr_rtl433 &
- 
+
 fpm -t deb -s python --python-bin python3 --python-pip pip3 --python-install-bin /usr/bin/ -v ${PACKAGE} \
     --replaces python-kismetcapturertlamr \
     --depends python3 \

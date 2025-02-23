@@ -30,6 +30,7 @@ fi
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
+    --enable-protobuf \
     --enable-bladerf \
     --enable-hak5-coconut
 
@@ -37,10 +38,9 @@ fi
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(nproc)
 fi
-make -j${NCORES}
+make -j${NCORES} || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
 
-/tmp/fpm/fpm_ubuntu_kinetic.sh
-/tmp/fpm/fpm_ubuntu_kinetic_python3_deb.sh
+/tmp/fpm/fpm_ubuntu_kinetic.sh || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
 
 mv -v *.deb /dpkgs
 

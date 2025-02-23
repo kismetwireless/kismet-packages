@@ -44,6 +44,7 @@ export CXX=${ABI}-g++
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
+    --enable-protobuf \
     --enable-wifi-coconut \
     --enable-bladerf
 
@@ -51,10 +52,9 @@ export CXX=${ABI}-g++
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(nproc)
 fi
-make -j${NCORES}
+make -j${NCORES} || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
 
-/tmp/fpm/fpm_ubuntu_jammy.sh
-#/tmp/fpm/fpm_ubuntu_jammy_python3_deb.sh
+/tmp/fpm/fpm_ubuntu_jammy.sh || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
 
 mv -v *.deb /dpkgs
 
