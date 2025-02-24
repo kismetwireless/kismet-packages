@@ -3,13 +3,13 @@ Template: kismet-common/install-setuid
 Type: boolean
 Default: true
 Description: Should Kismet be installed with suid-root helpers?
- Kismet uses multiple helper programs to capture the packets. Kismet
- can be installed so that members of the "kismet" system group can
+ Kismet uses multiple helper programs to capture the packets.  Installing
+ Kismet can be installed so that members of the "kismet" system group can
  reconfigure network interfaces and capture packets.
  .
  This behavior is more secure, as it allows Kismet to operate without
  root privileges, except on specific tools.
- .
+ . 
  Running Kismet as root increases the risk if there is a security error in
  Kismet.
  .
