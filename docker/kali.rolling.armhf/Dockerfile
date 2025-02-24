@@ -30,8 +30,6 @@ RUN apt update && \
             git \
             libglib2.0-dev \
             libprotobuf32t64 \
-            python3-setuptools \
-            python3-pip \
             pkg-config \
             make \
             cmake \
