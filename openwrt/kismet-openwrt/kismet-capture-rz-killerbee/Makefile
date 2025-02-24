@@ -9,14 +9,14 @@ include $(INCLUDE_DIR)/package.mk
 define Package/kismet-capture-rz-killerbee
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=Kismet KillerBee Capture Support
+  TITLE:=Kismet Killerbee Capture Support
   URL:=https://www.kismetwireless.net
   DEPENDS:=+libpthread +libpcap +libnl +libcap +protobuf-lite +libprotobuf-c +libusb-1.0 
   SUBMENU:=kismet
 endef
 
 define Package/kismet-capture-rz-killerbee/description
-  Helper binary to capture Zigbee from a KillerBee adapter.
+  Helper binary to capture Zigbee from a Killerbee adapter.
   Enables local and remote 802.15.4 packet capture with Kismet
 endef
 

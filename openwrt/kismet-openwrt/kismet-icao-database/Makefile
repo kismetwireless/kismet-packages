@@ -17,8 +17,8 @@ endef
 
 define Package/kismet-icao-database/description
   Kismet ICAO airplane database
-  Compressed database of ICAO airplane registrations. Without this
-  database, Kismet will not be able to resolve flight info for
+  Compressed database of ICAO airplane registrations.  Without this
+  database, Kismet will not be able to resolve flight info for 
   airlines detected via ADSB.
 endef
 
