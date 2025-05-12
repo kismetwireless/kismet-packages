@@ -35,5 +35,5 @@ for d in ${BASE_DIR}/docker/*; do
 	popd
 done
 
-${BASE_DIR}/scripts/host/aptly_update_release_repos.sh "${BASE_DIR}" "${VERSION}"
+# ${BASE_DIR}/scripts/host/aptly_update_release_repos.sh "${BASE_DIR}" "${VERSION}"
 
