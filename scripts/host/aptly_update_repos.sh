@@ -7,7 +7,7 @@ fi
 
 BASE_DIR=$1
 
-for dist in kali bookworm focal jammy noble oracular plucky; do
+for dist in kali bookworm focal jammy noble oracular plucky trixie; do
 	( 
     	cd ${BASE_DIR}
         echo "Working on ${dist}"
