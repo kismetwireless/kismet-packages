@@ -30,8 +30,8 @@ fi
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
-    --enable-protobuf \
     --disable-mosquitto \
+    --enable-protobuf \
     --disable-libwebsockets \
     --enable-wifi-coconut
 

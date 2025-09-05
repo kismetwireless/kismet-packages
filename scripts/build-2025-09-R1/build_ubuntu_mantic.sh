@@ -31,8 +31,7 @@ fi
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
     --enable-protobuf \
-    --disable-mosquitto \
-    --disable-libwebsockets \
+    --enable-bladerf \
     --enable-wifi-coconut
 
 
@@ -41,7 +40,20 @@ if [ "${NCORES}" = "" ]; then
 fi
 make -j${NCORES} || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
 
-/tmp/fpm/fpm_ubuntu_bionic.sh || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
+/tmp/fpm/fpm_ubuntu_mantic.sh || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
+
+mv -v *.deb /dpkgs
+
+# Build wifi coconut 
+
+cd /build 
+git clone https://github.com/hak5/hak5-wifi-coconut
+cd hak5-wifi-coconut 
+mkdir build 
+cd build 
+cmake ../ -DCMAKE_INSTALL_PREFIX=/usr
+make -j${NCORES} 
+/tmp/fpm/fpm_ubuntu_mantic_coconut.sh
 
 mv -v *.deb /dpkgs
 

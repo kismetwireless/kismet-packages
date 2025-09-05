@@ -6,16 +6,13 @@
 # to do the sysroot install inside the docker
 #
 
-DISTRO=debian_trixie
-ARCH=arm64
-
 container:
-	docker build --platform linux/arm64 -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
-	docker volume create kismet_${DISTRO}_${ARCH}_sysroot
+	docker build -t kismet/mantic_arm64 -f Dockerfile-arm64 .
+	docker volume create kismet_mantic_arm64_sysroot
 	docker run --rm \
-		--mount source=kismet_${DISTRO}_${ARCH}_sysroot,target=/mnt/sysroot \
-		kismet/${DISTRO}_${ARCH}:latest \
-		sh -c "tar \
+		--mount source=kismet_mantic_arm64_sysroot,target=/mnt/sysroot \
+		kismet/mantic_arm64:latest \
+		sh -c "/usr/bin/tar \
 		--exclude=/mnt \
 		--exclude=/dev \
 		--exclude=/proc \

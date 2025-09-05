@@ -30,18 +30,28 @@ fi
     --prefix=/usr \
     --sysconfdir=/etc/kismet \
     --disable-element-typesafety \
-    --enable-protobuf \
-    --disable-mosquitto \
-    --disable-libwebsockets \
-    --enable-wifi-coconut
-
+    --enable-protobuf
 
 if [ "${NCORES}" = "" ]; then 
 	NCORES=$(nproc)
 fi
 make -j${NCORES} || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
 
-/tmp/fpm/fpm_ubuntu_bionic.sh || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
+/tmp/fpm/fpm_debian_bullseye.sh || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
 
 mv -v *.deb /dpkgs
+
+# Build wifi coconut 
+#
+#cd /build 
+#git config --global --add safe.directory /build/hak5-wifi-coconut/.git
+#git clone https://github.com/hak5/hak5-wifi-coconut
+#cd hak5-wifi-coconut 
+#mkdir build 
+#cd build 
+#cmake ../ -DCMAKE_INSTALL_PREFIX=/usr
+#make -j${NCORES} 
+#/tmp/fpm/fpm_debian_bullseye_coconut.sh
+
+#mv -v *.deb /dpkgs
 
