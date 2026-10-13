@@ -1,0 +1,9 @@
+
+if test "${BUILD_METAPACKAGE}" = "1"; then
+    fpm -t deb -a ${ARCH} -s empty -n kismet -v ${PACKAGE} \
+        --description "Kismet metapackage" \
+        --depends kismet-core \
+        --depends kismet-adsb-icao-data \
+        ${METAPACKAGE_LIST} &
+fi
+

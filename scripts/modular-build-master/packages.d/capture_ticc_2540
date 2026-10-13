@@ -1,0 +1,14 @@
+
+if test "${BUILD_CAPTURE_TICC_2540}" = "1"; then
+    fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ti-cc-2540 -v ${PACKAGE} \
+        --description "Kismet TICC2540 BTLE Sniffer capture helper" \
+        --deb-templates ${BUILD_SCRIPT_ROOT}/debian/kismet.templates \
+        --deb-config ${BUILD_SCRIPT_ROOT}/debian/kismet.config \
+        --post-install ${BUILD_SCRIPT_ROOT}/debian/kismet_cap_ti_cc_2540.postinst \
+        ${LIBCAP_DEPENDS} \
+        ${LIBUSB_DEPENDS} \
+        ${LIBWEBSOCKETS_DEPENDS} \
+        /build/kismet/packaging/udev/99-kismet-ticc2540.rules=/etc/udev/rules.d/99-kismet-ticc2540.rules \
+        /build/kismet/capture_ti_cc_2540/kismet_cap_ti_cc_2540=/usr/bin/kismet_cap_ti_cc_2540  || { BUILD_FAILED=1; }&
+fi
+

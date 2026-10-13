@@ -9,6 +9,8 @@ services:
     build: .
 
     environment:
+      - BUILD_PLATFORM=ubuntu_noble
+      - BUILD_CROSS=1
       - CHECKOUT=HEAD
       - VERSION
       - ARCH=arm64

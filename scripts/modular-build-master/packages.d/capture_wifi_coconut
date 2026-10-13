@@ -1,0 +1,15 @@
+
+if test "${BUILD_CAPTURE_WIFI_COCONUT}" = "1"; then
+    fpm -t deb -a ${ARCH} -s dir -n kismet-capture-hak5-wifi-coconut -v ${PACKAGE} \
+        --description "Kismet Hak5 WiFi Coconut capture helper" \
+        --deb-templates ${BUILD_SCRIPT_ROOT}/debian/kismet.templates \
+        --deb-config ${BUILD_SCRIPT_ROOT}/debian/kismet.config \
+        --post-install ${BUILD_SCRIPT_ROOT}/debian/kismet_cap_hak5_wifi_coconut.postinst \
+        ${LIBCAP_DEPENDS} \
+        ${LIBUSB_DEPENDS} \
+        ${LIBWEBSOCKETS_DEPENDS} \
+        /build/kismet/capture_hak5_wifi_coconut/libwifiuserspace/firmware/LICENSE-ralink-mediatek.txt=/usr/share/kismet/firmware/LICENSE-ralink-mediatek.txt \
+        /build/kismet/capture_hak5_wifi_coconut/libwifiuserspace/firmware/rt2870.bin=/usr/share/kismet/firmware/rt2870.bin \
+        /build/kismet/capture_hak5_wifi_coconut/kismet_cap_hak5_wifi_coconut=/usr/bin/kismet_cap_hak5_wifi_coconut || { BUILD_FAILED=1; } &
+fi
+

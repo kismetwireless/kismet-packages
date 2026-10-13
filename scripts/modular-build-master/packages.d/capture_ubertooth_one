@@ -1,0 +1,14 @@
+
+if test "${BUILD_CAPTURE_UBERTOOTH_ONE}" = "1"; then
+    fpm -t deb -a ${ARCH} -s dir -n kismet-capture-ubertooth-one -v ${PACKAGE} \
+        --description "Kismet Ubertooth One BT Sniffer capture helper" \
+        --deb-templates ${BUILD_SCRIPT_ROOT}/debian/kismet.templates \
+        --deb-config ${BUILD_SCRIPT_ROOT}/debian/kismet.config \
+        --post-install ${BUILD_SCRIPT_ROOT}/debian/kismet_cap_ubertooth_one.postinst \
+        ${LIBCAP_DEPENDS} \
+        ${LIBUSB_DEPENDS} \
+        ${LIBUBERTOOTH_DEPENDS} \
+        ${LIBWEBSOCKETS_DEPENDS} \
+        /build/kismet/capture_ubertooth_one/kismet_cap_ubertooth_one=/usr/bin/kismet_cap_ubertooth_one || { BUILD_FAILED=1; } &
+fi
+

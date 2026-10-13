@@ -1,0 +1,104 @@
+#!/bin/sh
+
+BUILD_SCRIPT_ROOT="/tmp/modular-build/"
+
+# Load platform
+
+. "platforms/$BUILD_PLATFORM"
+
+cd /build
+
+git config --global --add safe.directory /kismet/.git
+git clone --recursive /kismet
+cd kismet
+git checkout master || exit 1
+
+if [ "${NCORES}" = "" ]; then
+	NCORES=$(nproc)
+fi
+
+if [ "${CHECKOUT}"x != "x" ]; then
+	echo "Checking out ${CHECKOUT}"
+	git checkout ${CHECKOUT} || exit 1
+fi
+
+# if test "${CHECKOUT}"x = "HEADx"; then
+#     touch /dpkgs/last_git_${ARCH}
+#
+#     if test "$(cat /dpkgs/last_git_${ARCH})" = "$(git rev-parse --short HEAD)"; then
+#         echo "*** No build required ***"
+#         exit 0
+#     fi
+#
+#     echo "*** Cleaning old git packages ***"
+#     rm -vf ${BASE_DIR}/dpkgs/*git*${ARCH}.deb
+#
+#     echo -n "$(git rev-parse --short HEAD)" > /dpkgs/last_git_${ARCH}
+# fi
+
+if test "${BUILD_CROSS}" = "1"; then
+    export PKG_CONFIG_DIR=""
+    export PKG_CONFIG_PATH="/sysroot/usr/lib/pkgconfig:/sysroot/usr/share/pkgconfig:/sysroot/usr/lib/${ABI}/pkgconfig"
+    export PKG_CONFIG_SYSROOT_DIR="/sysroot"
+
+    export AR=${ABI}-ar
+    export CC=${ABI}-gcc
+    export CXX=${ABI}-g++
+
+    ./configure \
+        --build=x86_64-linux \
+        --host=${ABI} \
+        CFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
+        CPPFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
+        CXXFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
+        LDFLAGS="-L/sysroot/usr/lib/${ABI} --sysroot=/sysroot" \
+        --prefix=/usr \
+        --sysconfdir=/etc/kismet \
+        --disable-element-typesafety \
+        ${CONFIGURE_PARAMETERS} || { rm /dpkgs/last_git_${ARCH}; echo "*** CONFIGURE FAILED ***"; exit; }
+else
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc/kismet \
+        --disable-element-typesafety \
+        ${CONFIGURE_PARAMETERS} || { rm /dpkgs/last_git_${ARCH}; echo "*** CONFIGURE FAILED ***"; exit; }
+fi
+
+make -j${NCORES} || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
+
+if test "${CHECKOUT}"x = "HEADx"; then
+    GITV="HEAD"
+    VERSION="git$(date '+%Y-%m-%d')r$(git rev-parse --short ${GITV})-1"
+    PACKAGE="9999+${VERSION}"
+else
+    PACKAGE="${VERSION}"
+fi
+
+for p in ${BUILD_SCRIPT_ROOT}/packages.d/*; do
+    . ${p}
+done
+
+wait
+
+if test "${BUILD_FAILED}" = 1; then
+    rm /dpkgs/last_git_${ARCH}
+    echo "*** FAILED ***"
+    exit 1
+fi
+
+mv -v *.deb /dpkgs
+
+# Build wifi coconut
+
+# cd /build
+# git config --global --add safe.directory /build/hak5-wifi-coconut/.git
+# git clone https://github.com/hak5/hak5-wifi-coconut
+# cd hak5-wifi-coconut
+# mkdir build
+# cd build
+# cmake ../ -DCMAKE_INSTALL_PREFIX=/usr
+# make -j${NCORES}
+# /tmp/fpm/fpm_ubuntu_noble_coconut.sh
+#
+# mv -v *.deb /dpkgs
+#

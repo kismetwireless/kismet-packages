@@ -1,0 +1,43 @@
+#!/bin/bash
+
+if test "${BUILD_WIFI_COCONUT}" = 1; then
+
+    git config --global --add safe.directory /build/hak5-wifi-coconut/.git
+    git clone https://github.com/hak5/hak5-wifi-coconut /build/hak5-wifi-coconut
+
+    pushd /build/hak5-wifi-coconut
+
+    if [ "${COCONUT_CHECKOUT}"x != "x" ]; then
+    	echo "Checking out ${COCONUT_CHECKOUT}"
+    	git checkout ${COCONUT_CHECKOUT} || exit 1
+    fi
+
+    if test "${COCONUT_CHECKOUT}"x = "HEADx"; then
+        touch /dpkgs/last_coconut_git_${ARCH}
+
+        if test "$(cat /dpkgs/last_kismet_git_${ARCH})" = "$(git rev-parse --short HEAD)"; then
+            echo "*** No build required ***"
+
+            _DYN_BUILD_COCONUT=0
+        fi
+    fi
+
+    if test "${_DYN_BUILD_COCONUT}" -ne 0; then
+        echo "*** Cleaning old kismet git packages ***"
+        rm -vf ${BASE_DIR}/dpkgs/kismet*git*${ARCH}.deb
+
+        if test "${BUILD_CROSS}" = 1; then
+            echo "Coconut cross build not enabled"
+            exit 0
+        else
+            git config --global --add safe.directory /build/hak5-wifi-coconut/.git
+            git clone https://github.com/hak5/hak5-wifi-coconut /build/hak5-wifi-coconut
+            mkdir /build/hak5-wifi-coconut/build
+
+            pushd /build/hak5-wifi-coconut/build/
+            cmake ../ -DCMAKE_INSTALL_PREFIX=/usr
+            make -j${NCORES} || { rm /dpkgs/last_git_${ARCH}; echo "*** FAILED ***"; exit; }
+            popd
+        fi
+    fi
+fi

@@ -1,0 +1,63 @@
+
+if test "${BUILD_KISMET}" = 1; then
+    git config --global --add safe.directory /kismet/.git
+    git clone --recursive /kismet /build/kismet
+
+    pushd /build/kismet
+
+    git checkout master || exit 1
+
+    if [ "${CHECKOUT}"x != "x" ]; then
+    	echo "Checking out ${CHECKOUT}"
+    	git checkout ${CHECKOUT} || exit 1
+    fi
+
+    if test "${CHECKOUT}"x = "HEADx"; then
+        touch /dpkgs/last_kismet_git_${ARCH}
+
+        if test "$(cat /dpkgs/last_kismet_git_${ARCH})" = "$(git rev-parse --short HEAD)"; then
+            echo "*** No build required ***"
+            _DYN_BUILD_KISMET=0
+        fi
+    fi
+
+    echo "*** Cleaning old kismet git packages ***"
+    rm -vf ${BASE_DIR}/dpkgs/kismet*git*${ARCH}.deb
+
+    if test "${_DYN_BUILD_KISMET}" -ne 0; then
+
+        if test "${BUILD_CROSS}" = "1"; then
+            export PKG_CONFIG_DIR=""
+            export PKG_CONFIG_PATH="/sysroot/usr/lib/pkgconfig:/sysroot/usr/share/pkgconfig:/sysroot/usr/lib/${ABI}/pkgconfig"
+            export PKG_CONFIG_SYSROOT_DIR="/sysroot"
+
+            export AR=${ABI}-ar
+            export CC=${ABI}-gcc
+            export CXX=${ABI}-g++
+
+            ./configure \
+                --build=x86_64-linux \
+                --host=${ABI} \
+                CFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
+                CPPFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
+                CXXFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
+                LDFLAGS="-L/sysroot/usr/lib/${ABI} --sysroot=/sysroot" \
+                --prefix=/usr \
+                --sysconfdir=/etc/kismet \
+                --disable-element-typesafety \
+                ${CONFIGURE_PARAMETERS} || { rm /dpkgs/last_kismet_git_${ARCH}; echo "*** CONFIGURE FAILED ***"; exit; }
+        else
+            ./configure \
+                --prefix=/usr \
+                --sysconfdir=/etc/kismet \
+                --disable-element-typesafety \
+                ${CONFIGURE_PARAMETERS} || { rm /dpkgs/last_kismet_git_${ARCH}; echo "*** CONFIGURE FAILED ***"; exit; }
+        fi
+
+        make -j${NCORES} || { rm /dpkgs/last_kismet_git_${ARCH}; echo "*** FAILED ***"; exit; }
+
+        echo -n "$(git rev-parse --short HEAD)" > /dpkgs/last_kismet_git_${ARCH}
+    fi
+
+    popd
+fi

@@ -1,0 +1,12 @@
+
+if test "${BUILD_CAPTURE_NRF_52840}" = "1"; then
+    fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-52840 -v ${PACKAGE} \
+        --description "Kismet NRF52840 BTLE Sniffer capture helper" \
+        --deb-templates ${BUILD_SCRIPT_ROOT}/debian/kismet.templates \
+        --deb-config ${BUILD_SCRIPT_ROOT}/debian/kismet.config \
+        ${LIBCAP_DEPENDS} \
+        ${LIBWEBSOCKETS_DEPENDS} \
+        /build/kismet/packaging/udev/99-kismet-nrf52840.rules=/etc/udev/rules.d/99-kismet-nrf52840.rules \
+        /build/kismet/capture_nrf_52840/kismet_cap_nrf_52840=/usr/bin/kismet_cap_nrf_52840 || { BUILD_FAILED=1; } &
+fi
+

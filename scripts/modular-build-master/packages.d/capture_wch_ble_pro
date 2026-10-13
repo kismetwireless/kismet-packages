@@ -1,0 +1,13 @@
+
+if test "${BUILD_CAPTURE_WCH_BLE_PRO}" = "1"; then
+    fpm -t deb -a ${ARCH} -s dir -n kismet-capture-wch-ble-pro -v ${PACKAGE} \
+        --description "WCH BLE Analyzer Pro BTLE capture driver" \
+        --deb-templates ${BUILD_SCRIPT_ROOT}/debian/kismet.templates \
+        --deb-config ${BUILD_SCRIPT_ROOT}/debian/kismet.config \
+        ${LIBCAP_DEPENDS} \
+        ${LIBUSB_DEPENDS} \
+        ${LIBWEBSOCKETS_DEPENDS} \
+        /build/kismet/packaging/udev/99-kismet-wch-ble-pro-usb.rules=/etc/udev/rules.d/99-kismet-wch-ble-pro-usb.rules \
+        /build/kismet/capture_wch_ble_analyzer_pro/kismet_cap_wch_ble_analyzer_pro=/usr/bin/kismet_cap_wch_ble_analyzer_pro || { BUILD_FAILED=1; } &
+fi
+

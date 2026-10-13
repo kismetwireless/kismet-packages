@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ "${VERSION}"x != "x" ]; then
+    ln -s /scripts/modular-build-${VERSION} /tmp/modular-build
+else
+    ln -s /scripts/modular-build-master /tmp/modular-build
+fi
+
+exec /tmp/modular-build/build

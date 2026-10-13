@@ -1,0 +1,9 @@
+
+if test "${BUILD_LOGTOOLS}" = "1"; then
+    fpm -t deb -a ${ARCH} -s dir -n kismet-logtools -v ${PACKAGE} \
+    	--description "Kismet kismetdb log tools (kismetdb)" \
+        ${LIBPCAP_DEPENDS} \
+        ${LIBSQLITE_DEPENDS} \
+        ${LOGTOOLS_LIST} || { BUILD_FAILURE=1; } &
+fi
+

@@ -1,0 +1,21 @@
+
+if test "${BUILD_KISMET_CORE}" = "1"; then
+    cp kismet kismet_stripped
+    ${ABI}-strip kismet_stripped
+
+    fpm -t deb -a ${ARCH} -s dir -n kismet-core -v ${PACKAGE} \
+        --description "Kismet core" \
+        --replaces kismet \
+        --replaces kismet-plugins \
+        ${CORE_RECOMMENDS} \
+        --deb-templates ${BUILD_SCRIPT_ROOT}/debian/kismet.templates \
+        --deb-config ${BUILD_SCRIPT_ROOT}/debian/kismet.config \
+        ${CORE_DEPENDS} \
+        ${CORE_CONFIG} \
+        /build/kismet/kismet_stripped=/usr/bin/kismet \
+        /build/kismet/kismet_cap_pcapfile=/usr/bin/kismet_cap_pcapfile \
+        /build/kismet/kismet_cap_kismetdb=/usr/bin/kismet_cap_kismetdb \
+        /build/kismet/packaging/kismet.pc=/usr/share/pkgconfig/kismet.pc \
+        /build/kismet/packaging/systemd/kismet.service=/lib/systemd/system/kismet.service \
+        /build/kismet/http_data/=/usr/share/kismet/httpd || { BUILD_FAILED=1; } &
+fi

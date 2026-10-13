@@ -1,0 +1,13 @@
+
+if test "${BUILD_CAPTURE_RZ_KILLERZEE}" = "1"; then
+    fpm -t deb -a ${ARCH} -s dir -n kismet-capture-rz-killerbee -v ${PACKAGE} \
+        --description "Kismet Killerbee Sniffer capture helper" \
+        --deb-templates ${BUILD_SCRIPT_ROOT}/debian/kismet.templates \
+        --deb-config ${BUILD_SCRIPT_ROOT}/debian/kismet.config \
+        --post-install ${BUILD_SCRIPT_ROOT}/debian/kismet_cap_rz_killerbee.postinst \
+        ${LIBCAP_DEPENDS} \
+        ${LIBUSB_DEPENDS} \
+        ${LIBWEBSOCKETS_DEPENDS} \
+        /build/kismet/capture_rz_killerbee/kismet_cap_rz_killerbee=/usr/bin/kismet_cap_rz_killerbee || { BUILD_FAILED=1; } &
+fi
+

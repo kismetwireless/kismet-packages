@@ -1,0 +1,8 @@
+
+if test "${BUILD_ICAO}" = "1"; then
+    fpm -t deb -a ${ARCH} -s dir -n kismet-adsb-icao-data -v ${PACKAGE} \
+        --description "Kismet ADSB ICAO data" \
+        /build/kismet/conf/kismet_adsb_icao.txt.gz=/usr/share/kismet/kismet_adsb_icao.txt.gz || { BUILD_FAILED=1; } &
+fi
+
+

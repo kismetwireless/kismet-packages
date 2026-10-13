@@ -1,0 +1,13 @@
+
+if test "${BUILD_CAPTURE_NRF_MOUSEJACK}" = "1"; then
+    fpm -t deb -a ${ARCH} -s dir -n kismet-capture-nrf-mousejack -v ${PACKAGE} \
+        --description "Kismet nRF MouseJack capture helper" \
+        --deb-templates ${BUILD_SCRIPT_ROOT}/debian/kismet.templates \
+        --deb-config ${BUILD_SCRIPT_ROOT}/debian/kismet.config \
+        --post-install ${BUILD_SCRIPT_ROOT}/debian/kismet_cap_nrf_mousejack.postinst \
+        ${LIBCAP_DEPENDS} \
+        ${LIBUSB_DEPENDS} \
+        ${LIBWEBSOCKETS_DEPENDS} \
+        /build/kismet/capture_nrf_mousejack/kismet_cap_nrf_mousejack=/usr/bin/kismet_cap_nrf_mousejack || { BUILD_FAILED = 1; } &
+fi
+

@@ -1,0 +1,14 @@
+
+if test "${BUILD_CAPTURE_BLADERF_WIPHY}" = "1"; then
+    fpm -t deb -a ${ARCH} -s dir -n kismet-capture-bladerf-wiphy -v ${PACKAGE} \
+        --description "Kismet BladeRF WiPhy capture helper" \
+        --deb-templates ${BUILD_SCRIPT_ROOT}/debian/kismet.templates \
+        --deb-config ${BUILD_SCRIPT_ROOT}/debian/kismet.config \
+        --post-install ${BUILD_SCRIPT_ROOT}/debian/kismet_cap_bladerf_wiphy.postinst \
+        ${LIBCAP_DEPENDS} \
+        ${LIBUSB_DEPENDS} |
+        ${LIBBLADERF_DEPENDS} \
+        ${LIBWEBSOCKETS_DEPENDS} \
+        /build/kismet/capture_bladerf_wiphy/kismet_cap_bladerf_wiphy=/usr/bin/kismet_cap_bladerf_wiphy || { BUILD_FAILED=1; } &
+fi
+

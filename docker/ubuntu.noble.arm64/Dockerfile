@@ -1,6 +1,7 @@
 FROM ubuntu:noble
 
-# Derive from kali to get the matching gcc attributes
+ENV BUILD_PLATFORM ubuntu_noble
+ENV BUILD_CROSS 1
 
 ENV CHECKOUT HEAD NCORES
 

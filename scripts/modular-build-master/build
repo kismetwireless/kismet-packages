@@ -1,0 +1,42 @@
+#!/bin/sh
+
+BUILD_SCRIPT_ROOT="/tmp/modular-build/"
+
+# Load platform
+
+echo "Sourcing platform"
+. "${BUILD_SCRIPT_ROOT}/platforms/$BUILD_PLATFORM"
+
+if [ "${NCORES}" = "" ]; then
+	NCORES=$(nproc)
+fi
+
+echo "Running builds"
+for p in ${BUILD_SCRIPT_ROOT}/builds.d/*; do
+    . ${p}
+done
+
+echo "Getting version"
+if test "${CHECKOUT}"x = "HEADx"; then
+    GITV="HEAD"
+    VERSION="git$(date '+%Y-%m-%d')r$(git rev-parse --short ${GITV})-1"
+    PACKAGE="9999+${VERSION}"
+else
+    PACKAGE="${VERSION}"
+fi
+
+echo "Running packages"
+for p in ${BUILD_SCRIPT_ROOT}/packages.d/*; do
+    . ${p}
+done
+
+wait
+
+if test "${BUILD_FAILED}" = 1; then
+    rm /dpkgs/last_git_${ARCH}
+    echo "*** FAILED ***"
+    exit 1
+fi
+
+mv -v *.deb /dpkgs
+

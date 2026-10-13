@@ -1,0 +1,13 @@
+
+if test "${BUILD_CAPTURE_LINUX_BLUETOOTH}" = "1"; then
+    fpm -t deb -a ${ARCH} -s dir -n kismet-capture-linux-bluetooth -v ${PACKAGE} \
+        --description "Kismet Linux Bluetooth capture helper" \
+        --deb-templates ${BUILD_SCRIPT_ROOT}/debian/kismet.templates \
+        --deb-config ${BUILD_SCRIPT_ROOT}/debian/kismet.config \
+        --post-install ${BUILD_SCRIPT_ROOT}/debian/kismet_cap_linux_bluetooth.postinst \
+        ${LIBCAP_DEPENDS} \
+        ${LIBNM_DEPENDS} \
+        ${LIBWEBSOCKETS_DEPENDS} \
+        /build/kismet/capture_linux_bluetooth/kismet_cap_linux_bluetooth=/usr/bin/kismet_cap_linux_bluetooth || { BUILD_FAILED=1; } &
+fi
+
