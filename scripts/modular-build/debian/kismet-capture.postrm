@@ -1,0 +1,40 @@
+#!/bin/sh
+
+set -e
+
+# Kismet capture helper postrm, rendered by fpm --template-scripts.
+
+UDEV_RULE="<%= udev_rule %>"
+LEGACY_RULES="<%= legacy_rules %>"
+KISMET_VERSION="<%= kismet_version %>"
+
+RULES_SRC=/usr/share/kismet/udev
+RULES_DIR=/etc/udev/rules.d
+
+# Older packages installed udev rules directly into /etc as conffiles
+if [ "$LEGACY_RULES" != "none" ]; then
+    for r in $LEGACY_RULES; do
+        dpkg-maintscript-helper rm_conffile "$r" "${KISMET_VERSION}~" -- "$@"
+    done
+fi
+
+case "$1" in
+    remove|purge)
+        if [ "$UDEV_RULE" != "none" ]; then
+            if [ -L "$RULES_DIR/$UDEV_RULE" ] && [ "$(readlink "$RULES_DIR/$UDEV_RULE")" = "$RULES_SRC/$UDEV_RULE" ]; then
+                rm -f "$RULES_DIR/$UDEV_RULE"
+            fi
+
+            if [ -d /run/udev ] && command -v udevadm > /dev/null; then
+                udevadm control --reload-rules || true
+            fi
+        fi
+        ;;
+esac
+
+if [ "$1" = "purge" ] && [ -e /usr/share/debconf/confmodule ]; then
+    . /usr/share/debconf/confmodule
+    db_purge
+fi
+
+exit 0

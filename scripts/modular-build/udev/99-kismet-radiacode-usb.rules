@@ -1,0 +1,6 @@
+# Radiacode USB radiation detector
+# Grants members of the kismet group access; enabled by the kismet-capture postinst
+# when udev device access is selected.
+
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="0483", ATTR{idProduct}=="f123", MODE="0660", GROUP="kismet"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="0483", ATTR{idProduct}=="f123", SYMLINK+="radiacode-%k"

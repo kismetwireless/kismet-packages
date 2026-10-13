@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Common environment, sourced once by modular-build.  Build and package
+# scripts run in subshells of modular-build and inherit everything here,
+# including the platform arrays.
+
+if test "${BUILD_PLATFORM}"x = "x"; then
+    echo "*** BUILD_PLATFORM not set ***"
+    exit 1
+fi
+
+if test "${ARCH}"x = "x" -o "${ABI}"x = "x"; then
+    echo "*** ARCH and ABI must be set ***"
+    exit 1
+fi
+
+if ! test -f "${BUILD_SCRIPT_ROOT}/platforms/${BUILD_PLATFORM}"; then
+    echo "*** Unknown platform ${BUILD_PLATFORM} ***"
+    exit 1
+fi
+
+# Exit code from a build.d script when the tree has already been built
+BUILD_NOT_NEEDED=100
+
+KISMET_SRC="${KISMET_SRC:-/build/kismet}"
+PKG_OUT="${PKG_OUT:-/build/debs}"
+PKG_STAGE_ROOT="${PKG_STAGE_ROOT:-/build/stage}"
+PKG_LOG_DIR="${PKG_LOG_DIR:-/build/logs}"
+DPKG_DIR="${DPKG_DIR:-/dpkgs}"
+
+# fail or warn when verify-deps finds an undeclared library dependency
+VERIFY_DEPS="${VERIFY_DEPS:-fail}"
+
+# Packaging script revision recorded in each package; set by the launcher
+MODULAR_BUILD_REF="${MODULAR_BUILD_REF:-master}"
+
+. "${BUILD_SCRIPT_ROOT}/platforms/${BUILD_PLATFORM}"
+. "${BUILD_SCRIPT_ROOT}/utils/git"
+. "${BUILD_SCRIPT_ROOT}/utils/fpm"
+. "${BUILD_SCRIPT_ROOT}/utils/kismet"
+. "${BUILD_SCRIPT_ROOT}/utils/verify-deps"

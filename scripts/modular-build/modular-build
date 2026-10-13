@@ -1,0 +1,106 @@
+#!/bin/bash
+
+# Modular Kismet package builder
+#
+# Environment:
+#   BUILD_PLATFORM      platform file in platforms/ (required)
+#   ARCH, ABI           debian arch and toolchain ABI (required)
+#   CHECKOUT            git ref to build; HEAD builds nightly git packages
+#   VERSION             release version, used when CHECKOUT is not HEAD
+#   BUILD_CROSS         1 when cross-compiling against /sysroot
+#   NCORES              parallel make jobs (defaults to nproc)
+#   SKIP_BUILD          1 to package an existing build tree without rebuilding
+#   DPKG_DIR            final package destination (defaults to /dpkgs)
+#
+# Arguments:
+#   [package ...]       only build the named packages from the platform list
+
+set -o pipefail
+
+export BUILD_SCRIPT_ROOT="${BUILD_SCRIPT_ROOT:-$(cd "$(dirname "$0")" && pwd)}"
+
+. "${BUILD_SCRIPT_ROOT}/utils/common"
+
+if test "${NCORES}"x = "x"; then
+    NCORES=$(nproc)
+fi
+
+if test $# -gt 0; then
+    KISMET_BUILD_PACKAGES=("$@")
+fi
+
+# Load each package definition to validate it against the platform and
+# collect the configure options the packages need
+echo "*** Checking packages for ${BUILD_PLATFORM} ${ARCH} ***"
+
+KISMET_CONFIGURE_PARAMETERS=()
+
+for p in "${KISMET_BUILD_PACKAGES[@]}"; do
+    _KISMET_PACKAGE_DEFINED "${p}" || exit 1
+
+    KISMET_CONFIGURE_PARAMETERS+=($( . "$(_KISMET_PACKAGE_FILE "${p}")"; echo "${PKG_CONFIGURE}" ))
+
+    ( . "$(_KISMET_PACKAGE_FILE "${p}")"; _KISMET_CHECK_REQUIRES ) || exit 1
+done
+
+# Remove duplicate configure options, keeping order
+KISMET_CONFIGURE_PARAMETERS=($(printf '%s\n' "${KISMET_CONFIGURE_PARAMETERS[@]}" | awk '!seen[$0]++'))
+
+if test "${SKIP_BUILD}" != "1"; then
+    echo "*** Running builds ***"
+
+    for b in "${BUILD_SCRIPT_ROOT}"/build.d/*; do
+        ( . "${b}" )
+        rc=$?
+
+        if test ${rc} -eq ${BUILD_NOT_NEEDED}; then
+            echo "*** $(basename "${b}") ${ARCH} no build required ***"
+            exit 0
+        elif test ${rc} -ne 0; then
+            echo "*** FAILED BUILD $(basename "${b}") ${ARCH} ***"
+            exit 1
+        fi
+    done
+fi
+
+_KISMET_PACKAGE_VERSION
+
+echo "*** Packaging kismet ${PACKAGE} ${ARCH} ***"
+
+rm -rf "${PKG_OUT}" "${PKG_STAGE_ROOT}" "${PKG_LOG_DIR}"
+mkdir -p "${PKG_OUT}" "${PKG_STAGE_ROOT}" "${PKG_LOG_DIR}"
+
+declare -A PKG_PIDS
+
+for p in "${KISMET_BUILD_PACKAGES[@]}"; do
+    ( . "$(_KISMET_PACKAGE_FILE "${p}")"; _KISMET_PACKAGE ) > "${PKG_LOG_DIR}/${p}.log" 2>&1 &
+    PKG_PIDS[${p}]=$!
+done
+
+BUILD_FAILED=0
+
+for p in "${KISMET_BUILD_PACKAGES[@]}"; do
+    if wait ${PKG_PIDS[${p}]}; then
+        echo "*** Packaged ${p} ***"
+    else
+        echo "*** FAILED PACKAGING ${p} ***"
+        sed "s/^/[${p}] /" "${PKG_LOG_DIR}/${p}.log"
+        BUILD_FAILED=1
+    fi
+done
+
+if test "${BUILD_FAILED}" = 1; then
+    echo "*** FAILED ${BUILD_PLATFORM} ${ARCH} ***"
+    exit 1
+fi
+
+if test "${CHECKOUT}"x = "HEADx"; then
+    echo "*** Cleaning old kismet git packages ***"
+    rm -vf "${DPKG_DIR}"/kismet*git*_${ARCH}.deb
+fi
+
+mv -v "${PKG_OUT}"/*.deb "${DPKG_DIR}"/ || exit 1
+
+if test "${SKIP_BUILD}" != "1"; then
+    _MARK_BUILD_COMPLETE "kismet" "${KISMET_SRC}"
+fi

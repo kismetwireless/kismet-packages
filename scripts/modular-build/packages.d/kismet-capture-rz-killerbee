@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-rz-killerbee"
+PKG_DESCRIPTION="Kismet RZ Raven KillerBee sniffer capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_rz_killerbee"
+PKG_UDEV_RULE="99-kismet-rz-killerbee.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_rz_killerbee/kismet_cap_rz_killerbee /usr/bin/kismet_cap_rz_killerbee || return 1
+}

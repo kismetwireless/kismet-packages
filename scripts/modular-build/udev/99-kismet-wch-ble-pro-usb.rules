@@ -1,0 +1,6 @@
+# WCH BLE Analyzer Pro (CH582F BLE MCU)
+# Grants members of the kismet group access; enabled by the kismet-capture postinst
+# when udev device access is selected.
+
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="1a86", ATTR{idProduct}=="8009", MODE="0660", GROUP="kismet"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="1a86", ATTR{idProduct}=="8009", SYMLINK+="wch-ble-pro-mcu-%k"

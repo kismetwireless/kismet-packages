@@ -1,0 +1,62 @@
+Template: kismet-common/install-setuid
+Type: boolean
+Default: true
+Description: Should Kismet be installed with suid-root helpers?
+ Kismet uses multiple helper programs to capture packets.  Some helpers,
+ such as the Linux Wi-Fi and Bluetooth capture tools, need elevated
+ privileges to reconfigure interfaces and capture packets.
+ .
+ Kismet can be installed so that members of the "kismet" system group can
+ run these helpers with the privileges they need, allowing the Kismet
+ server itself to run as a normal user.
+ .
+ This is more secure than running Kismet as root, which increases the risk
+ if there is a security error in Kismet.
+ .
+ This setting is shared by all Kismet capture packages.  If you change it
+ with dpkg-reconfigure, apply it to every installed capture helper with:
+ .
+   dpkg-reconfigure -f noninteractive $(dpkg -l 'kismet-capture-*' | awk '/^ii/ {print $2}')
+ .
+ For more detailed information, please see the Kismet README at:
+ https://www.kismetwireless.net/docs/readme/intro/kismet/
+
+Template: kismet-common/device-access
+Type: select
+Choices: udev, suid
+Default: udev
+Description: How should Kismet USB and serial capture helpers access devices?
+ Many Kismet capture helpers only need access to a USB or serial device,
+ such as a Bluetooth, Zigbee, or SDR sniffer.
+ .
+ udev: Install udev rules which give members of the "kismet" system group
+ access to supported devices.  The capture helpers run without any extra
+ privileges.  This is the recommended option.
+ .
+ suid: Install the capture helpers suid-root, executable by members of the
+ "kismet" system group.
+ .
+ With either option, users who run Kismet must be members of the "kismet"
+ group.  If neither is acceptable, Kismet must be run as root.
+ .
+ This setting is shared by all Kismet capture packages.  If you change it
+ with dpkg-reconfigure, apply it to every installed capture helper with:
+ .
+   dpkg-reconfigure -f noninteractive $(dpkg -l 'kismet-capture-*' | awk '/^ii/ {print $2}')
+
+Template: kismet-common/addgroup-failed
+Type: error
+Description: Creating the kismet system group failed
+ The kismet group does not exist, and creating it failed, so
+ Kismet cannot be configured to capture traffic as an unprivileged
+ user.
+ .
+ Please create the kismet system group and try configuring
+ kismet-core and any kismet-capture-foo packages again.
+
+Template: kismet-common/setcap-failed
+Type: error
+Description: Setting capabilities for a Kismet capture tool failed
+ The attempt to use Linux capabilities to grant packet-capturing
+ privileges to a kismet_cap binary failed.  Instead, it has had the
+ set-user-id bit set.

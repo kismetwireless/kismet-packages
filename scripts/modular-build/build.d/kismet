@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Build the kismet tree; sourced in a subshell by modular-build.
+# KISMET_CONFIGURE_PARAMETERS is collected from the platform packages.
+
+git config --global --add safe.directory /kismet/.git
+
+rm -rf "${KISMET_SRC}"
+git clone --recursive /kismet "${KISMET_SRC}" || exit 1
+
+cd "${KISMET_SRC}" || exit 1
+
+git checkout master || exit 1
+
+if test "${CHECKOUT}"x != "x"; then
+    echo "Checking out ${CHECKOUT}"
+    git checkout "${CHECKOUT}" || exit 1
+    git submodule update --init --recursive || exit 1
+fi
+
+_CHECK_BUILD_NEEDED "kismet" "${KISMET_SRC}" || exit ${BUILD_NOT_NEEDED}
+
+echo "*** Configuring kismet ${ARCH}: ${KISMET_CONFIGURE_PARAMETERS[*]} ${KISMET_PLATFORM_CONFIGURE[*]} ***"
+
+if test "${BUILD_CROSS}" = "1"; then
+    export PKG_CONFIG_DIR=""
+    export PKG_CONFIG_PATH="/sysroot/usr/lib/pkgconfig:/sysroot/usr/share/pkgconfig:/sysroot/usr/lib/${ABI}/pkgconfig"
+    export PKG_CONFIG_SYSROOT_DIR="/sysroot"
+
+    export AR=${ABI}-ar
+    export CC=${ABI}-gcc
+    export CXX=${ABI}-g++
+
+    ./configure \
+        --build=x86_64-linux \
+        --host=${ABI} \
+        CFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
+        CPPFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
+        CXXFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
+        LDFLAGS="-L/sysroot/usr/lib/${ABI} --sysroot=/sysroot" \
+        --prefix=/usr \
+        --sysconfdir=/etc/kismet \
+        --disable-element-typesafety \
+        "${KISMET_CONFIGURE_PARAMETERS[@]}" \
+        "${KISMET_PLATFORM_CONFIGURE[@]}" || { echo "*** KISMET ${ARCH} CROSS CONFIGURE FAILED ***"; exit 1; }
+else
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc/kismet \
+        --disable-element-typesafety \
+        "${KISMET_CONFIGURE_PARAMETERS[@]}" \
+        "${KISMET_PLATFORM_CONFIGURE[@]}" || { echo "*** KISMET ${ARCH} CONFIGURE FAILED ***"; exit 1; }
+fi
+
+make -j${NCORES} || { echo "*** KISMET ${ARCH} BUILD FAILED ***"; exit 1; }

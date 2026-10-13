@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-freaklabs-zigbee-v2"
+PKG_DESCRIPTION="Kismet Freaklabs Zigbee capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    )
+PKG_CONFLICTS=("python3-kismetcapturefreaklabszigbee")
+
+# Suid only: the CP210x serial id (10c4:ea60) is shared with many unrelated
+# devices, so a udev rule cannot safely target the Freaklabs hardware
+PKG_ACCESS="suid"
+PKG_PROGRAM="/usr/bin/kismet_cap_freaklabs_zigbee"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_freaklabs_zigbee_v2/kismet_cap_freaklabs_zigbee /usr/bin/kismet_cap_freaklabs_zigbee || return 1
+}

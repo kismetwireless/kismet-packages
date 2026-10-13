@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-linux-bluetooth"
+PKG_DESCRIPTION="Kismet Linux Bluetooth capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBNM_DEPENDS)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBNM_DEPENDS[@]}"
+    )
+
+PKG_ACCESS="suid"
+PKG_PROGRAM="/usr/bin/kismet_cap_linux_bluetooth"
+PKG_CAPS="cap_net_raw,cap_net_admin"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_linux_bluetooth/kismet_cap_linux_bluetooth /usr/bin/kismet_cap_linux_bluetooth || return 1
+}

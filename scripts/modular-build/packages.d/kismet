@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Metapackage depending on every kismet package the platform builds
+
+PKG_NAME="kismet"
+PKG_DESCRIPTION="Kismet wireless sniffer and IDS (metapackage)"
+
+PKG_DEPENDS=("kismet-core (= ${PACKAGE})")
+for p in $(_KISMET_COMPONENT_PACKAGES); do
+    PKG_DEPENDS+=("${p} (= ${PACKAGE})")
+done

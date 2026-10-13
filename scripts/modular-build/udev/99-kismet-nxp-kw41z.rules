@@ -1,0 +1,6 @@
+# NXP KW41Z BLE / 802.15.4 sniffer
+# Grants members of the kismet group access; enabled by the kismet-capture postinst
+# when udev device access is selected.  The symlink numbers devices starting at 1.
+
+SUBSYSTEM=="tty", ATTRS{idVendor}=="15a2", ATTRS{idProduct}=="0300", MODE="0660", GROUP="kismet"
+ACTION=="add", SUBSYSTEM=="tty", ATTRS{idVendor}=="15a2", ATTRS{idProduct}=="0300", PROGRAM="/bin/sh -c 'echo $$(($$(ls /dev/nxp_kw41z* 2>/dev/null| tail -n1 | sed -e s#/dev/nxp_kw41z## )+1))'", SYMLINK+="nxp_kw41z%c"

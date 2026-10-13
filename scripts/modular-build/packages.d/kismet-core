@@ -1,0 +1,54 @@
+#!/bin/bash
+
+PKG_NAME="kismet-core"
+PKG_DESCRIPTION="Kismet core server, configuration, and web UI"
+PKG_CONFIGURE="--enable-protobuf"
+
+PKG_REQUIRES=(KISMET_CORE_DEPENDS KISMET_CAPTURE_BASE_DEPENDS)
+PKG_DEPENDS=("${KISMET_CORE_DEPENDS[@]}" "${KISMET_CAPTURE_BASE_DEPENDS[@]}")
+PKG_RECOMMENDS=($(_KISMET_COMPONENT_PACKAGES))
+PKG_REPLACES=("kismet" "kismet-plugins")
+
+PKG_FPM_ARGS=(--before-install "${BUILD_SCRIPT_ROOT}/debian/kismet-core.preinst")
+
+KISMET_CONFIG_FILES=(
+    "kismet.conf"
+    "kismet_80211.conf"
+    "kismet_alerts.conf"
+    "kismet_filter.conf"
+    "kismet_httpd.conf"
+    "kismet_logging.conf"
+    "kismet_memory.conf"
+    "kismet_meshtastic.conf"
+    "kismet_uav.conf"
+    "kismet_wardrive.conf"
+    )
+
+KISMET_DATA_FILES=(
+    "kismet_manuf.txt.gz"
+    "kismet_bluetooth_ids.txt.gz"
+    "kismet_bluetooth_manuf.txt.gz"
+    )
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN kismet /usr/bin/kismet || return 1
+    _KISMET_INSTALL_SCRIPT kismet_server /usr/bin/kismet_server || return 1
+    _KISMET_INSTALL_BIN kismet_cap_pcapfile /usr/bin/kismet_cap_pcapfile || return 1
+    _KISMET_INSTALL_BIN kismet_cap_kismetdb /usr/bin/kismet_cap_kismetdb || return 1
+    _KISMET_INSTALL_BIN tools/kismet_discovery /usr/bin/kismet_discovery || return 1
+
+    for c in "${KISMET_CONFIG_FILES[@]}"; do
+        _KISMET_INSTALL_FILE conf/${c} /etc/kismet/${c} || return 1
+    done
+
+    _KISMET_INSTALL_EMPTY_DIR /etc/kismet/kismet_site.d || return 1
+
+    for d in "${KISMET_DATA_FILES[@]}"; do
+        _KISMET_INSTALL_FILE conf/${d} /usr/share/kismet/${d} || return 1
+    done
+
+    _KISMET_INSTALL_TREE http_data /usr/share/kismet/httpd || return 1
+
+    _KISMET_INSTALL_FILE packaging/kismet.pc /usr/share/pkgconfig/kismet.pc || return 1
+    _KISMET_INSTALL_FILE packaging/systemd/kismet.service /lib/systemd/system/kismet.service || return 1
+}

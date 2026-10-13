@@ -1,0 +1,22 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-hak5-wifi-coconut"
+PKG_DESCRIPTION="Kismet Hak5 WiFi Coconut capture helper"
+PKG_CONFIGURE="--enable-wifi-coconut"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    )
+
+# Suid only: the RT5370 id (148f:5370) is shared with common Wi-Fi dongles,
+# so a udev rule cannot safely target the Coconut radios
+PKG_ACCESS="suid"
+PKG_PROGRAM="/usr/bin/kismet_cap_hak5_wifi_coconut"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_hak5_wifi_coconut/kismet_cap_hak5_wifi_coconut /usr/bin/kismet_cap_hak5_wifi_coconut || return 1
+    _KISMET_INSTALL_FILE capture_hak5_wifi_coconut/libwifiuserspace/firmware/LICENSE-ralink-mediatek.txt /usr/share/kismet/firmware/LICENSE-ralink-mediatek.txt || return 1
+    _KISMET_INSTALL_FILE capture_hak5_wifi_coconut/libwifiuserspace/firmware/rt2870.bin /usr/share/kismet/firmware/rt2870.bin || return 1
+}

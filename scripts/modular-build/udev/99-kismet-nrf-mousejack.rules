@@ -1,0 +1,5 @@
+# Nordic nRF24 MouseJack (Crazyradio PA / CrazyPA firmware)
+# Grants members of the kismet group access; enabled by the kismet-capture postinst
+# when udev device access is selected.
+
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="1915", ATTR{idProduct}=="0102", MODE="0660", GROUP="kismet"

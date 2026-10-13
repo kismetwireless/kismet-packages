@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+# Kismet capture helper preinst, rendered by fpm --template-scripts.
+
+LEGACY_RULES="<%= legacy_rules %>"
+KISMET_VERSION="<%= kismet_version %>"
+
+# Older packages installed udev rules directly into /etc as conffiles
+if [ "$LEGACY_RULES" != "none" ]; then
+    for r in $LEGACY_RULES; do
+        dpkg-maintscript-helper rm_conffile "$r" "${KISMET_VERSION}~" -- "$@"
+    done
+fi
+
+exit 0

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-antsdr-droneid"
+PKG_DESCRIPTION="Kismet AntSDR DJI DroneID capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    )
+
+PKG_ACCESS="none"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_antsdr_droneid/kismet_cap_antsdr_droneid /usr/bin/kismet_cap_antsdr_droneid || return 1
+}

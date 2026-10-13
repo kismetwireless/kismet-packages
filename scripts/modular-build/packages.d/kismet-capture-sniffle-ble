@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-sniffle-ble"
+PKG_DESCRIPTION="Kismet Sniffle BTLE capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    )
+
+PKG_ACCESS="suid"
+PKG_PROGRAM="/usr/bin/kismet_cap_sniffle_ble"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_sniffle_ble/kismet_cap_sniffle_ble /usr/bin/kismet_cap_sniffle_ble || return 1
+}

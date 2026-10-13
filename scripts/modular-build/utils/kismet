@@ -1,0 +1,226 @@
+#!/bin/bash
+
+# Kismet packaging helpers
+#
+# Each packages.d/<name> file defines a package and is sourced in its own
+# subshell.  It may set:
+#
+#   PKG_NAME                package name; must match the file name
+#   PKG_DESCRIPTION         package description
+#   PKG_CONFIGURE           configure options this package needs
+#   PKG_REQUIRES=()         platform variables which must be set
+#   PKG_DEPENDS=()          debian dependencies
+#   PKG_RECOMMENDS=()       debian recommends
+#   PKG_CONFLICTS=()        debian conflicts
+#   PKG_REPLACES=()         debian replaces
+#   PKG_FPM_ARGS=()         any additional fpm arguments
+#
+#   PKG_ACCESS              capture privilege model:
+#                             none    no maintainer scripts
+#                             suid    debconf suid prompt (install-setuid)
+#                             device  debconf udev or suid prompt (device-access)
+#   PKG_PROGRAM             installed capture binary the postinst manages
+#   PKG_CAPS                capabilities to set instead of suid (suid only)
+#   PKG_UDEV_RULE           rule in udev/ which grants device access (device only)
+#   PKG_LEGACY_UDEV_RULES   rules previous packages installed as conffiles
+#
+# and the function:
+#
+#   pkg_stage               install files into the staging dir with the
+#                           _KISMET_INSTALL_* helpers; packages without it
+#                           are built as empty metapackages
+
+KISMET_PKG_MAINTAINER="Mike Kershaw <dragorn@kismetwireless.net>"
+KISMET_PKG_URL="https://www.kismetwireless.net"
+KISMET_PKG_LICENSE="GPL-2.0-or-later"
+
+STRIP="${STRIP:-${ABI}-strip}"
+
+_KISMET_PACKAGE_FILE() {
+    echo -n "${BUILD_SCRIPT_ROOT}/packages.d/$1"
+}
+
+_KISMET_PACKAGE_DEFINED() {
+    if ! test -f "$(_KISMET_PACKAGE_FILE "$1")"; then
+        echo "*** Platform ${BUILD_PLATFORM} lists $1 but packages.d/$1 does not exist ***"
+        return 1
+    fi
+
+    return 0
+}
+
+_KISMET_PACKAGE_VERSION() {
+    if test "${CHECKOUT}"x = "HEADx"; then
+        VERSION="git$(date '+%Y-%m-%d')r$(git -C "${KISMET_SRC}" rev-parse --short HEAD)-1"
+        PACKAGE="9999+${VERSION}"
+    else
+        if test "${VERSION}"x = "x"; then
+            echo "*** VERSION must be set when building ${CHECKOUT} ***"
+            exit 1
+        fi
+
+        PACKAGE="${VERSION}"
+    fi
+}
+
+# Every platform package other than the core and the metapackage
+_KISMET_COMPONENT_PACKAGES() {
+    for p in "${KISMET_BUILD_PACKAGES[@]}"; do
+        if test "${p}" != "kismet" -a "${p}" != "kismet-core"; then
+            echo "${p}"
+        fi
+    done
+}
+
+# Make sure the package definition matches its file and the platform
+# defines every library it needs
+_KISMET_CHECK_REQUIRES() {
+    FAILED=0
+
+    if test "${PKG_NAME}"x = "x"; then
+        echo "*** Package definition does not set PKG_NAME ***"
+        return 1
+    fi
+
+    if ! test -f "$(_KISMET_PACKAGE_FILE "${PKG_NAME}")"; then
+        echo "*** PKG_NAME ${PKG_NAME} does not match its packages.d file ***"
+        return 1
+    fi
+
+    for r in "${PKG_REQUIRES[@]}"; do
+        if test "${!r}"x = "x"; then
+            echo "*** ${PKG_NAME} requires ${r}, which platform ${BUILD_PLATFORM} does not set ***"
+            FAILED=1
+        fi
+    done
+
+    case "${PKG_ACCESS:-none}" in
+        none)
+            ;;
+        suid)
+            if test "${PKG_PROGRAM}"x = "x"; then
+                echo "*** ${PKG_NAME} uses suid access but does not set PKG_PROGRAM ***"
+                FAILED=1
+            fi
+            ;;
+        device)
+            if test "${PKG_PROGRAM}"x = "x" -o "${PKG_UDEV_RULE}"x = "x"; then
+                echo "*** ${PKG_NAME} uses device access but does not set PKG_PROGRAM and PKG_UDEV_RULE ***"
+                FAILED=1
+            elif ! test -f "${BUILD_SCRIPT_ROOT}/udev/${PKG_UDEV_RULE}"; then
+                echo "*** ${PKG_NAME} udev rule udev/${PKG_UDEV_RULE} does not exist ***"
+                FAILED=1
+            fi
+            ;;
+        *)
+            echo "*** ${PKG_NAME} has unknown PKG_ACCESS ${PKG_ACCESS} ***"
+            FAILED=1
+            ;;
+    esac
+
+    return ${FAILED}
+}
+
+_KISMET_STAGE_DIR() {
+    echo -n "${PKG_STAGE_ROOT}/${PKG_NAME}"
+}
+
+# _KISMET_INSTALL_BIN [source relative to kismet src] [destination]
+# Install and strip a compiled binary
+_KISMET_INSTALL_BIN() {
+    install -D -m 0755 "${KISMET_SRC}/$1" "$(_KISMET_STAGE_DIR)$2" || return 1
+    ${STRIP} "$(_KISMET_STAGE_DIR)$2" || return 1
+}
+
+# _KISMET_INSTALL_SCRIPT [source relative to kismet src] [destination]
+_KISMET_INSTALL_SCRIPT() {
+    install -D -m 0755 "${KISMET_SRC}/$1" "$(_KISMET_STAGE_DIR)$2" || return 1
+}
+
+# _KISMET_INSTALL_FILE [source relative to kismet src] [destination]
+_KISMET_INSTALL_FILE() {
+    install -D -m 0644 "${KISMET_SRC}/$1" "$(_KISMET_STAGE_DIR)$2" || return 1
+}
+
+# _KISMET_INSTALL_TREE [source dir relative to kismet src] [destination dir]
+_KISMET_INSTALL_TREE() {
+    mkdir -p "$(_KISMET_STAGE_DIR)$2" || return 1
+    cp -r "${KISMET_SRC}/$1/." "$(_KISMET_STAGE_DIR)$2/" || return 1
+    find "$(_KISMET_STAGE_DIR)$2" -type d -exec chmod 0755 {} + || return 1
+    find "$(_KISMET_STAGE_DIR)$2" -type f -exec chmod 0644 {} + || return 1
+}
+
+# _KISMET_INSTALL_EMPTY_DIR [destination dir]
+_KISMET_INSTALL_EMPTY_DIR() {
+    install -d -m 0755 "$(_KISMET_STAGE_DIR)$1" || return 1
+}
+
+# _KISMET_INSTALL_UDEV [rule file in udev/]
+# Rules are installed inactive; the capture postinst links them into
+# /etc/udev/rules.d when the user selects udev device access
+_KISMET_INSTALL_UDEV() {
+    install -D -m 0644 "${BUILD_SCRIPT_ROOT}/udev/$1" "$(_KISMET_STAGE_DIR)/usr/share/kismet/udev/$1" || return 1
+}
+
+# Stage, verify, and build the package currently defined
+_KISMET_PACKAGE() {
+    _KISMET_CHECK_REQUIRES || return 1
+
+    FPM_ARGS=(
+        -t deb
+        -a "${ARCH}"
+        -n "${PKG_NAME}"
+        -v "${PACKAGE}"
+        -p "${PKG_OUT}/${PKG_NAME}_${PACKAGE}_${ARCH}.deb"
+        --description "${PKG_DESCRIPTION}"
+        --maintainer "${KISMET_PKG_MAINTAINER}"
+        --url "${KISMET_PKG_URL}"
+        --license "${KISMET_PKG_LICENSE}"
+        --vendor "Kismet"
+        --deb-field "X-Kismet-Packaging: ${MODULAR_BUILD_REF}"
+        )
+
+    _FPM_ADD --depends "${PKG_DEPENDS[@]}"
+    _FPM_ADD --deb-recommends "${PKG_RECOMMENDS[@]}"
+    _FPM_ADD --conflicts "${PKG_CONFLICTS[@]}"
+    _FPM_ADD --replaces "${PKG_REPLACES[@]}"
+
+    case "${PKG_ACCESS:-none}" in
+        suid|device)
+            FPM_ARGS+=(
+                --deb-templates "${BUILD_SCRIPT_ROOT}/debian/kismet.templates"
+                --deb-config "${BUILD_SCRIPT_ROOT}/debian/kismet-${PKG_ACCESS}.config"
+                --before-install "${BUILD_SCRIPT_ROOT}/debian/kismet-capture.preinst"
+                --after-install "${BUILD_SCRIPT_ROOT}/debian/kismet-capture.postinst"
+                --after-remove "${BUILD_SCRIPT_ROOT}/debian/kismet-capture.postrm"
+                --template-scripts
+                )
+
+            _FPM_TEMPLATE_VALUE program "${PKG_PROGRAM}"
+            _FPM_TEMPLATE_VALUE access "${PKG_ACCESS}"
+            _FPM_TEMPLATE_VALUE caps "${PKG_CAPS}"
+            _FPM_TEMPLATE_VALUE udev_rule "${PKG_UDEV_RULE}"
+            _FPM_TEMPLATE_VALUE legacy_rules "${PKG_LEGACY_UDEV_RULES}"
+            _FPM_TEMPLATE_VALUE kismet_version "${PACKAGE}"
+            ;;
+    esac
+
+    FPM_ARGS+=("${PKG_FPM_ARGS[@]}")
+
+    if declare -F pkg_stage > /dev/null; then
+        rm -rf "$(_KISMET_STAGE_DIR)"
+        mkdir -p "$(_KISMET_STAGE_DIR)"
+
+        pkg_stage || { echo "*** ${PKG_NAME} staging failed ***"; return 1; }
+
+        if test "${PKG_ACCESS:-none}" = "device"; then
+            _KISMET_INSTALL_UDEV "${PKG_UDEV_RULE}" || return 1
+        fi
+
+        _VERIFY_DEPS "$(_KISMET_STAGE_DIR)" "${PKG_DEPENDS[@]}" || return 1
+
+        fpm -s dir -C "$(_KISMET_STAGE_DIR)" "${FPM_ARGS[@]}" . || return 1
+    else
+        fpm -s empty "${FPM_ARGS[@]}" || return 1
+    fi
+}

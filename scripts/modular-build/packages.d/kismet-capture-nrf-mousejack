@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-nrf-mousejack"
+PKG_DESCRIPTION="Kismet nRF MouseJack capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_nrf_mousejack"
+PKG_UDEV_RULE="99-kismet-nrf-mousejack.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_nrf_mousejack/kismet_cap_nrf_mousejack /usr/bin/kismet_cap_nrf_mousejack || return 1
+}

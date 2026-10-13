@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-nrf-51822"
+PKG_DESCRIPTION="Kismet nRF51822 BTLE sniffer capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_nrf_51822"
+PKG_UDEV_RULE="99-kismet-nrf51822.rules"
+PKG_LEGACY_UDEV_RULES="/etc/udev/rules.d/99-kismet-nrf51822.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_nrf_51822/kismet_cap_nrf_51822 /usr/bin/kismet_cap_nrf_51822 || return 1
+}

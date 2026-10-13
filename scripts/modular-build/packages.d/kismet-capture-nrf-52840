@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-nrf-52840"
+PKG_DESCRIPTION="Kismet nRF52840 802.15.4 sniffer capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_nrf_52840"
+PKG_UDEV_RULE="99-kismet-nrf52840.rules"
+PKG_LEGACY_UDEV_RULES="/etc/udev/rules.d/99-kismet-nrf52840.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_nrf_52840/kismet_cap_nrf_52840 /usr/bin/kismet_cap_nrf_52840 || return 1
+}

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-serial-radview"
+PKG_DESCRIPTION="Kismet Radview geiger counter capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    )
+
+PKG_ACCESS="suid"
+PKG_PROGRAM="/usr/bin/kismet_cap_serial_radview"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_serial_radview/kismet_cap_serial_radview /usr/bin/kismet_cap_serial_radview || return 1
+}

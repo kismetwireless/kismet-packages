@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-nxp-kw41z"
+PKG_DESCRIPTION="Kismet NXP KW41Z BTLE and Zigbee sniffer capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_nxp_kw41z"
+PKG_UDEV_RULE="99-kismet-nxp-kw41z.rules"
+PKG_LEGACY_UDEV_RULES="/etc/udev/rules.d/99-kismet-nxp-kw41z.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_nxp_kw41z/kismet_cap_nxp_kw41z /usr/bin/kismet_cap_nxp_kw41z || return 1
+}

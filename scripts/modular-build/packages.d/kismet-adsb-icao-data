@@ -1,0 +1,8 @@
+#!/bin/bash
+
+PKG_NAME="kismet-adsb-icao-data"
+PKG_DESCRIPTION="Kismet ADSB ICAO aircraft registration data"
+
+pkg_stage() {
+    _KISMET_INSTALL_FILE conf/kismet_adsb_icao.txt.gz /usr/share/kismet/kismet_adsb_icao.txt.gz || return 1
+}

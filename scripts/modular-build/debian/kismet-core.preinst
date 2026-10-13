@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+# Create the kismet group before any capture helper is configured.  Capture
+# packages also create it, since remote capture installs may not include
+# kismet-core.
+
+case "$1" in
+    install|upgrade)
+        if ! getent group kismet > /dev/null; then
+            groupadd --system kismet || true
+        fi
+        ;;
+esac
+
+exit 0
