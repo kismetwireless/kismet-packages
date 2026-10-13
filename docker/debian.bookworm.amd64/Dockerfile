@@ -39,6 +39,10 @@ RUN apt-get update && \
         librtlsdr-dev \
 	    libusb-1.0-0-dev \
         libmosquitto-dev \
+        libpcre2-dev \
+        libbladerf-dev \
+        libubertooth-dev \
+        libbtbb-dev \
 	    ruby \
 	    ruby-dev \
 	    rubygems && \

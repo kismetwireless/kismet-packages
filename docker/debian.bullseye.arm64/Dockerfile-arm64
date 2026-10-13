@@ -32,4 +32,5 @@ RUN apt-get update && apt-get install -y \
     libbtbb-dev \
     libubertooth1 \
     libbtbb1 \
-    libmosquitto-dev 
+    libmosquitto-dev \
+    libpcre2-dev

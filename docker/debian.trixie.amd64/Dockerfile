@@ -42,6 +42,8 @@ RUN apt-get update && \
 	    libusb-1.0-0-dev \
         libmosquitto1 \
         libmosquitto-dev \
+        libpcre2-dev \
+        libbladerf-dev \
         libubertooth1 \
         libubertooth-dev \
         libbtbb1 \

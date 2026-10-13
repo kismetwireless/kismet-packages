@@ -44,6 +44,7 @@ RUN apt-get update && apt-get install -y \
     libbladerf2 \
     libbladerf-dev \
     libmosquitto-dev \
+    libpcre2-dev \
 	ruby \
 	ruby-dev \
 	rubygems && \

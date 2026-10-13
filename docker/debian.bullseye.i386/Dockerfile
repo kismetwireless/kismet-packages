@@ -41,6 +41,7 @@ RUN apt-get update && apt-get install -y \
     libubertooth-dev \
     libbtbb-dev \
     libmosquitto-dev \
+    libpcre2-dev \
 	ruby \
 	ruby-dev \
 	rubygems && \
