@@ -16,12 +16,12 @@ VERIFY_DEPS_IGNORE=(
 if test "${BUILD_CROSS}" = "1"; then
     VERIFY_DEPS_ROOT="/sysroot"
     VERIFY_DEPS_DPKG=(dpkg --admindir=/sysroot/var/lib/dpkg)
+    OBJDUMP="${OBJDUMP:-${ABI}-objdump}"
 else
     VERIFY_DEPS_ROOT=""
     VERIFY_DEPS_DPKG=(dpkg)
+    OBJDUMP="${OBJDUMP:-objdump}"
 fi
-
-OBJDUMP="${OBJDUMP:-${ABI}-objdump}"
 
 # _VERIFY_DEPS_FIND_LIB [soname]
 # Print the path of the library, relative to the root it was found in

@@ -34,7 +34,13 @@ KISMET_PKG_MAINTAINER="Mike Kershaw <dragorn@kismetwireless.net>"
 KISMET_PKG_URL="https://www.kismetwireless.net"
 KISMET_PKG_LICENSE="GPL-2.0-or-later"
 
-STRIP="${STRIP:-${ABI}-strip}"
+# Native toolchains are not always named for the multiarch ABI (i386 uses
+# i686-linux-gnu-*), so only cross builds use the prefixed tools
+if test "${BUILD_CROSS}" = "1"; then
+    STRIP="${STRIP:-${ABI}-strip}"
+else
+    STRIP="${STRIP:-strip}"
+fi
 
 _KISMET_PACKAGE_FILE() {
     echo -n "${BUILD_SCRIPT_ROOT}/packages.d/$1"
