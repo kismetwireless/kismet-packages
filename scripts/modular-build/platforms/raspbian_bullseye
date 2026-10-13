@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Raspbian Bullseye (armhf cross build); same libraries as Debian Bullseye
+
+. "${BUILD_SCRIPT_ROOT}/platforms/debian_bullseye"
