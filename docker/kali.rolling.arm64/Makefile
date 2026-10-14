@@ -33,7 +33,7 @@ shell:
 	@docker compose run --rm kismet-build /bin/bash
 
 armshell:
-	docker build -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
+	docker build --pull -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
 	docker run --rm \
 		--mount source=kismet_${DISTRO}_${ARCH}_sysroot,target=/mnt/sysroot \
 		kismet/${DISTRO}_${ARCH}:latest \
