@@ -10,6 +10,7 @@ DISTRO=ubuntu_focal
 ARCH=arm64
 
 container:
+	docker pull --platform linux/arm64 arm64v8/ubuntu:focal
 	docker build --pull -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
 	docker volume create kismet_${DISTRO}_${ARCH}_sysroot
 	docker run --rm \

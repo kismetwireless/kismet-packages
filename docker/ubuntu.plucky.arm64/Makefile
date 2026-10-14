@@ -8,6 +8,7 @@
 
 container:
 	-docker image rm kismet/plucky_arm64
+	docker pull --platform linux/arm64 arm64v8/ubuntu:plucky
 	docker build --pull --platform linux/arm64/v8 -t kismet/plucky_arm64 -f Dockerfile-arm64 .
 	docker volume create kismet_plucky_arm64_sysroot
 	docker run --rm \

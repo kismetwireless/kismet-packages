@@ -8,6 +8,7 @@
 
 container:
 	-docker image rm kismet/oracular_arm64
+	docker pull --platform linux/arm64 arm64v8/ubuntu:oracular
 	docker build --pull --platform linux/arm64/v8 -t kismet/oracular_arm64 -f Dockerfile-arm64 .
 	docker volume create kismet_oracular_arm64_sysroot
 	docker run --rm \
