@@ -9,7 +9,7 @@
 container:
 	-docker image rm kismet/noble_arm64
 	docker pull --platform linux/arm64 arm64v8/ubuntu:noble
-	docker build --pull -t kismet/noble_arm64 -f Dockerfile-arm64 .
+	docker build --pull --platform linux/arm64 -t kismet/noble_arm64 -f Dockerfile-arm64 .
 	docker volume create kismet_noble_arm64_sysroot
 	docker run --rm \
 		--mount source=kismet_noble_arm64_sysroot,target=/mnt/sysroot \

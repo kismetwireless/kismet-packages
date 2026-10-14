@@ -8,7 +8,7 @@
 
 container:
 	docker pull --platform linux/arm64 arm64v8/ubuntu:jammy
-	docker build --pull -t kismet/jammy_arm64 -f Dockerfile-arm64 .
+	docker build --pull --platform linux/arm64 -t kismet/jammy_arm64 -f Dockerfile-arm64 .
 	docker volume create kismet_jammy_arm64_sysroot
 	docker run --rm \
 		--mount source=kismet_jammy_arm64_sysroot,target=/mnt/sysroot \
