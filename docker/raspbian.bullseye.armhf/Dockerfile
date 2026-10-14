@@ -22,6 +22,10 @@ ENV XTOOLTGZ cross-gcc-10.2.0-pi_0-1
 # Prep host
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
+# Bullseye is end of life; deb.debian.org no longer carries its security
+# updates, so install everything from archive.debian.org
+RUN sed -i "s|http://deb.debian.org|http://archive.debian.org|g" /etc/apt/sources.list
+
 # Install host deps
 RUN apt update && \
         apt install -y \

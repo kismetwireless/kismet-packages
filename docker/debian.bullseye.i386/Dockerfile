@@ -8,6 +8,10 @@ ENV TERMINAL linux
 ENV ARCH i386
 ENV ABI i386-linux-gnu
 
+# Bullseye is end of life; deb.debian.org no longer carries its security
+# updates, so install everything from archive.debian.org
+RUN sed -i "s|http://deb.debian.org|http://archive.debian.org|g" /etc/apt/sources.list
+
 RUN apt-get update && apt-get install -y \
 	sudo \
 	build-essential \
