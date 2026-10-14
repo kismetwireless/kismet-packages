@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-lorapipe"
+PKG_DESCRIPTION="Kismet LoRaPipe LoRa capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    )
+
+PKG_ACCESS="suid"
+PKG_PROGRAM="/usr/bin/kismet_cap_lorapipe"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_lorapipe/kismet_cap_lorapipe /usr/bin/kismet_cap_lorapipe || return 1
+}

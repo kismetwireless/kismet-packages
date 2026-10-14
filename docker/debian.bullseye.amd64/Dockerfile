@@ -8,6 +8,10 @@ ENV TERMINAL linux
 ENV ARCH amd64
 ENV ABI x86_64-linux-gnu
 
+# Bullseye is end of life; deb.debian.org no longer carries its security
+# updates, so install everything from archive.debian.org
+RUN sed -i "s|http://deb.debian.org|http://archive.debian.org|g" /etc/apt/sources.list
+
 RUN apt-get update && \
     apt-get install -y \
 	    sudo \
@@ -43,6 +47,7 @@ RUN apt-get update && \
 	    libubertooth-dev \
 	    libbtbb-dev \
         libmosquitto-dev \
+        libpcre2-dev \
 	    ruby \
 	    ruby-dev \
 	    rubygems && \

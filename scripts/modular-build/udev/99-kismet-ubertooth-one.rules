@@ -1,0 +1,5 @@
+# Ubertooth One
+# Grants members of the kismet group access; enabled by the kismet-capture postinst
+# when udev device access is selected.
+
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="1d50", ATTR{idProduct}=="6002", MODE="0660", GROUP="kismet"

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-radiacode-usb"
+PKG_DESCRIPTION="Kismet Radiacode USB radiation detector capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_radiacode_usb"
+PKG_UDEV_RULE="99-kismet-radiacode-usb.rules"
+PKG_LEGACY_UDEV_RULES="/etc/udev/rules.d/99-kismet-radiacode-usb.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_radiacode/kismet_cap_radiacode_usb /usr/bin/kismet_cap_radiacode_usb || return 1
+}

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-ubertooth-one"
+PKG_DESCRIPTION="Kismet Ubertooth One Bluetooth sniffer capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB KISMET_LIBUBERTOOTH_DEPENDS)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    "${KISMET_LIBUBERTOOTH_DEPENDS[@]}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_ubertooth_one"
+PKG_UDEV_RULE="99-kismet-ubertooth-one.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_ubertooth_one/kismet_cap_ubertooth_one /usr/bin/kismet_cap_ubertooth_one || return 1
+}

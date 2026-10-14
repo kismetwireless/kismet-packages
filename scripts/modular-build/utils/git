@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# _CHECK_BUILD_NEEDED [tool name] [source dir]
+# Nightly (HEAD) builds are skipped when the last successful build was the
+# same revision; tagged builds always build.
+_CHECK_BUILD_NEEDED() {
+    TOOL=$1
+    SRC=$2
+
+    if test "${CHECKOUT}"x != "HEADx"; then
+        return 0
+    fi
+
+    touch "${DPKG_DIR}/last_${TOOL}_git_${ARCH}"
+
+    if test "$(cat "${DPKG_DIR}/last_${TOOL}_git_${ARCH}")" = "$(git -C "${SRC}" rev-parse --short HEAD)"; then
+        return 1
+    fi
+
+    return 0
+}
+
+# _MARK_BUILD_COMPLETE [tool name] [source dir]
+# Only called once every package has been built successfully
+_MARK_BUILD_COMPLETE() {
+    TOOL=$1
+    SRC=$2
+
+    if test "${CHECKOUT}"x != "HEADx"; then
+        return 0
+    fi
+
+    echo -n "$(git -C "${SRC}" rev-parse --short HEAD)" > "${DPKG_DIR}/last_${TOOL}_git_${ARCH}"
+}

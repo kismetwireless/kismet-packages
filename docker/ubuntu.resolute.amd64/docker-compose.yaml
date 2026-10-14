@@ -6,10 +6,12 @@ services:
         environment:
             - CHECKOUT=HEAD
             - VERSION
+            - MODULAR_BUILD_REF
             - ARCH=amd64
             - ABI=x86_64-linux-gnu
+            - BUILD_PLATFORM=ubuntu_resolute
 
-        command: /scripts/launch/ubuntu_resolute.sh
+        command: /scripts/launch/modular.sh
 
         tmpfs: 
             - /build:exec,mode=777

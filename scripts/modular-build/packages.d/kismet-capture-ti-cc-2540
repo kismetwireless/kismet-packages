@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-ti-cc-2540"
+PKG_DESCRIPTION="Kismet TI CC2540 BTLE sniffer capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_ti_cc_2540"
+PKG_UDEV_RULE="99-kismet-ticc2540.rules"
+PKG_LEGACY_UDEV_RULES="/etc/udev/rules.d/99-kismet-ticc2540.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_ti_cc_2540/kismet_cap_ti_cc_2540 /usr/bin/kismet_cap_ti_cc_2540 || return 1
+}

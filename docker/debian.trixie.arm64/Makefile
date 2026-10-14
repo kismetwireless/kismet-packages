@@ -10,7 +10,8 @@ DISTRO=debian_trixie
 ARCH=arm64
 
 container:
-	docker build --platform linux/arm64 -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
+	docker pull --platform linux/arm64 arm64v8/debian:trixie
+	docker build --pull --platform linux/arm64 -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
 	docker volume create kismet_${DISTRO}_${ARCH}_sysroot
 	docker run --rm \
 		--mount source=kismet_${DISTRO}_${ARCH}_sysroot,target=/mnt/sysroot \
@@ -21,7 +22,7 @@ container:
 		--exclude=/proc \
 		--exclude=/sys \
 		-chv / | tar x -C /mnt/sysroot/"
-	docker compose build --no-cache
+	docker compose build --pull --no-cache
 
 kismet:
 	@docker compose run --rm -e NCORES kismet-build

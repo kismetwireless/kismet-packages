@@ -1,0 +1,25 @@
+#!/bin/bash
+
+PKG_NAME="kismet-logtools"
+PKG_DESCRIPTION="Kismet kismetdb log tools"
+
+# pcre2 is optional; platforms built without it leave KISMET_LIBPCRE empty
+PKG_REQUIRES=(KISMET_LIBSQLITE KISMET_LIBPCAP)
+PKG_DEPENDS=("${KISMET_LIBSQLITE}" "${KISMET_LIBPCAP}" "${KISMET_LIBPCRE}")
+
+KISMET_LOG_TOOLS=(
+    "kismetdb_clean"
+    "kismetdb_dump_devices"
+    "kismetdb_statistics"
+    "kismetdb_strip_packets"
+    "kismetdb_to_gpx"
+    "kismetdb_to_kml"
+    "kismetdb_to_pcap"
+    "kismetdb_to_wiglecsv"
+    )
+
+pkg_stage() {
+    for t in "${KISMET_LOG_TOOLS[@]}"; do
+        _KISMET_INSTALL_BIN log_tools/${t} /usr/bin/${t} || return 1
+    done
+}

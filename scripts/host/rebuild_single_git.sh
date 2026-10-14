@@ -1,15 +1,11 @@
-#!/bin/bash -e
+#!/bin/bash
 
 if test $# -ne 5; then
     echo "Expected [base] [src] [docker] [distro] [platform]"
-	exit
+	exit 1
 fi
 
-export BASE_DIR=$1
-export SRC_DIR=$2
-export NCORES=$(nproc)
+# distro and platform are derived from the docker target name by the modular
+# build; they are accepted for compatibility
 
-pushd ${BASE_DIR}/docker/$(basename "${3}")
-make kismet 
-popd
-
+exec $1/scripts/host/modular_build_single.sh $1 $2 $3

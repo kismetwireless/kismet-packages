@@ -43,6 +43,7 @@ RUN apt-get update && apt-get install -y \
     libtbb2 \
     libtbb-dev \
     libmosquitto-dev \
+    libpcre2-dev \
 	ruby \
 	ruby-dev \
 	rubygems && \

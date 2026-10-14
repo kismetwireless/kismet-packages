@@ -1,0 +1,7 @@
+# Nuand bladeRF
+# Grants members of the kismet group access; enabled by the kismet-capture postinst
+# when udev device access is selected.
+
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="1d50", ATTR{idProduct}=="6066", MODE="0660", GROUP="kismet"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="2cf0", ATTR{idProduct}=="5246", MODE="0660", GROUP="kismet"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="2cf0", ATTR{idProduct}=="5250", MODE="0660", GROUP="kismet"

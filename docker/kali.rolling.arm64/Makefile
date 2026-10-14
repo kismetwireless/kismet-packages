@@ -10,7 +10,8 @@ DISTRO=kali_rolling
 ARCH=arm64
 
 container:
-	docker build --no-cache --pull -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
+	docker pull --platform linux/arm64 kalilinux/kali-rolling:arm64
+	docker build --no-cache --pull --platform linux/arm64 -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
 	docker volume create kismet_${DISTRO}_${ARCH}_sysroot
 	docker run --rm \
 		--mount source=kismet_${DISTRO}_${ARCH}_sysroot,target=/mnt/sysroot \
@@ -33,7 +34,8 @@ shell:
 	@docker compose run --rm kismet-build /bin/bash
 
 armshell:
-	docker build -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
+	docker pull --platform linux/arm64 kalilinux/kali-rolling:arm64
+	docker build --pull --platform linux/arm64 -t kismet/${DISTRO}_${ARCH} -f Dockerfile-${ARCH} .
 	docker run --rm \
 		--mount source=kismet_${DISTRO}_${ARCH}_sysroot,target=/mnt/sysroot \
 		kismet/${DISTRO}_${ARCH}:latest \

@@ -11,10 +11,13 @@ services:
     environment:
       - CHECKOUT=HEAD
       - VERSION
+      - MODULAR_BUILD_REF
       - ARCH=arm64
       - ABI=aarch64-linux-gnu
+      - BUILD_PLATFORM=ubuntu_resolute
+      - BUILD_CROSS=1
 
-    command: /scripts/launch/ubuntu_resolute_cross.sh
+    command: /scripts/launch/modular.sh
 
     tmpfs: 
             - /build:exec,mode=777

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-bladerf-wiphy"
+PKG_DESCRIPTION="Kismet bladeRF wiphy capture helper"
+PKG_CONFIGURE="--enable-bladerf"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB KISMET_LIBBLADERF)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    "${KISMET_LIBBLADERF}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_bladerf_wiphy"
+PKG_UDEV_RULE="99-kismet-bladerf.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_bladerf_wiphy/kismet_cap_bladerf_wiphy /usr/bin/kismet_cap_bladerf_wiphy || return 1
+}

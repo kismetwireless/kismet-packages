@@ -1,0 +1,6 @@
+# nRF51822 BLE sniffer firmware
+# Grants members of the kismet group access; enabled by the kismet-capture postinst
+# when udev device access is selected.  The symlink numbers devices starting at 1.
+
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1915", ATTRS{idProduct}=="522a", MODE="0660", GROUP="kismet"
+ACTION=="add", SUBSYSTEM=="tty", ATTRS{idVendor}=="1915", ATTRS{idProduct}=="522a", PROGRAM="/bin/sh -c 'echo $$(($$(ls /dev/nrf51822* 2>/dev/null| tail -n1 | sed -e s#/dev/nrf51822## )+1))'", SYMLINK+="nrf51822%c"

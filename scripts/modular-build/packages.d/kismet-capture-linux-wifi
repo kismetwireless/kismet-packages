@@ -1,0 +1,21 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-linux-wifi"
+PKG_DESCRIPTION="Kismet Linux Wi-Fi capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBPCAP KISMET_LIBNL_DEPENDS KISMET_LIBNM_DEPENDS KISMET_LIBGLIB)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBPCAP}"
+    "${KISMET_LIBNL_DEPENDS[@]}"
+    "${KISMET_LIBNM_DEPENDS[@]}"
+    "${KISMET_LIBGLIB}"
+    )
+
+PKG_ACCESS="suid"
+PKG_PROGRAM="/usr/bin/kismet_cap_linux_wifi"
+PKG_CAPS="cap_net_raw,cap_net_admin"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_linux_wifi/kismet_cap_linux_wifi /usr/bin/kismet_cap_linux_wifi || return 1
+}

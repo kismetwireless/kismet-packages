@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-wch-ble-analyzer-pro"
+PKG_DESCRIPTION="Kismet WCH BLE Analyzer Pro capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_wch_ble_analyzer_pro"
+PKG_UDEV_RULE="99-kismet-wch-ble-pro-usb.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_wch_ble_analyzer_pro/kismet_cap_wch_ble_analyzer_pro /usr/bin/kismet_cap_wch_ble_analyzer_pro || return 1
+}

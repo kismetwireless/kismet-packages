@@ -1,0 +1,6 @@
+# nRF52840 802.15.4 sniffer firmware
+# Grants members of the kismet group access; enabled by the kismet-capture postinst
+# when udev device access is selected.  The symlink numbers devices starting at 1.
+
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1915", ATTRS{idProduct}=="154a", MODE="0660", GROUP="kismet"
+ACTION=="add", SUBSYSTEM=="tty", ATTRS{idVendor}=="1915", ATTRS{idProduct}=="154a", PROGRAM="/bin/sh -c 'echo $$(($$(ls /dev/nrf52840* 2>/dev/null| tail -n1 | sed -e s#/dev/nrf52840## )+1))'", SYMLINK+="nrf52840%c"

@@ -1,0 +1,87 @@
+#!/bin/bash
+
+# Kali rolling; library names track Debian testing and may change
+
+KISMET_BUILD_PACKAGES=(
+    "kismet-core"
+    "kismet-adsb-icao-data"
+    "kismet-logtools"
+    "kismet-capture-linux-wifi"
+    "kismet-capture-linux-bluetooth"
+    "kismet-capture-hak5-wifi-coconut"
+    "kismet-capture-bladerf-wiphy"
+    "kismet-capture-ubertooth-one"
+    "kismet-capture-rtl433-v2"
+    "kismet-capture-rtladsb-v2"
+    "kismet-capture-nrf-mousejack"
+    "kismet-capture-ti-cc-2531"
+    "kismet-capture-ti-cc-2540"
+    "kismet-capture-rz-killerbee"
+    "kismet-capture-radiacode-usb"
+    "kismet-capture-wch-ble-analyzer-pro"
+    "kismet-capture-nrf-51822"
+    "kismet-capture-nrf-52840"
+    "kismet-capture-nxp-kw41z"
+    "kismet-capture-freaklabs-zigbee-v2"
+    "kismet-capture-catsniffer-zigbee"
+    "kismet-capture-sniffle-ble"
+    "kismet-capture-lorapipe"
+    "kismet-capture-serial-radview"
+    "kismet-capture-antsdr-droneid"
+    "kismet"
+    )
+
+# Additional configure options for this platform only
+KISMET_PLATFORM_CONFIGURE=()
+
+KISMET_LIBZ="zlib1g"
+KISMET_LIBPCAP="libpcap0.8t64"
+KISMET_LIBPROTOBUF="libprotobuf32t64"
+KISMET_LIBSSL="libssl3t64"
+KISMET_LIBSQLITE="libsqlite3-0"
+KISMET_LIBDW="libdw1t64"
+KISMET_LIBWEBSOCKET="libwebsockets19t64"
+KISMET_LIBSENSORS="libsensors5"
+KISMET_LIBPCRE="libpcre2-8-0"
+KISMET_LIBMOSQUITTO="libmosquitto1"
+KISMET_LIBGLIB="libglib2.0-0t64"
+
+KISMET_LIBUSB="libusb-1.0-0"
+KISMET_LIBBLADERF="libbladerf2"
+KISMET_LIBRTLSDR="librtlsdr0"
+
+KISMET_LIBNL_DEPENDS=(
+    "libnl-3-200"
+    "libnl-genl-3-200"
+    )
+
+KISMET_LIBNM_DEPENDS=(
+    "libnm0"
+    )
+
+KISMET_LIBCAP_DEPENDS=(
+    "libcap2-bin"
+    "libcap2"
+    )
+
+KISMET_LIBUBERTOOTH_DEPENDS=(
+    "libubertooth1"
+    "libbtbb1"
+    )
+
+KISMET_CORE_DEPENDS=(
+    ${KISMET_LIBZ}
+    ${KISMET_LIBPCAP}
+    ${KISMET_LIBDW}
+    ${KISMET_LIBSQLITE}
+    ${KISMET_LIBPROTOBUF}
+    ${KISMET_LIBSENSORS}
+    ${KISMET_LIBSSL}
+    ${KISMET_LIBPCRE}
+    ${KISMET_LIBMOSQUITTO}
+    )
+
+KISMET_CAPTURE_BASE_DEPENDS=(
+    ${KISMET_LIBCAP_DEPENDS[@]}
+    ${KISMET_LIBWEBSOCKET}
+    )

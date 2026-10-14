@@ -8,7 +8,8 @@
 
 container:
 	-docker image rm kismet/oracular_arm64
-	docker build --platform linux/arm64/v8 -t kismet/oracular_arm64 -f Dockerfile-arm64 .
+	docker pull --platform linux/arm64 arm64v8/ubuntu:oracular
+	docker build --pull --platform linux/arm64/v8 -t kismet/oracular_arm64 -f Dockerfile-arm64 .
 	docker volume create kismet_oracular_arm64_sysroot
 	docker run --rm \
 		--mount source=kismet_oracular_arm64_sysroot,target=/mnt/sysroot \
@@ -19,7 +20,7 @@ container:
 		--exclude=/proc \
 		--exclude=/sys \
 		-chv / | tar x -C /mnt/sysroot/"
-	docker compose build --no-cache
+	docker compose build --pull --no-cache
 
 kismet:
 	@docker compose run --rm -e NCORES kismet-build

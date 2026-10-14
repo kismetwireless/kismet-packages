@@ -1,0 +1,167 @@
+#!/bin/sh
+
+set -e
+
+# Kismet capture helper postinst, rendered by fpm --template-scripts.
+# Originally copied from wireshark-common and modified.
+#
+# access=suid    ask kismet-common/install-setuid; install suid-root, or
+#                with capabilities when caps are set
+# access=device  ask kismet-common/device-access; enable the udev rule, or
+#                install suid-root
+
+. /usr/share/debconf/confmodule
+
+PROGRAM="<%= program %>"
+ACCESS="<%= access %>"
+CAPS="<%= caps %>"
+UDEV_RULE="<%= udev_rule %>"
+LEGACY_RULES="<%= legacy_rules %>"
+KISMET_VERSION="<%= kismet_version %>"
+
+GROUP=kismet
+RULES_SRC=/usr/share/kismet/udev
+RULES_DIR=/etc/udev/rules.d
+
+# Older packages installed udev rules directly into /etc as conffiles
+if [ "$LEGACY_RULES" != "none" ]; then
+    for r in $LEGACY_RULES; do
+        dpkg-maintscript-helper rm_conffile "$r" "${KISMET_VERSION}~" -- "$@"
+    done
+fi
+
+add_group() {
+    if ! getent group $GROUP > /dev/null; then
+        if ! groupadd --system $GROUP; then
+            db_input high kismet-common/addgroup-failed || true
+            db_go || true
+            exit 1
+        fi
+    fi
+}
+
+reload_udev() {
+    if [ -d /run/udev ] && command -v udevadm > /dev/null; then
+        udevadm control --reload-rules || true
+        udevadm trigger --action=add --subsystem-match=usb --subsystem-match=tty || true
+    fi
+}
+
+enable_udev_rule() {
+    if [ -L "$RULES_DIR/$UDEV_RULE" ] || [ -e "$RULES_DIR/$UDEV_RULE" ]; then
+        if [ "$(readlink "$RULES_DIR/$UDEV_RULE")" != "$RULES_SRC/$UDEV_RULE" ]; then
+            echo "$RULES_DIR/$UDEV_RULE already exists and was not installed by Kismet; leaving it unchanged."
+        fi
+        return 0
+    fi
+
+    mkdir -p $RULES_DIR
+    ln -s "$RULES_SRC/$UDEV_RULE" "$RULES_DIR/$UDEV_RULE"
+}
+
+disable_udev_rule() {
+    if [ -L "$RULES_DIR/$UDEV_RULE" ] && [ "$(readlink "$RULES_DIR/$UDEV_RULE")" = "$RULES_SRC/$UDEV_RULE" ]; then
+        rm -f "$RULES_DIR/$UDEV_RULE"
+    fi
+}
+
+set_unprivileged() {
+    chown root:root $PROGRAM
+    chmod u=rwx,go=rx $PROGRAM
+
+    if command -v setcap > /dev/null; then
+        setcap -r $PROGRAM 2> /dev/null || true
+    fi
+}
+
+set_suid() {
+    chown root:$GROUP $PROGRAM
+    chmod u=rwxs,g=rx,o= $PROGRAM
+}
+
+set_caps() {
+    chown root:$GROUP $PROGRAM
+    chmod u=rwx,g=rx,o= $PROGRAM
+
+    if command -v setcap > /dev/null; then
+        if ! setcap $CAPS=eip $PROGRAM; then
+            db_input high kismet-common/setcap-failed || true
+            db_go || true
+            set_suid
+        fi
+    else
+        set_suid
+    fi
+}
+
+case "$1" in
+    configure)
+        # MODE is one of udev, suid, or root
+        if [ "$ACCESS" = "device" ]; then
+            db_get kismet-common/device-access
+            MODE="$RET"
+        else
+            db_get kismet-common/install-setuid
+            if [ "$RET" = "true" ]; then
+                MODE=suid
+            else
+                MODE=root
+            fi
+        fi
+
+        if [ "$MODE" != "root" ]; then
+            add_group
+        fi
+
+        if [ "$ACCESS" = "device" ]; then
+            if [ "$MODE" = "udev" ]; then
+                enable_udev_rule
+            else
+                disable_udev_rule
+            fi
+
+            reload_udev
+        fi
+
+        if dpkg-statoverride --list $PROGRAM > /dev/null; then
+            echo "$PROGRAM permissions are managed by dpkg-statoverride; leaving them unchanged."
+        elif [ -e "$PROGRAM" ]; then
+            case "$MODE" in
+                udev)
+                    set_unprivileged
+                    ;;
+                suid)
+                    if [ "$CAPS" != "none" ]; then
+                        set_caps
+                    else
+                        set_suid
+                    fi
+                    ;;
+                root)
+                    echo "Kismet capture helpers are not being installed suid-root; this is less secure "
+                    echo "because it means Kismet must be run as root at all times.  Strongly consider "
+                    echo "installing as suid-root; for more information see the 'Suid-Install' section of "
+                    echo "the Kismet docs at https://www.kismetwireless.net/docs/readme/intro/kismet/"
+                    set_unprivileged
+                    ;;
+            esac
+        fi
+
+        if [ "$MODE" != "root" ]; then
+            echo "Users must be members of the '$GROUP' group to use $PROGRAM without root;"
+            echo "add them with: usermod -aG $GROUP <username>"
+        fi
+
+        # The debconf answers are shared by every capture package, but a
+        # reconfigure only applies them to this one
+        if [ "$DEBCONF_RECONFIGURE" = "1" ]; then
+            echo "This setting is shared by all Kismet capture packages.  To apply it to every"
+            echo "installed capture helper, run:"
+            echo "  dpkg-reconfigure -f noninteractive \$(dpkg -l 'kismet-capture-*' | awk '/^ii/ {print \$2}')"
+        fi
+        ;;
+esac
+
+db_stop
+
+exit 0

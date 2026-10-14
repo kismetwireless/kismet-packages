@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Helpers which append fpm options to the FPM_ARGS array
+
+# _FPM_ADD [option] [value ...]
+# Add the option once per non-empty value
+_FPM_ADD() {
+    OPT=$1
+    shift
+
+    for v in "$@"; do
+        if test "${v}"x != "x"; then
+            FPM_ARGS+=("${OPT}" "${v}")
+        fi
+    done
+}
+
+# _FPM_TEMPLATE_VALUE [key] [value]
+# Empty values are passed as 'none' so the ERB templates always see a value
+_FPM_TEMPLATE_VALUE() {
+    if test "$2"x = "x"; then
+        FPM_ARGS+=(--template-value "$1=none")
+    else
+        FPM_ARGS+=(--template-value "$1=$2")
+    fi
+}

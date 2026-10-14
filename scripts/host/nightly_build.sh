@@ -9,7 +9,7 @@ export BASE_DIR=$1
 export SRC_DIR=$2
 
 if test -e ${BASE_DIR}/pause; then
-    ech "Paused"
+    echo "Paused"
     exit
 fi
 
