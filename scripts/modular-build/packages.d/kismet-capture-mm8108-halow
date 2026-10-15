@@ -1,0 +1,24 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-mm8108-halow"
+PKG_DESCRIPTION="Kismet Morse Micro MM8108 USB Wi-Fi HaLow capture helper"
+PKG_CONFIGURE="--enable-mm8108"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    )
+
+# Suid only, as the userspace USB Wi-Fi source: root lets libusb detach the
+# kernel morse_usb driver from the adapter
+PKG_ACCESS="suid"
+PKG_PROGRAM="/usr/bin/kismet_cap_mm8108_halow"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_morse_mm8108_usb_halow/kismet_cap_mm8108_halow /usr/bin/kismet_cap_mm8108_halow || return 1
+
+    # Firmware and board configs from morse-firmware, with their license; the
+    # bcf_boardtype_* files are relative links to the board configs
+    _KISMET_INSTALL_TREE capture_morse_mm8108_usb_halow/firmware /usr/share/kismet/firmware || return 1
+}
