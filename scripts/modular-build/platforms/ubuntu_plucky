@@ -10,6 +10,7 @@ KISMET_BUILD_PACKAGES=(
     "kismet-capture-linux-bluetooth"
     "kismet-capture-hak5-wifi-coconut"
     "kismet-capture-usbwifi"
+    "kismet-capture-mm8108-halow"
     "kismet-capture-bladerf-wiphy"
     "kismet-capture-ubertooth-one"
     "kismet-capture-rtl433-v2"
