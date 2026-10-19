@@ -60,8 +60,9 @@ if test $# -ne 2; then
     exit 1
 fi
 
-export BASE_DIR=$(cd "$1" && pwd) || exit 1
-export SRC_DIR=$(cd "$2" && pwd) || exit 1
+BASE_DIR=$(cd "$1" && pwd) || exit 1
+SRC_DIR=$(cd "$2" && pwd) || exit 1
+export BASE_DIR SRC_DIR
 export NCORES=${NCORES:-$(nproc)}
 
 RELEASES=($(git -C "${SRC_DIR}" tag -l 'kismet-[0-9][0-9][0-9][0-9]-[0-9][0-9]-*' --sort=-v:refname | head -n 5))
