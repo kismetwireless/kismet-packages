@@ -4,10 +4,13 @@ PKG_NAME="kismet-capture-mm8108-halow"
 PKG_DESCRIPTION="Kismet Morse Micro MM8108 USB Wi-Fi HaLow capture helper"
 PKG_CONFIGURE="--enable-mm8108"
 
-PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB)
+# zstd and xz for compressed firmware
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB KISMET_LIBZSTD KISMET_LIBLZMA)
 PKG_DEPENDS=(
     "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
     "${KISMET_LIBUSB}"
+    "${KISMET_LIBZSTD}"
+    "${KISMET_LIBLZMA}"
     )
 
 # Suid only, as the userspace USB Wi-Fi source: root lets libusb detach the

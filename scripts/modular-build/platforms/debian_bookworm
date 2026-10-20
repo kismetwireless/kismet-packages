@@ -49,6 +49,8 @@ KISMET_LIBMOSQUITTO="libmosquitto1"
 KISMET_LIBGLIB="libglib2.0-0"
 
 KISMET_LIBUSB="libusb-1.0-0"
+KISMET_LIBZSTD="libzstd1"
+KISMET_LIBLZMA="liblzma5"
 KISMET_LIBBLADERF="libbladerf2"
 KISMET_LIBRTLSDR="librtlsdr0"
 

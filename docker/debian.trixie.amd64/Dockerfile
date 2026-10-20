@@ -40,6 +40,8 @@ RUN apt-get update && \
         librtlsdr-dev \
         libusb-1.0-0 \
 	    libusb-1.0-0-dev \
+	    libzstd-dev \
+	    liblzma-dev \
         libmosquitto1 \
         libmosquitto-dev \
         libpcre2-dev \

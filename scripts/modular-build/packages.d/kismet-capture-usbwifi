@@ -4,10 +4,13 @@ PKG_NAME="kismet-capture-usbwifi"
 PKG_DESCRIPTION="Kismet userspace USB Wi-Fi (MediaTek MT7921U) capture helper"
 PKG_CONFIGURE="--enable-usbwifi"
 
-PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB)
+# zstd and xz for compressed firmware
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB KISMET_LIBZSTD KISMET_LIBLZMA)
 PKG_DEPENDS=(
     "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
     "${KISMET_LIBUSB}"
+    "${KISMET_LIBZSTD}"
+    "${KISMET_LIBLZMA}"
     )
 
 # Suid only: the MT7921U ids are the stock ids of common Wi-Fi dongles, so a
@@ -20,6 +23,7 @@ pkg_stage() {
     _KISMET_INSTALL_BIN capture_userspace_usb_wifi/kismet_cap_usbwifi /usr/bin/kismet_cap_usbwifi || return 1
 
     # Firmware from linux-firmware, with its license, which the userspace
-    # drivers load from /usr/share/kismet/firmware instead of /lib/firmware
+    # drivers load from /usr/share/kismet/firmware first, then from the system
+    # firmware directories
     _KISMET_INSTALL_TREE capture_userspace_usb_wifi/firmware /usr/share/kismet/firmware || return 1
 }

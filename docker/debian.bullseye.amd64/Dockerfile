@@ -42,6 +42,8 @@ RUN apt-get update && \
 	    librtlsdr0 \
         librtlsdr-dev \
 	    libusb-1.0-0-dev \
+	    libzstd-dev \
+	    liblzma-dev \
 	    libubertooth1 \
 	    libbtbb1 \
 	    libubertooth-dev \
