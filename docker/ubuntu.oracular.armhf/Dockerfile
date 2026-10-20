@@ -60,6 +60,8 @@ RUN /usr/sbin/debootstrap --arch=${ARCH} --components=main,contrib,non-free,rest
                     librtlsdr0 \
                     librtlsdr-dev \
                     libusb-1.0-0-dev \
+                    libzstd-dev \
+                    liblzma-dev \
                     libubertooth-dev \
                     libbtbb-dev \
                     libubertooth1 \

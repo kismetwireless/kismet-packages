@@ -15,9 +15,13 @@
 # is [distro]_[release].  amd64 and i386 targets build natively, all other
 # arches cross-compile against the target sysroot.
 #
+# A target whose build dependencies changed has a docker/[target]/REGENERATE
+# marker (see mark_docker_regenerate.sh); its docker image is regenerated
+# before building, and the marker removed once that succeeds.
+#
 # Exit codes:
 #   0   built, or no build needed
-#   1   build failed
+#   1   build failed, or regenerating the docker image failed
 #   2   no modular platform for this target
 
 if test $# -ne 3; then
@@ -85,6 +89,20 @@ fi
 echo "*** Modular build ${TARGET}: platform ${PLATFORM} cross ${CROSS} checkout ${CHECKOUT} ref ${REF} ***"
 
 cd "${BASE_DIR}/docker/${TARGET}" || exit 1
+
+# The target's make container also rebuilds a cross build's sysroot
+if test -f REGENERATE; then
+    echo "*** Regenerating docker ${TARGET}: ***"
+    sed 's/^/    /' REGENERATE
+
+    if ! make container; then
+        echo "*** Regenerating docker ${TARGET} failed, leaving its REGENERATE marker ***"
+        exit 1
+    fi
+
+    rm -f REGENERATE
+    echo "*** Regenerated docker ${TARGET} ***"
+fi
 
 # Override the compose command so builds use the modular launcher regardless
 # of which launcher the target uses for legacy builds

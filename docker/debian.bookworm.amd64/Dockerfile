@@ -38,6 +38,8 @@ RUN apt-get update && \
 	    librtlsdr0 \
         librtlsdr-dev \
 	    libusb-1.0-0-dev \
+	    libzstd-dev \
+	    liblzma-dev \
         libmosquitto-dev \
         libpcre2-dev \
         libbladerf-dev \

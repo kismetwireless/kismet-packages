@@ -28,6 +28,8 @@ RUN apt-get update && apt-get install -y \
 	librtlsdr0 \
     librtlsdr-dev \
 	libusb-1.0-0-dev \
+	libzstd-dev \
+	liblzma-dev \
     libubertooth-dev \
     libbtbb-dev \
     libubertooth1 \

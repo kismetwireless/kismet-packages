@@ -75,6 +75,8 @@ RUN curl -LO ${KEYSRC}{$KEYFILE} && \
                     librtlsdr0 \
                     librtlsdr-dev \
                     libusb-1.0-0-dev \
+                    libzstd-dev \
+                    liblzma-dev \
                     libudev-dev \
                     libubertooth-dev \
                     libbtbb-dev \
