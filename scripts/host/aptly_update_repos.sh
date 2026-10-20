@@ -7,7 +7,15 @@ fi
 
 BASE_DIR=$1
 
-for dist in kali bookworm jammy noble trixie resolute; do
+# Publish a repo for each modular platform
+REPOS=$(${BASE_DIR}/scripts/host/modular_repos.sh ${BASE_DIR}) || exit 1
+
+for dist in ${REPOS}; do
+    if ! test -f ${BASE_DIR}/aptly/${dist}-git-aptly.conf; then
+        echo "*** No aptly config aptly/${dist}-git-aptly.conf, skipping ${dist} ***"
+        continue
+    fi
+
 	(
     	cd ${BASE_DIR}
         echo "Working on ${dist}"
