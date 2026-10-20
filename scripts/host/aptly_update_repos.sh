@@ -7,8 +7,8 @@ fi
 
 BASE_DIR=$1
 
-for dist in kali bookworm focal jammy noble oracular plucky trixie resolute; do
-	( 
+for dist in kali bookworm focal jammy noble plucky trixie resolute; do
+	(
     	cd ${BASE_DIR}
         echo "Working on ${dist}"
         rm -rfv ${BASE_DIR}/aptly/${dist}-git-aptly
