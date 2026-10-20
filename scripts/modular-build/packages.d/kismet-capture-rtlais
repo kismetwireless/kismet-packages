@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-rtlais"
+PKG_DESCRIPTION="Kismet rtlsdr AIS capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB KISMET_LIBRTLSDR)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    "${KISMET_LIBRTLSDR}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_sdr_rtlais"
+PKG_UDEV_RULE="99-kismet-sdr-rtlais.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_sdr_rtlais/kismet_cap_sdr_rtlais /usr/bin/kismet_cap_sdr_rtlais || return 1
+}
