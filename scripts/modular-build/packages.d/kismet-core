@@ -19,6 +19,7 @@ KISMET_CONFIG_FILES=(
     "kismet_httpd.conf"
     "kismet_logging.conf"
     "kismet_memory.conf"
+    "kismet_meshcore.conf"
     "kismet_meshtastic.conf"
     "kismet_uav.conf"
     "kismet_wardrive.conf"
