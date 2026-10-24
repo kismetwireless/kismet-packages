@@ -16,6 +16,7 @@ KISMET_BUILD_PACKAGES=(
     "kismet-capture-rtl433-v2"
     "kismet-capture-rtladsb-v2"
     "kismet-capture-rtlais"
+    "kismet-capture-rtlaisadsb"
     "kismet-capture-nrf-mousejack"
     "kismet-capture-ti-cc-2531"
     "kismet-capture-ti-cc-2540"

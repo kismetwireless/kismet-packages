@@ -1,0 +1,6 @@
+# RTL2832U SDR dongles, for combined AIS and ADS-B capture
+# Grants members of the kismet group access; enabled by the kismet-capture postinst
+# when udev device access is selected.
+
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="0bda", ATTR{idProduct}=="2838", MODE="0660", GROUP="kismet"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="0bda", ATTR{idProduct}=="2832", MODE="0660", GROUP="kismet"
