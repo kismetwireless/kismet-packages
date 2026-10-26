@@ -17,6 +17,8 @@ KISMET_BUILD_PACKAGES=(
     "kismet-capture-rtladsb-v2"
     "kismet-capture-rtlais"
     "kismet-capture-rtlaisadsb"
+    "kismet-capture-cell-at"
+    "kismet-capture-cell-diag"
     "kismet-capture-nrf-mousejack"
     "kismet-capture-ti-cc-2531"
     "kismet-capture-ti-cc-2540"

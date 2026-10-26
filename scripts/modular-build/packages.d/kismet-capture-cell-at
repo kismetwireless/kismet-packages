@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-cell-at"
+PKG_DESCRIPTION="Kismet cell modem (AT command) capture helper and USB modem serial bridge"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    )
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_cell_at"
+PKG_UDEV_RULE="99-kismet-cell-at.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_cell_at/kismet_cap_cell_at /usr/bin/kismet_cap_cell_at || return 1
+    _KISMET_INSTALL_BIN usbserial/kismet_usbserial /usr/bin/kismet_usbserial || return 1
+}
