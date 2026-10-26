@@ -20,7 +20,6 @@ KISMET_LOG_TOOLS=(
     "kismetdb_to_celllog"
     "kismetdb_to_cellndjson"
     "kismetdb_to_hdlc"
-    "kismetdb_to_qmilog"
     )
 
 pkg_stage() {
