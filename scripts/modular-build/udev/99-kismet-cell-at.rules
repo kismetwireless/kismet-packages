@@ -1,0 +1,12 @@
+# Quectel, Telit and Sierra Wireless cell modems, for the cell AT capture
+# Grants members of the kismet group access to the modem's serial and wwan ports,
+# and to the USB device for usb= capture; enabled by the kismet-capture postinst
+# when udev device access is selected.
+
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2c7c", MODE="0660", GROUP="kismet"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1bc7", MODE="0660", GROUP="kismet"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1199", MODE="0660", GROUP="kismet"
+SUBSYSTEM=="wwan", ATTRS{idVendor}=="2c7c", MODE="0660", GROUP="kismet"
+SUBSYSTEM=="wwan", ATTRS{idVendor}=="1bc7", MODE="0660", GROUP="kismet"
+SUBSYSTEM=="wwan", ATTRS{idVendor}=="1199", MODE="0660", GROUP="kismet"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="2c7c", MODE="0660", GROUP="kismet"
