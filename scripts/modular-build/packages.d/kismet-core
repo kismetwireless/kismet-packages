@@ -23,6 +23,7 @@ KISMET_CONFIG_FILES=(
     "kismet_meshtastic.conf"
     "kismet_uav.conf"
     "kismet_wardrive.conf"
+    "kismet_zigbee.conf"
     )
 
 KISMET_DATA_FILES=(
