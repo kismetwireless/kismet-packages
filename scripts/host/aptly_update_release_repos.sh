@@ -20,6 +20,13 @@ for dist in ${REPOS}; do
         continue
     fi
 
+    # A dist without this release's packages keeps its published repo; rebuilding
+    # it would publish an empty repo over the last release
+    if ! compgen -G "${BASE_DIR}/dpkgs-${dist}/*${RELEASEMATCH}*.deb" > /dev/null; then
+        echo "*** No ${RELEASEMATCH} packages in dpkgs-${dist}, keeping its published repo ***"
+        continue
+    fi
+
     (
         cd ${BASE_DIR}
         echo "Working on ${dist}"
@@ -49,8 +56,5 @@ wait
 
 echo "Uploading..."
 rsync -av --delete -e "ssh -F ${BASE_DIR}/../kismet-packages-creds/ssh_config -i ${BASE_DIR}/../kismet-packages-creds/id_rsa" ${BASE_DIR}/repos-aptly/apt/release/ dragorn@kismetrepo:repos/apt/release/
-
-
-exit 1
 
 
