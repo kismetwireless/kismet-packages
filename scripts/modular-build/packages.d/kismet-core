@@ -26,6 +26,7 @@ KISMET_CONFIG_FILES=(
     "kismet_zigbee.conf"
     "kismet_device_rules.conf"
     "kismet_device_rules.txt"
+    "kismet_device_rules_highlights.txt"
     )
 
 KISMET_DATA_FILES=(
