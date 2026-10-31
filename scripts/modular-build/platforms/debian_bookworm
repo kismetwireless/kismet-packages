@@ -17,6 +17,7 @@ KISMET_BUILD_PACKAGES=(
     "kismet-capture-rtladsb-v2"
     "kismet-capture-rtlais"
     "kismet-capture-rtlaisadsb"
+    "kismet-capture-zigbee900"
     "kismet-capture-cell-at"
     "kismet-capture-cell-diag"
     "kismet-capture-nrf-mousejack"
