@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PKG_NAME="kismet-capture-zigbee900"
+PKG_DESCRIPTION="Kismet 900MHz 802.15.4 RTL-SDR capture helper"
+
+PKG_REQUIRES=(KISMET_CAPTURE_BASE_DEPENDS KISMET_LIBUSB KISMET_LIBRTLSDR)
+PKG_DEPENDS=(
+    "${KISMET_CAPTURE_BASE_DEPENDS[@]}"
+    "${KISMET_LIBUSB}"
+    "${KISMET_LIBRTLSDR}"
+    )
+
+# The receiver script demodulates with GNU Radio
+PKG_RECOMMENDS=("python3" "python3-numpy" "gnuradio" "gr-osmosdr")
+
+PKG_ACCESS="device"
+PKG_PROGRAM="/usr/bin/kismet_cap_sdr_zigbee900"
+PKG_UDEV_RULE="99-kismet-sdr-zigbee900.rules"
+
+pkg_stage() {
+    _KISMET_INSTALL_BIN capture_sdr_zigbee900/kismet_cap_sdr_zigbee900 /usr/bin/kismet_cap_sdr_zigbee900 || return 1
+    _KISMET_INSTALL_FILE capture_sdr_zigbee900/zigbee900_live_rx.py /usr/share/kismet/zigbee900/zigbee900_live_rx.py || return 1
+}
