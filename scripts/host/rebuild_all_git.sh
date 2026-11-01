@@ -11,6 +11,10 @@ fi
 
 export BASE_DIR=$1
 export SRC_DIR=$2
+
+# Every target builds the revision the run started with, even if the source
+# tree moves while the run is going
+export KISMET_REV=${KISMET_REV:-$(git -C ${SRC_DIR} rev-parse HEAD)}
 export NCORES=$(nproc)
 
 mkdir -p ${BASE_DIR}/logs
