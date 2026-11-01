@@ -11,7 +11,7 @@ PKG_DEPENDS=(
     )
 PKG_CONFLICTS=("python3-kismetcapturertl433")
 
-PKG_ACCESS="device"
+PKG_ACCESS="udev"
 PKG_PROGRAM="/usr/bin/kismet_cap_sdr_rtl433"
 PKG_UDEV_RULE="99-kismet-sdr-rtl433.rules"
 
