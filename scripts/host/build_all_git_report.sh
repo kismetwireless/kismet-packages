@@ -12,7 +12,8 @@
 #   report.txt      summary and failure reasons
 #
 # logs/nightly-latest links to the most recent run, and logs/[target].last
-# holds the latest output of each target as before.
+# holds the latest output of each target as before.  The run and each target
+# build are also recorded in logs/builds.log (see buildlog).
 #
 # Environment:
 #   NIGHTLY_KEEP_RUNS   number of run log directories to keep (default 14)
@@ -40,6 +41,9 @@ RUN_DIR=${BASE_DIR}/logs/nightly-$(date '+%Y-%m-%d-%H%M%S')
 REPORT=${RUN_DIR}/report.txt
 
 mkdir -p ${RUN_DIR} || exit 1
+
+. ${BASE_DIR}/scripts/host/buildlog
+_BUILDLOG_RUN_START nightly ${SRC_DIR}
 ln -sfn $(basename ${RUN_DIR}) ${BASE_DIR}/logs/nightly-latest
 rm -f ${BASE_DIR}/logs/*.last
 
@@ -106,6 +110,8 @@ echo "*** $(date '+%H:%M:%S') publishing repositories ***"
 ${BASE_DIR}/scripts/host/aptly_update_repos.sh ${BASE_DIR} > ${RUN_DIR}/publish.log 2>&1
 PUBLISH_RC=$?
 
+_BUILDLOG_RUN_END ${PUBLISH_RC}
+
 # Write the report
 
 COUNT_BUILT=0
@@ -142,6 +148,7 @@ COUNT_FAILED=0
     fi
 
     echo "Total time: $(_DURATION $(($(date +%s) - RUN_START)))"
+    echo "CPU energy: $(_BUILDLOG_LAST type=run run=${BUILDLOG_RUN} energy_j) J"
 
     if test ${COUNT_FAILED} -ne 0 -o ${PUBLISH_RC} -ne 0; then
         echo

@@ -25,6 +25,19 @@ if test "${NCORES}"x = "x"; then
     NCORES=$(nproc)
 fi
 
+# The container's CPU time and peak memory, however the build ends
+_BUILDSTAT_CGROUP() {
+    local usec peak
+
+    usec=$(awk '$1 == "usage_usec" { print $2 }' /sys/fs/cgroup/cpu.stat 2> /dev/null)
+    peak=$(cat /sys/fs/cgroup/memory.peak 2> /dev/null)
+
+    test "${usec}"x != "x" && _BUILDSTAT cpu_s=$((usec / 1000000))
+    test "${peak}"x != "x" && _BUILDSTAT mem_peak_mb=$((peak / 1048576))
+}
+
+trap _BUILDSTAT_CGROUP EXIT
+
 if test $# -gt 0; then
     KISMET_BUILD_PACKAGES=("$@")
 fi
@@ -67,6 +80,9 @@ _KISMET_PACKAGE_VERSION
 
 echo "*** Packaging kismet ${PACKAGE} ${ARCH} ***"
 
+PACKAGE_START=$(date +%s)
+_BUILDSTAT kismet_version=${PACKAGE} packages=${#KISMET_BUILD_PACKAGES[@]}
+
 rm -rf "${PKG_OUT}" "${PKG_STAGE_ROOT}" "${PKG_LOG_DIR}"
 mkdir -p "${PKG_OUT}" "${PKG_STAGE_ROOT}" "${PKG_LOG_DIR}"
 
@@ -78,6 +94,7 @@ for p in "${KISMET_BUILD_PACKAGES[@]}"; do
 done
 
 BUILD_FAILED=0
+FAILED_PACKAGES=()
 
 for p in "${KISMET_BUILD_PACKAGES[@]}"; do
     if wait ${PKG_PIDS[${p}]}; then
@@ -86,8 +103,16 @@ for p in "${KISMET_BUILD_PACKAGES[@]}"; do
         echo "*** FAILED PACKAGING ${p} ***"
         sed "s/^/[${p}] /" "${PKG_LOG_DIR}/${p}.log"
         BUILD_FAILED=1
+        FAILED_PACKAGES+=(${p})
     fi
 done
+
+_BUILDSTAT package_s=$(($(date +%s) - PACKAGE_START)) \
+    $(find "${PKG_OUT}" -name '*.deb' -printf '%s\n' | awk '{ n++; s += $1 } END { printf "debs=%d deb_kb=%d", n, s / 1024 }')
+
+if test ${#FAILED_PACKAGES[@]} -ne 0; then
+    _BUILDSTAT failed_packages=$(IFS=,; echo "${FAILED_PACKAGES[*]}")
+fi
 
 if test "${BUILD_FAILED}" = 1; then
     echo "*** FAILED ${BUILD_PLATFORM} ${ARCH} ***"

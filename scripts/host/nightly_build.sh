@@ -13,6 +13,13 @@ if test -e ${BASE_DIR}/pause; then
     exit
 fi
 
+. ${BASE_DIR}/scripts/host/buildlog
+_BUILDLOG_RUN_START nightly ${SRC_DIR}
+
 ${BASE_DIR}/scripts/host/rebuild_all_git.sh $*
 ${BASE_DIR}/scripts/host/aptly_update_repos.sh $1
+PUBLISH_RC=$?
+
+_BUILDLOG_RUN_END ${PUBLISH_RC}
+exit ${PUBLISH_RC}
 
