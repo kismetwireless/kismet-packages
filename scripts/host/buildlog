@@ -1,0 +1,239 @@
+#!/bin/bash
+
+# Build statistics log, sourced by the host build scripts.
+#
+# ${BASE_DIR}/logs/builds.log (or BUILDLOG) gets one line per record, made of
+# key=value fields.  Values holding anything but [A-Za-z0-9._:/+@,-] are
+# double quoted, with \ and " escaped.  Fields are only ever added, so readers
+# should skip keys they don't know and treat a missing key as unknown.
+#
+#   type=target   one docker target build, from modular_build_single.sh
+#   type=run      a nightly run over every target and its publish
+#
+# Records written during a nightly run share its run= id.  Builds inside the
+# container report their own figures by printing "@@BUILDSTAT key=value ..."
+# lines, which modular_build_single.sh adds to the target record.
+#
+# Energy is the CPU package counter (RAPL), covering everything the host CPU
+# did during the build, not only the build.  The counter is root only by
+# default; without read access the energy fields are "na".  To allow it:
+#
+#   /etc/udev/rules.d/99-rapl-energy.rules:
+#   SUBSYSTEM=="powercap", KERNEL=="intel-rapl:0", RUN+="/bin/chgrp rapl /sys%p/energy_uj", RUN+="/bin/chmod 0440 /sys%p/energy_uj"
+#
+# with the build user in the rapl group.  Keep it to a group: the counter is
+# root only because it can leak information about other processes.
+
+BUILDLOG="${BUILDLOG:-${BASE_DIR}/logs/builds.log}"
+
+_BUILDLOG_KEYS=()
+declare -A _BUILDLOG_VALS
+
+# _BUILDLOG_SET [key] [value]
+_BUILDLOG_SET() {
+    if test "${_BUILDLOG_VALS[$1]+set}" != "set"; then
+        _BUILDLOG_KEYS+=("$1")
+    fi
+
+    _BUILDLOG_VALS[$1]="$2"
+}
+
+_BUILDLOG_QUOTE() {
+    if [[ "$1" =~ ^[A-Za-z0-9._:/+@,-]+$ ]]; then
+        printf '%s' "$1"
+    else
+        local v="${1//\\/\\\\}"
+        v="${v//\"/\\\"}"
+        v="${v//$'\n'/ }"
+        printf '"%s"' "${v}"
+    fi
+}
+
+# Append the record being built and start a new one
+_BUILDLOG_WRITE() {
+    local line="" k
+
+    for k in "${_BUILDLOG_KEYS[@]}"; do
+        line+="${line:+ }${k}=$(_BUILDLOG_QUOTE "${_BUILDLOG_VALS[$k]}")"
+    done
+
+    mkdir -p "$(dirname "${BUILDLOG}")"
+    ( flock 9; printf '%s\n' "${line}" >> "${BUILDLOG}" ) 9>> "${BUILDLOG}.lock"
+
+    _BUILDLOG_KEYS=()
+    _BUILDLOG_VALS=()
+}
+
+# _BUILDLOG_LAST [match ...] [key]
+# The key's value in the newest record whose fields include every match
+_BUILDLOG_LAST() {
+    local key="${!#}" line m
+    local matches=("${@:1:$#-1}")
+
+    test -f "${BUILDLOG}" || return 0
+
+    while IFS= read -r line; do
+        for m in "${matches[@]}"; do
+            [[ " ${line} " == *" ${m} "* ]] || continue 2
+        done
+
+        if [[ " ${line}" =~ \ ${key}=([^ ]*) ]]; then
+            echo "${BASH_REMATCH[1]}"
+            return 0
+        fi
+    done < <(tac "${BUILDLOG}")
+}
+
+# _BUILDLOG_COUNT [match ...]
+# How many records have fields matching every match
+_BUILDLOG_COUNT() {
+    local line m n=0
+
+    if test -f "${BUILDLOG}"; then
+        while IFS= read -r line; do
+            for m in "$@"; do
+                [[ " ${line} " == *" ${m} "* ]] || continue 2
+            done
+            n=$((n + 1))
+        done < "${BUILDLOG}"
+    fi
+
+    echo ${n}
+}
+
+# _BUILDLOG_RUN_START [kind] [src]
+# Start a type=run record; every target build in the run shares its run= id
+_BUILDLOG_RUN_START() {
+    export BUILDLOG_RUN="$1-$(date '+%Y-%m-%d-%H%M%S')"
+    _BUILDLOG_RUN_T0=$(date +%s)
+
+    _BUILDLOG_SET ts "$(date -d @${_BUILDLOG_RUN_T0} -Iseconds)"
+    _BUILDLOG_SET type run
+    _BUILDLOG_SET run "${BUILDLOG_RUN}"
+    _BUILDLOG_SET status unknown
+    _BUILDLOG_SET duration_s 0
+    _BUILDLOG_SET host "$(hostname -s)"
+    _BUILDLOG_SET kismet_rev "$(git -C "$2" rev-parse --short HEAD 2> /dev/null)"
+    _BUILDLOG_SET packaging "$(git -C "${BASE_DIR}" rev-parse --short HEAD 2> /dev/null)"
+
+    _ENERGY_START
+}
+
+# _BUILDLOG_RUN_END [publish exit code, or empty when nothing was published]
+_BUILDLOG_RUN_END() {
+    local s failed
+
+    _ENERGY_STOP
+
+    _BUILDLOG_SET duration_s $(($(date +%s) - _BUILDLOG_RUN_T0))
+    _BUILDLOG_SET targets "$(_BUILDLOG_COUNT type=target run=${BUILDLOG_RUN})"
+
+    for s in built unchanged skipped failed; do
+        _BUILDLOG_SET ${s} "$(_BUILDLOG_COUNT type=target run=${BUILDLOG_RUN} status=${s})"
+    done
+
+    failed=${_BUILDLOG_VALS[failed]}
+
+    if test "$1"x != "x"; then
+        _BUILDLOG_SET publish "$(test "$1" -eq 0 && echo ok || echo failed)"
+        _BUILDLOG_SET publish_rc "$1"
+        test "$1" -ne 0 && failed=$((failed + 1))
+    fi
+
+    _BUILDLOG_SET status "$(test "${failed}" -eq 0 && echo ok || echo failed)"
+    _BUILDLOG_WRITE
+}
+
+# _BUILDLOG_ADD_STATS [output file]
+# Add the @@BUILDSTAT fields a container build printed
+_BUILDLOG_ADD_STATS() {
+    local line f
+
+    while IFS= read -r line; do
+        for f in ${line#@@BUILDSTAT }; do
+            test "${f%%=*}" != "${f}" && _BUILDLOG_SET "${f%%=*}" "${f#*=}"
+        done
+    done < <(grep -a '^@@BUILDSTAT ' "$1" | tr -d '\r')
+}
+
+_ENERGY_DIR=/sys/class/powercap/intel-rapl:0
+
+# Start summing the CPU package energy.  The counter wraps every ~65 kJ, a few
+# minutes at full load, so it's sampled every 10 seconds.
+_ENERGY_START() {
+    _ENERGY_OUT=$(mktemp) || return 0
+    _ENERGY_T0=$(date +%s)
+
+    if ! cat "${_ENERGY_DIR}/energy_uj" > /dev/null 2>&1; then
+        echo na > "${_ENERGY_OUT}"
+        return 0
+    fi
+
+    (
+        max=$(cat "${_ENERGY_DIR}/max_energy_range_uj")
+        last=$(cat "${_ENERGY_DIR}/energy_uj")
+        total=0
+
+        _sample() {
+            now=$(cat "${_ENERGY_DIR}/energy_uj")
+            d=$((now - last))
+            test ${d} -lt 0 && d=$((d + max))
+            total=$((total + d))
+            last=${now}
+            echo ${total} > "${_ENERGY_OUT}"
+        }
+
+        trap '_sample; kill ${sp} 2> /dev/null; exit 0' TERM
+
+        while :; do
+            sleep 10 &
+            sp=$!
+            wait ${sp}
+            _sample
+        done
+    ) &
+    _ENERGY_PID=$!
+}
+
+# Stop sampling and set energy_j and avg_w
+_ENERGY_STOP() {
+    local uj secs
+
+    test "${_ENERGY_OUT}"x = "x" && return 0
+
+    if test "${_ENERGY_PID}"x != "x"; then
+        kill -TERM ${_ENERGY_PID} 2> /dev/null
+        wait ${_ENERGY_PID} 2> /dev/null
+        _ENERGY_PID=""
+    fi
+
+    uj=$(cat "${_ENERGY_OUT}" 2> /dev/null)
+    rm -f "${_ENERGY_OUT}"
+    _ENERGY_OUT=""
+    secs=$(($(date +%s) - _ENERGY_T0))
+
+    if [[ "${uj}" =~ ^[0-9]+$ ]]; then
+        _BUILDLOG_SET energy_j $((uj / 1000000))
+        test ${secs} -gt 0 && _BUILDLOG_SET avg_w $((uj / 1000000 / secs))
+    else
+        _BUILDLOG_SET energy_j na
+        _BUILDLOG_SET avg_w na
+    fi
+}
+
+# _BUILDLOG_GIT_DELTA [src] [from rev] [to rev]
+# How far the source moved between two builds
+_BUILDLOG_GIT_DELTA() {
+    local stat
+
+    test "$2"x = "x" -o "$3"x = "x" && return 0
+    git -C "$1" cat-file -e "$2^{commit}" 2> /dev/null || return 0
+    git -C "$1" cat-file -e "$3^{commit}" 2> /dev/null || return 0
+
+    _BUILDLOG_SET commits "$(git -C "$1" rev-list --count "$2..$3")"
+
+    stat=$(git -C "$1" diff --shortstat "$2" "$3")
+    _BUILDLOG_SET files_changed "$(grep -o -E '[0-9]+ file' <<< "${stat}" | grep -o -E '[0-9]+' || echo 0)"
+    _BUILDLOG_SET insertions "$(grep -o -E '[0-9]+ insertion' <<< "${stat}" | grep -o -E '[0-9]+' || echo 0)"
+    _BUILDLOG_SET deletions "$(grep -o -E '[0-9]+ deletion' <<< "${stat}" | grep -o -E '[0-9]+' || echo 0)"
+}

@@ -34,6 +34,13 @@ VERIFY_DEPS="${VERIFY_DEPS:-fail}"
 # Packaging script revision recorded in each package; set by the launcher
 MODULAR_BUILD_REF="${MODULAR_BUILD_REF:-master}"
 
+# _BUILDSTAT [key=value ...]
+# Report build figures to the host, which adds them to its build log; values
+# can't hold spaces
+_BUILDSTAT() {
+    echo "@@BUILDSTAT $*"
+}
+
 . "${BUILD_SCRIPT_ROOT}/platforms/${BUILD_PLATFORM}"
 . "${BUILD_SCRIPT_ROOT}/utils/git"
 . "${BUILD_SCRIPT_ROOT}/utils/fpm"

@@ -5,6 +5,8 @@
 
 git config --global --add safe.directory /kismet/.git
 
+STEP_START=$(date +%s)
+
 rm -rf "${KISMET_SRC}"
 git clone --recursive /kismet "${KISMET_SRC}" || exit 1
 
@@ -18,7 +20,14 @@ if test "${CHECKOUT}"x != "x"; then
     git submodule update --init --recursive || exit 1
 fi
 
+_BUILDSTAT clone_s=$(($(date +%s) - STEP_START)) \
+    kismet_rev=$(git rev-parse --short HEAD) \
+    kismet_time=$(git log -1 --format=%cI) \
+    kismet_describe=$(git describe --tags --always 2> /dev/null)
+
 _CHECK_BUILD_NEEDED "kismet" "${KISMET_SRC}" || exit ${BUILD_NOT_NEEDED}
+
+STEP_START=$(date +%s)
 
 echo "*** Configuring kismet ${ARCH}: ${KISMET_CONFIGURE_PARAMETERS[*]} ${KISMET_PLATFORM_CONFIGURE[*]} ***"
 
@@ -52,4 +61,9 @@ else
         "${KISMET_PLATFORM_CONFIGURE[@]}" || { echo "*** KISMET ${ARCH} CONFIGURE FAILED ***"; exit 1; }
 fi
 
-make -j${NCORES} || { echo "*** KISMET ${ARCH} BUILD FAILED ***"; exit 1; }
+_BUILDSTAT configure_s=$(($(date +%s) - STEP_START))
+STEP_START=$(date +%s)
+
+make -j${NCORES} 2>&1 | tee /build/make.log || { echo "*** KISMET ${ARCH} BUILD FAILED ***"; exit 1; }
+
+_BUILDSTAT make_s=$(($(date +%s) - STEP_START)) warnings=$(grep -c 'warning:' /build/make.log)
