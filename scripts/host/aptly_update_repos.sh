@@ -30,12 +30,6 @@ for dist in ${REPOS}; do
             repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*git*.deb 
 
         aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
-            repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*python3-bluepy*.deb
-
-        aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
-            repo add ${dist} ${BASE_DIR}/dpkgs-${dist}-static/*python3-websockets*.deb
-
-        aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
             repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*hak5-wifi-coconut*.deb
 
         aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \

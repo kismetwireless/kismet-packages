@@ -2,7 +2,8 @@
 
 # Run the modular build for one docker target.
 #
-# Nightly (git HEAD) builds use the live scripts in scripts/modular-build.
+# Nightly (git HEAD) builds use the live scripts in scripts/modular-build,
+# and build KISMET_REV when it is set (rebuild_all_git.sh pins it per run).
 # Release builds are selected by setting, in the environment:
 #
 #   RELEASE_TAG         kismet git tag to build
@@ -97,7 +98,7 @@ _BUILD_FINISH() {
     # Scripts from older packaging tags don't report the revision they built
     rev=${_BUILDLOG_VALS[kismet_rev]}
     if test "${rev}"x = "x"; then
-        rev=$(git -C "${SRC_DIR}" rev-parse --short "${RELEASE_TAG:-HEAD}" 2> /dev/null)
+        rev=$(git -C "${SRC_DIR}" rev-parse --short "${RELEASE_TAG:-${KISMET_REV:-HEAD}}" 2> /dev/null)
         test "${rev}"x != "x" && _BUILDLOG_SET kismet_rev "${rev}"
     fi
 
@@ -214,6 +215,7 @@ docker compose run --rm \
     "${DPKG_ARGS[@]}" \
     -e NCORES \
     -e CHECKOUT="${CHECKOUT}" \
+    -e KISMET_REV="${KISMET_REV}" \
     -e VERSION="${VERSION}" \
     -e BUILD_PLATFORM="${PLATFORM}" \
     -e BUILD_CROSS="${CROSS}" \
