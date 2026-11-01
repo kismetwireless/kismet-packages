@@ -9,6 +9,8 @@ set -e
 #                with capabilities when caps are set
 # access=device  ask kismet-common/device-access; enable the udev rule, or
 #                install suid-root
+# access=udev    enable the udev rule; never suid, for helpers which run
+#                external tools as the user
 
 . /usr/share/debconf/confmodule
 
@@ -97,7 +99,9 @@ set_caps() {
 case "$1" in
     configure)
         # MODE is one of udev, suid, or root
-        if [ "$ACCESS" = "device" ]; then
+        if [ "$ACCESS" = "udev" ]; then
+            MODE=udev
+        elif [ "$ACCESS" = "device" ]; then
             db_get kismet-common/device-access
             MODE="$RET"
         else
@@ -113,7 +117,7 @@ case "$1" in
             add_group
         fi
 
-        if [ "$ACCESS" = "device" ]; then
+        if [ "$ACCESS" = "device" ] || [ "$ACCESS" = "udev" ]; then
             if [ "$MODE" = "udev" ]; then
                 enable_udev_rule
             else

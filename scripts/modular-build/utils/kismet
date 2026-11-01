@@ -19,9 +19,11 @@
 #                             none    no maintainer scripts
 #                             suid    debconf suid prompt (install-setuid)
 #                             device  debconf udev or suid prompt (device-access)
+#                             udev    udev rule only, never suid (helpers which run
+#                                     external tools as the user)
 #   PKG_PROGRAM             installed capture binary the postinst manages
 #   PKG_CAPS                capabilities to set instead of suid (suid only)
-#   PKG_UDEV_RULE           rule in udev/ which grants device access (device only)
+#   PKG_UDEV_RULE           rule in udev/ which grants device access (device, udev)
 #   PKG_LEGACY_UDEV_RULES   rules previous packages installed as conffiles
 #
 # and the function:
@@ -109,9 +111,9 @@ _KISMET_CHECK_REQUIRES() {
                 FAILED=1
             fi
             ;;
-        device)
+        device|udev)
             if test "${PKG_PROGRAM}"x = "x" -o "${PKG_UDEV_RULE}"x = "x"; then
-                echo "*** ${PKG_NAME} uses device access but does not set PKG_PROGRAM and PKG_UDEV_RULE ***"
+                echo "*** ${PKG_NAME} uses ${PKG_ACCESS} access but does not set PKG_PROGRAM and PKG_UDEV_RULE ***"
                 FAILED=1
             elif ! test -f "${BUILD_SCRIPT_ROOT}/udev/${PKG_UDEV_RULE}"; then
                 echo "*** ${PKG_NAME} udev rule udev/${PKG_UDEV_RULE} does not exist ***"
@@ -192,7 +194,7 @@ _KISMET_PACKAGE() {
     _FPM_ADD --replaces "${PKG_REPLACES[@]}"
 
     case "${PKG_ACCESS:-none}" in
-        suid|device)
+        suid|device|udev)
             FPM_ARGS+=(
                 --deb-templates "${BUILD_SCRIPT_ROOT}/debian/kismet.templates"
                 --deb-config "${BUILD_SCRIPT_ROOT}/debian/kismet-${PKG_ACCESS}.config"
@@ -219,7 +221,7 @@ _KISMET_PACKAGE() {
 
         pkg_stage || { echo "*** ${PKG_NAME} staging failed ***"; return 1; }
 
-        if test "${PKG_ACCESS:-none}" = "device"; then
+        if test "${PKG_ACCESS:-none}" = "device" -o "${PKG_ACCESS:-none}" = "udev"; then
             _KISMET_INSTALL_UDEV "${PKG_UDEV_RULE}" || return 1
         fi
 

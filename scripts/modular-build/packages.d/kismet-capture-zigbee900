@@ -13,7 +13,7 @@ PKG_DEPENDS=(
 # The receiver script demodulates with GNU Radio
 PKG_RECOMMENDS=("python3" "python3-numpy" "gnuradio" "gr-osmosdr")
 
-PKG_ACCESS="device"
+PKG_ACCESS="udev"
 PKG_PROGRAM="/usr/bin/kismet_cap_sdr_zigbee900"
 PKG_UDEV_RULE="99-kismet-sdr-zigbee900.rules"
 
