@@ -49,5 +49,5 @@ echo "Uploading..."
 rsync -av --delete -e "ssh -F ${BASE_DIR}/../kismet-packages-creds/ssh_config -i ${BASE_DIR}/../kismet-packages-creds/id_rsa" ${BASE_DIR}/repos-aptly/apt/git/ dragorn@kismetrepo:repos/apt/git/
 
 
-exit 1
+exit 0
 
