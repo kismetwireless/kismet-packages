@@ -9,7 +9,8 @@ PKG_DEPENDS=("${KISMET_CORE_DEPENDS[@]}" "${KISMET_CAPTURE_BASE_DEPENDS[@]}")
 PKG_RECOMMENDS=($(_KISMET_COMPONENT_PACKAGES))
 PKG_REPLACES=("kismet" "kismet-plugins")
 
-PKG_FPM_ARGS=(--before-install "${BUILD_SCRIPT_ROOT}/debian/kismet-core.preinst")
+PKG_DEB_FPM_ARGS=(--before-install "${BUILD_SCRIPT_ROOT}/debian/kismet-core.preinst")
+PKG_RPM_FPM_ARGS=(--before-install "${BUILD_SCRIPT_ROOT}/rpm/kismet-group.pre" --rpm-tag "Requires(pre): shadow-utils")
 
 KISMET_CONFIG_FILES=(
     "kismet.conf"
@@ -55,5 +56,5 @@ pkg_stage() {
     _KISMET_INSTALL_TREE http_data /usr/share/kismet/httpd || return 1
 
     _KISMET_INSTALL_FILE packaging/kismet.pc /usr/share/pkgconfig/kismet.pc || return 1
-    _KISMET_INSTALL_FILE packaging/systemd/kismet.service /lib/systemd/system/kismet.service || return 1
+    _KISMET_INSTALL_FILE packaging/systemd/kismet.service ${KISMET_SYSTEMD_UNIT_DIR}/kismet.service || return 1
 }

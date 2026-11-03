@@ -9,11 +9,14 @@
 #   PKG_DESCRIPTION         package description
 #   PKG_CONFIGURE           configure options this package needs
 #   PKG_REQUIRES=()         platform variables which must be set
-#   PKG_DEPENDS=()          debian dependencies
-#   PKG_RECOMMENDS=()       debian recommends
-#   PKG_CONFLICTS=()        debian conflicts
-#   PKG_REPLACES=()         debian replaces
+#   PKG_DEPENDS=()          dependencies, written debian style; library names
+#                           come from the platform
+#   PKG_RECOMMENDS=()       recommends
+#   PKG_CONFLICTS=()        conflicts
+#   PKG_REPLACES=()         debian replaces (not used for rpm)
 #   PKG_FPM_ARGS=()         any additional fpm arguments
+#   PKG_DEB_FPM_ARGS=()     additional fpm arguments for debian packages only
+#   PKG_RPM_FPM_ARGS=()     additional fpm arguments for rpm packages only
 #
 #   PKG_ACCESS              capture privilege model:
 #                             none    no maintainer scripts
@@ -57,10 +60,14 @@ _KISMET_PACKAGE_DEFINED() {
     return 0
 }
 
+# PACKAGE is the full package version, which dependencies on other kismet
+# packages use; rpm versions can't hold '-', so rpm packages split it into
+# RPM_VERSION and RPM_RELEASE
 _KISMET_PACKAGE_VERSION() {
     if test "${CHECKOUT}"x = "HEADx"; then
         VERSION="git$(date '+%Y-%m-%d')r$(git -C "${KISMET_SRC}" rev-parse --short HEAD)-1"
         PACKAGE="9999+${VERSION}"
+        RPM_VERSION="9999+git$(date '+%Y%m%d')r$(git -C "${KISMET_SRC}" rev-parse --short HEAD)"
     else
         if test "${VERSION}"x = "x"; then
             echo "*** VERSION must be set when building ${CHECKOUT} ***"
@@ -68,6 +75,13 @@ _KISMET_PACKAGE_VERSION() {
         fi
 
         PACKAGE="${VERSION}"
+        RPM_VERSION="${VERSION//-/.}"
+    fi
+
+    RPM_RELEASE=1
+
+    if test "${KISMET_PKG_FORMAT}" = "rpm"; then
+        PACKAGE="${RPM_VERSION}-${RPM_RELEASE}"
     fi
 }
 
@@ -170,21 +184,14 @@ _KISMET_INSTALL_UDEV() {
     install -D -m 0644 "${BUILD_SCRIPT_ROOT}/udev/$1" "$(_KISMET_STAGE_DIR)/usr/share/kismet/udev/$1" || return 1
 }
 
-# Stage, verify, and build the package currently defined
-_KISMET_PACKAGE() {
-    _KISMET_CHECK_REQUIRES || return 1
-
-    FPM_ARGS=(
+# _KISMET_DEB_ARGS
+# Add the debian package options, dependencies, and maintainer scripts
+_KISMET_DEB_ARGS() {
+    FPM_ARGS+=(
         -t deb
-        -a "${ARCH}"
-        -n "${PKG_NAME}"
+        -a "${PKG_ARCH}"
         -v "${PACKAGE}"
-        -p "${PKG_OUT}/${PKG_NAME}_${PACKAGE}_${ARCH}.deb"
-        --description "${PKG_DESCRIPTION}"
-        --maintainer "${KISMET_PKG_MAINTAINER}"
-        --url "${KISMET_PKG_URL}"
-        --license "${KISMET_PKG_LICENSE}"
-        --vendor "Kismet"
+        -p "${PKG_OUT}/${PKG_NAME}_${PACKAGE}_${PKG_ARCH}.deb"
         --deb-field "X-Kismet-Packaging: ${MODULAR_BUILD_REF}"
         )
 
@@ -213,6 +220,109 @@ _KISMET_PACKAGE() {
             ;;
     esac
 
+    FPM_ARGS+=("${PKG_DEB_FPM_ARGS[@]}")
+}
+
+# _KISMET_RPM_ARGS
+# Add the rpm package options, dependencies, and scriptlets.  There is no
+# debconf: capture helpers take the debian defaults, which an admin can change
+# in /etc/sysconfig/kismet-capture (see rpm/kismet-capture.post).  Replaces
+# is debian only; fpm makes it an rpm Obsoletes, which would remove the
+# packages it names.
+_KISMET_RPM_ARGS() {
+    FPM_ARGS+=(
+        -t rpm
+        -a "${PKG_ARCH}"
+        -v "${RPM_VERSION}"
+        --iteration "${RPM_RELEASE}"
+        -p "${PKG_OUT}/${PKG_NAME}-${RPM_VERSION}-${RPM_RELEASE}.${PKG_ARCH}.rpm"
+        --rpm-os linux
+        --rpm-digest sha256
+        # The binaries are stripped and the dependencies declared already;
+        # rpmbuild's own steps run host tools, which can't handle cross builds
+        --rpm-rpmbuild-define "__os_install_post %{nil}"
+        --rpm-rpmbuild-define "_build_id_links none"
+        --rpm-rpmbuild-define "debug_package %{nil}"
+        )
+
+    # Dependencies on other kismet packages are written debian style
+    local d
+    for d in "${PKG_DEPENDS[@]}"; do
+        test "${d}"x = "x" && continue
+        FPM_ARGS+=(--depends "$(_KISMET_RPM_DEP "${d}")")
+    done
+
+    for d in "${PKG_RECOMMENDS[@]}"; do
+        test "${d}"x = "x" && continue
+        FPM_ARGS+=(--rpm-tag "Recommends: $(_KISMET_RPM_DEP "${d}")")
+    done
+
+    _FPM_ADD --conflicts "${PKG_CONFLICTS[@]}"
+
+    case "${PKG_ACCESS:-none}" in
+        suid|device|udev)
+            FPM_ARGS+=(
+                --rpm-tag "Requires(pre): shadow-utils"
+                --before-install "${BUILD_SCRIPT_ROOT}/rpm/kismet-group.pre"
+                --after-install "${BUILD_SCRIPT_ROOT}/rpm/kismet-capture.post"
+                --after-remove "${BUILD_SCRIPT_ROOT}/rpm/kismet-capture.postun"
+                --template-scripts
+                )
+
+            _FPM_TEMPLATE_VALUE program "${PKG_PROGRAM}"
+            _FPM_TEMPLATE_VALUE access "${PKG_ACCESS}"
+            _FPM_TEMPLATE_VALUE caps "${PKG_CAPS}"
+            _FPM_TEMPLATE_VALUE udev_rule "${PKG_UDEV_RULE}"
+            ;;
+    esac
+
+    FPM_ARGS+=("${PKG_RPM_FPM_ARGS[@]}")
+}
+
+# _KISMET_RPM_DEP [debian style dependency]
+# "name (op version)" becomes "name op version"
+_KISMET_RPM_DEP() {
+    if [[ "$1" =~ ^([^ ]+)\ \(([<>=]+)\ (.+)\)$ ]]; then
+        echo -n "${BASH_REMATCH[1]} ${BASH_REMATCH[2]} ${BASH_REMATCH[3]}"
+    else
+        echo -n "$1"
+    fi
+}
+
+# _KISMET_RPM_FILE_ARGS [stage dir]
+# rpm only packages the directories it's told to own, and only treats files
+# under /etc as config when it's told to
+_KISMET_RPM_FILE_ARGS() {
+    local f
+
+    while IFS= read -r -d '' f; do
+        FPM_ARGS+=(--config-files "${f#$1}")
+    done < <(find "$1/etc" -type f -print0 2> /dev/null)
+
+    while IFS= read -r -d '' f; do
+        FPM_ARGS+=(--directories "${f#$1}")
+    done < <(find "$1" -mindepth 1 -type d -empty -print0)
+}
+
+# Stage, verify, and build the package currently defined
+_KISMET_PACKAGE() {
+    _KISMET_CHECK_REQUIRES || return 1
+
+    FPM_ARGS=(
+        -n "${PKG_NAME}"
+        --description "${PKG_DESCRIPTION}"
+        --maintainer "${KISMET_PKG_MAINTAINER}"
+        --url "${KISMET_PKG_URL}"
+        --license "${KISMET_PKG_LICENSE}"
+        --vendor "Kismet"
+        )
+
+    if test "${KISMET_PKG_FORMAT}" = "rpm"; then
+        _KISMET_RPM_ARGS
+    else
+        _KISMET_DEB_ARGS
+    fi
+
     FPM_ARGS+=("${PKG_FPM_ARGS[@]}")
 
     if declare -F pkg_stage > /dev/null; then
@@ -226,6 +336,10 @@ _KISMET_PACKAGE() {
         fi
 
         _VERIFY_DEPS "$(_KISMET_STAGE_DIR)" "${PKG_DEPENDS[@]}" || return 1
+
+        if test "${KISMET_PKG_FORMAT}" = "rpm"; then
+            _KISMET_RPM_FILE_ARGS "$(_KISMET_STAGE_DIR)"
+        fi
 
         fpm -s dir -C "$(_KISMET_STAGE_DIR)" "${FPM_ARGS[@]}" . || return 1
     else

@@ -1,0 +1,131 @@
+#!/bin/bash
+
+# rpm repo publishing; sourced by publish_repos.sh, which sets BASE_DIR, KIND
+# (git or release), MATCH (the release version), and KISMET_CREDS_DIR and
+# KISMET_SIGNING_KEY.
+#
+# The host has no rpm tools, so the packages are signed and the repo metadata
+# generated in a container of the platform's image.  The container gets a
+# copy of the host gpg keyring in tmpfs, which goes away with it.
+#
+# Each repo is published to repos-rpm/[kind]/[repo]: the signed packages, the
+# repodata with a detached signature on repomd.xml, the public key as
+# kismet.gpg, and a kismet-[kind].repo file for /etc/yum.repos.d using
+# KISMET_RPM_BASEURL.
+
+KISMET_RPM_BASEURL="${KISMET_RPM_BASEURL:-https://www.kismetwireless.net/repos/rpm}"
+
+# _PUBLISH_RPM_REPO [repo] [image]
+_PUBLISH_RPM_REPO() {
+    local repo=$1
+    local image=$2
+    local pkgs out stage glob
+
+    pkgs=$(_PLATFORM_PKG_DIR "${BASE_DIR}" rpm "${repo}")
+    out="${BASE_DIR}/repos-rpm/${KIND}/${repo}"
+    stage="${BASE_DIR}/repos-rpm/.stage-${KIND}-${repo}"
+
+    if test "${image}"x = "x"; then
+        echo "*** rpm repo ${repo} has no platform image to publish with ***"
+        return 1
+    fi
+
+    if test "${KIND}" = "git"; then
+        glob="*git*.rpm"
+    else
+        # rpm versions use '.' where the release version has '-'
+        glob="*${MATCH//-/.}*.rpm"
+    fi
+
+    if ! compgen -G "${pkgs}/${glob}" > /dev/null; then
+        if test "${KIND}" = "release"; then
+            echo "*** No ${MATCH} packages in $(basename "${pkgs}"), keeping its published repo ***"
+        else
+            echo "*** No ${KIND} packages in $(basename "${pkgs}"), skipping ${repo} ***"
+        fi
+        return 0
+    fi
+
+    for f in "${KISMET_CREDS_DIR}/passphrase" "${GNUPGHOME:-${HOME}/.gnupg}"; do
+        if ! test -r "${f}"; then
+            echo "*** Can't read ${f} to sign the rpm repo ${repo} ***"
+            return 1
+        fi
+    done
+
+    echo "Working on ${KIND} ${repo}"
+
+    # Pulling a multi-arch tag for another platform retags it, so run the
+    # native image by the id the pull resolved to
+    docker pull -q --platform linux/amd64 "${image}" > /dev/null || return 1
+    local image_id
+    image_id=$(docker image inspect --format '{{.Id}}' "${image}") || return 1
+
+    rm -rf "${stage}"
+    mkdir -p "${stage}" || return 1
+    cp "${pkgs}"/${glob} "${stage}"/ || return 1
+
+    docker run --rm -i \
+        --platform linux/amd64 \
+        -v "${GNUPGHOME:-${HOME}/.gnupg}:/gnupg-ro:ro" \
+        -v "${KISMET_CREDS_DIR}/passphrase:/passphrase:ro" \
+        -v "${stage}:/repo" \
+        --tmpfs /gnupg:mode=0700 \
+        -e KEY="${KISMET_SIGNING_KEY}" \
+        -e KIND="${KIND}" \
+        -e REPO="${repo}" \
+        -e BASEURL="${KISMET_RPM_BASEURL}" \
+        -e OWNER="$(id -u):$(id -g)" \
+        "${image_id}" /bin/bash -s << 'EOF'
+set -o pipefail
+
+# Leave the repo to the host user however this ends
+trap 'chown -R "${OWNER}" /repo' EXIT
+
+dnf -y -q install createrepo_c rpm-sign gnupg2 > /dev/null || exit 1
+
+cp -r /gnupg-ro/. /gnupg/ 2> /dev/null
+rm -f /gnupg/S.* /gnupg/*.lock
+export GNUPGHOME=/gnupg
+
+GPG_ARGS="--batch --pinentry-mode loopback --passphrase-file /passphrase"
+
+rpmsign --addsign \
+    --define "_gpg_name ${KEY}" \
+    --define "_gpg_sign_cmd_extra_args ${GPG_ARGS}" \
+    /repo/*.rpm > /dev/null || { echo "*** Signing the ${REPO} packages failed ***"; exit 1; }
+
+createrepo_c -q /repo || exit 1
+
+gpg ${GPG_ARGS} --yes -u "${KEY}" --detach-sign --armor /repo/repodata/repomd.xml || exit 1
+gpg --batch --export --armor "${KEY}" > /repo/kismet.gpg || exit 1
+
+cat > /repo/kismet-${KIND}.repo << REPO
+[kismet-${KIND}]
+name=Kismet ${KIND} packages (${REPO})
+baseurl=${BASEURL}/${KIND}/${REPO}/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=${BASEURL}/${KIND}/${REPO}/kismet.gpg
+REPO
+EOF
+
+    if test $? -ne 0; then
+        echo "*** Generating the rpm repo ${repo} failed ***"
+        rm -rf "${stage}"
+        return 1
+    fi
+
+    # Swap the new repo in whole
+    mkdir -p "$(dirname "${out}")"
+    rm -rf "${out}"
+    mv "${stage}" "${out}" || return 1
+}
+
+# _UPLOAD_RPM_REPOS
+_UPLOAD_RPM_REPOS() {
+    rsync -av --delete \
+        -e "ssh -F ${KISMET_CREDS_DIR}/ssh_config -i ${KISMET_CREDS_DIR}/id_rsa" \
+        "${BASE_DIR}/repos-rpm/${KIND}/" "dragorn@kismetrepo:repos/rpm/${KIND}/"
+}

@@ -1,0 +1,124 @@
+#!/bin/bash
+
+# Fedora 45; rpm packages.  Fedora does not package bladeRF, so the bladeRF
+# capture is left out.  arm64 cross compiles with clang against the Fedora
+# sysroot, since Fedora's cross gcc has no target libc or libstdc++.
+
+KISMET_BUILD_PACKAGES=(
+    "kismet-core"
+    "kismet-adsb-icao-data"
+    "kismet-logtools"
+    "kismet-capture-linux-wifi"
+    "kismet-capture-linux-bluetooth"
+    "kismet-capture-hak5-wifi-coconut"
+    "kismet-capture-usbwifi"
+    "kismet-capture-mm8108-halow"
+    "kismet-capture-ubertooth-one"
+    "kismet-capture-rtl433-v2"
+    "kismet-capture-rtladsb-v2"
+    "kismet-capture-rtlais"
+    "kismet-capture-rtlaisadsb"
+    "kismet-capture-zigbee900"
+    "kismet-capture-cell-at"
+    "kismet-capture-cell-diag"
+    "kismet-capture-nrf-mousejack"
+    "kismet-capture-ti-cc-2531"
+    "kismet-capture-ti-cc-2540"
+    "kismet-capture-rz-killerbee"
+    "kismet-capture-radiacode-usb"
+    "kismet-capture-wch-ble-analyzer-pro"
+    "kismet-capture-nrf-51822"
+    "kismet-capture-nrf-52840"
+    "kismet-capture-nxp-kw41z"
+    "kismet-capture-freaklabs-zigbee-v2"
+    "kismet-capture-catsniffer-zigbee"
+    "kismet-capture-sniffle-ble"
+    "kismet-capture-lorapipe"
+    "kismet-capture-serial-radview"
+    "kismet-capture-antsdr-droneid"
+    "kismet"
+    )
+
+# Additional configure options for this platform only; see below
+KISMET_PLATFORM_CONFIGURE=()
+
+# Package format, the repo the packages are published to, and the image the
+# packages are test installed in
+KISMET_PKG_FORMAT="rpm"
+KISMET_REPO="fedora45"
+KISMET_TEST_IMAGE="fedora:45"
+
+# /lib is a symlink on Fedora, so packages can't install under it
+KISMET_SYSTEMD_UNIT_DIR="/usr/lib/systemd/system"
+
+# Fedora's toolchain doesn't link --as-needed by default, which would make
+# every binary depend on every library configure found.  The cross linker
+# options are part of the compiler command, since some capture Makefiles link
+# without LDFLAGS.
+KISMET_CROSS_LINK="-fuse-ld=lld -Wl,--as-needed -Wno-unused-command-line-argument"
+KISMET_CROSS_CC="clang --target=${ABI} --sysroot=/sysroot ${KISMET_CROSS_LINK}"
+KISMET_CROSS_CXX="clang++ --target=${ABI} --sysroot=/sysroot ${KISMET_CROSS_LINK}"
+KISMET_CROSS_AR="llvm-ar"
+KISMET_CROSS_RANLIB="llvm-ranlib"
+
+if test "${BUILD_CROSS}" != "1"; then
+    KISMET_PLATFORM_CONFIGURE=("LDFLAGS=-Wl,--as-needed")
+fi
+KISMET_CROSS_PKG_CONFIG_LIBDIR="/sysroot/usr/lib64/pkgconfig:/sysroot/usr/share/pkgconfig"
+
+if test "${BUILD_CROSS}" = "1"; then
+    STRIP="llvm-strip"
+    OBJDUMP="llvm-objdump"
+fi
+
+KISMET_LIBZ="zlib-ng-compat"
+KISMET_LIBPCAP="libpcap"
+KISMET_LIBPROTOBUF="protobuf-cpp"
+KISMET_LIBSSL="openssl-libs"
+KISMET_LIBSQLITE="sqlite-libs"
+KISMET_LIBDW="elfutils-libs"
+KISMET_LIBWEBSOCKET="libwebsockets"
+KISMET_LIBSENSORS="lm_sensors-libs"
+KISMET_LIBPCRE="pcre2"
+KISMET_LIBMOSQUITTO="mosquitto"
+KISMET_LIBGLIB="glib2"
+
+KISMET_LIBUSB="libusb1"
+KISMET_LIBZSTD="libzstd"
+KISMET_LIBLZMA="xz-libs"
+KISMET_LIBRTLSDR="rtl-sdr"
+
+KISMET_LIBNL_DEPENDS=(
+    "libnl3"
+    )
+
+KISMET_LIBNM_DEPENDS=(
+    "NetworkManager-libnm"
+    )
+
+KISMET_LIBCAP_DEPENDS=(
+    "libcap"
+    )
+
+KISMET_LIBUBERTOOTH_DEPENDS=(
+    "libubertooth"
+    "libbtbb"
+    )
+
+KISMET_CORE_DEPENDS=(
+    ${KISMET_LIBZ}
+    ${KISMET_LIBPCAP}
+    ${KISMET_LIBDW}
+    ${KISMET_LIBSQLITE}
+    ${KISMET_LIBPROTOBUF}
+    "abseil-cpp"
+    ${KISMET_LIBSENSORS}
+    ${KISMET_LIBSSL}
+    ${KISMET_LIBPCRE}
+    ${KISMET_LIBMOSQUITTO}
+    )
+
+KISMET_CAPTURE_BASE_DEPENDS=(
+    ${KISMET_LIBCAP_DEPENDS[@]}
+    ${KISMET_LIBWEBSOCKET}
+    )

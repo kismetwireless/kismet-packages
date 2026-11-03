@@ -81,6 +81,8 @@ SRC_DIR=$(cd "${SRC_DIR}" && pwd) || exit 1
 export BASE_DIR SRC_DIR
 export NCORES=${NCORES:-$(nproc)}
 
+. "${BASE_DIR}/scripts/host/platform"
+
 # _DURATION [seconds]
 _DURATION() {
     printf '%d:%02d:%02d' $(($1 / 3600)) $(($1 % 3600 / 60)) $(($1 % 60))
@@ -106,6 +108,7 @@ echo
 echo "Release repos:"
 
 REPOS=$("${BASE_DIR}/scripts/host/modular_repos.sh" "${BASE_DIR}") || exit 1
+RPM_REPOS=$("${BASE_DIR}/scripts/host/modular_repos.sh" "${BASE_DIR}" rpm) || exit 1
 MISSING_CONF=()
 
 for dist in ${REPOS}; do
@@ -119,6 +122,13 @@ for dist in ${REPOS}; do
         sed -nE 's/^kismet_(.+)_[a-z0-9]+\.deb$/\1/p' | sort -u -V | tail -n 1)
 
     printf "  %-10s publishes %s\n" "${dist}" "${PUBLISHED:-nothing yet}"
+done
+
+for dist in ${RPM_REPOS}; do
+    PUBLISHED=$(ls -1 "${BASE_DIR}/repos-rpm/release/${dist}/" 2> /dev/null | \
+        sed -nE 's/^kismet-([0-9].+)-[0-9]+\.[a-z0-9_]+\.rpm$/\1/p' | sort -u -V | tail -n 1)
+
+    printf "  %-10s publishes %s (rpm)\n" "${dist}" "${PUBLISHED:-nothing yet}"
 done
 
 if test ${#MISSING_CONF[@]} -ne 0; then
@@ -199,7 +209,7 @@ for d in "${BASE_DIR}"/docker/*; do
         continue
     fi
 
-    DPKGS=$(grep -oE 'dpkgs-[A-Za-z0-9_-]+:/dpkgs' "${d}/docker-compose.yaml" | head -n 1)
+    DPKGS=$(grep -oE '(dpkgs|rpms)-[A-Za-z0-9_-]+:/dpkgs' "${d}/docker-compose.yaml" | head -n 1)
     DPKGS=${DPKGS%:/dpkgs}
     ARCH=$(grep -oE 'ARCH=[A-Za-z0-9_]+' "${d}/docker-compose.yaml" | head -n 1)
     ARCH=${ARCH#ARCH=}
@@ -211,7 +221,15 @@ for d in "${BASE_DIR}"/docker/*; do
 
     TARGETS+=("${t}")
 
-    if test -f "${BASE_DIR}/${DPKGS}/kismet_${VERSION}_${ARCH}.deb"; then
+    _PLATFORM_LOAD "${MODULAR_SCRIPTS}/platforms/${DISTRO}_${RELEASE}"
+
+    if test "${PLATFORM_FORMAT}" = "rpm"; then
+        RELEASE_PKG="kismet-${VERSION//-/.}-1.$(_PLATFORM_PKG_ARCH rpm "${ARCH}").rpm"
+    else
+        RELEASE_PKG="kismet_${VERSION}_${ARCH}.deb"
+    fi
+
+    if test -f "${BASE_DIR}/${DPKGS}/${RELEASE_PKG}"; then
         STATE+=("built")
     else
         STATE+=("missing")
@@ -304,7 +322,7 @@ if test "${DRY_RUN}" = 1; then
         echo "Tag:       ${MODULAR_TAG} already exists"
     fi
 
-    echo "Repos:     ${REPOS//$'\n'/ }"
+    echo "Repos:     ${REPOS//$'\n'/ } ${RPM_REPOS//$'\n'/ }"
     exit 0
 fi
 

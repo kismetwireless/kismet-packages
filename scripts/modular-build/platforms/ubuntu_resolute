@@ -41,6 +41,12 @@ KISMET_BUILD_PACKAGES=(
 # Additional configure options for this platform only
 KISMET_PLATFORM_CONFIGURE=()
 
+# Package format, the repo the packages are published to, and the image the
+# packages are test installed in
+KISMET_PKG_FORMAT="deb"
+KISMET_REPO="resolute"
+KISMET_TEST_IMAGE="ubuntu:resolute"
+
 KISMET_LIBZ="zlib1g"
 KISMET_LIBPCAP="libpcap0.8t64"
 KISMET_LIBPROTOBUF="libprotobuf32t64"

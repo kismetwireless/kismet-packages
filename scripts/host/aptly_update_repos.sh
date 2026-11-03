@@ -1,53 +1,11 @@
 #!/bin/bash
 
+# Generate and upload the nightly git repos for every modular platform; see
+# publish_repos.sh.
+
 if test $# -ne 1; then
     echo "Expected [basedir]"
-    exit
+    exit 1
 fi
 
-BASE_DIR=$1
-
-# Publish a repo for each modular platform
-REPOS=$(${BASE_DIR}/scripts/host/modular_repos.sh ${BASE_DIR}) || exit 1
-
-for dist in ${REPOS}; do
-    if ! test -f ${BASE_DIR}/aptly/${dist}-git-aptly.conf; then
-        echo "*** No aptly config aptly/${dist}-git-aptly.conf, skipping ${dist} ***"
-        continue
-    fi
-
-	(
-    	cd ${BASE_DIR}
-        echo "Working on ${dist}"
-        rm -rfv ${BASE_DIR}/aptly/${dist}-git-aptly
-        rm -rfv ${BASE_DIR}/repos-aptly/apt/git/${dist}
-
-        gpg-connect-agent reloadagent /bye
-
-        aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf repo create ${dist}
-
-        aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
-            repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*git*.deb 
-
-        aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
-            repo add ${dist} ${BASE_DIR}/dpkgs-${dist}/*hak5-wifi-coconut*.deb
-
-        aptly --config ${BASE_DIR}/aptly/${dist}-git-aptly.conf \
-            -batch \
-            -gpg-key=8E18F4B6 \
-            -passphrase-file ${BASE_DIR}/../kismet-packages-creds/passphrase \
-            -distribution ${dist} \
-            -origin Kismet \
-            -label Kismet \
-            publish repo ${dist} filesystem:git:${dist}
-    ) &
-done
-
-wait
-
-echo "Uploading..."
-rsync -av --delete -e "ssh -F ${BASE_DIR}/../kismet-packages-creds/ssh_config -i ${BASE_DIR}/../kismet-packages-creds/id_rsa" ${BASE_DIR}/repos-aptly/apt/git/ dragorn@kismetrepo:repos/apt/git/
-
-
-exit 0
-
+exec "$1/scripts/host/publish_repos.sh" "$1" git

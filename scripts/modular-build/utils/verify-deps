@@ -1,9 +1,8 @@
 #!/bin/bash
 
 # Compare the shared libraries each staged binary links against with the
-# dependencies the package declares.  Libraries are resolved to the debian
-# packages which own them, from the sysroot dpkg database when cross
-# compiling.
+# dependencies the package declares.  Libraries are resolved to the packages
+# which own them, from the sysroot package database when cross compiling.
 
 # Provided by libc and the compiler runtime; never declared explicitly
 VERIFY_DEPS_IGNORE=(
@@ -11,22 +10,35 @@ VERIFY_DEPS_IGNORE=(
     "libstdc++6"
     "libgcc-s1"
     "libgcc1"
+    "glibc"
+    "libstdc++"
+    "libgcc"
     )
 
 if test "${BUILD_CROSS}" = "1"; then
     VERIFY_DEPS_ROOT="/sysroot"
-    VERIFY_DEPS_DPKG=(dpkg --admindir=/sysroot/var/lib/dpkg)
     OBJDUMP="${OBJDUMP:-${ABI}-objdump}"
 else
     VERIFY_DEPS_ROOT=""
-    VERIFY_DEPS_DPKG=(dpkg)
     OBJDUMP="${OBJDUMP:-objdump}"
+fi
+
+# _VERIFY_DEPS_QUERY [path]
+# Print the packages owning the path, one per line
+if test "${KISMET_PKG_FORMAT}" = "rpm"; then
+    _VERIFY_DEPS_QUERY() {
+        rpm --root "${VERIFY_DEPS_ROOT:-/}" -qf --qf '%{NAME}\n' "$1" 2> /dev/null | grep -v 'is not owned'
+    }
+else
+    _VERIFY_DEPS_QUERY() {
+        dpkg --admindir=${VERIFY_DEPS_ROOT}/var/lib/dpkg -S "$1" 2> /dev/null | cut -d: -f1
+    }
 fi
 
 # _VERIFY_DEPS_FIND_LIB [soname]
 # Print the path of the library, relative to the root it was found in
 _VERIFY_DEPS_FIND_LIB() {
-    for d in /lib/${ABI} /usr/lib/${ABI} /lib /usr/lib; do
+    for d in /lib/${ABI} /usr/lib/${ABI} /lib64 /usr/lib64 /lib /usr/lib; do
         if test -e "${VERIFY_DEPS_ROOT}${d}/$1"; then
             echo -n "${d}/$1"
             return 0
@@ -41,7 +53,7 @@ _VERIFY_DEPS_FIND_LIB() {
 # the file under either /lib or /usr/lib
 _VERIFY_DEPS_OWNER() {
     for p in "$1" "${1#/usr}" "/usr$1"; do
-        OWNER=$("${VERIFY_DEPS_DPKG[@]}" -S "${p}" 2> /dev/null | head -n 1 | cut -d: -f1)
+        OWNER=$(_VERIFY_DEPS_QUERY "${p}" | head -n 1)
 
         if test "${OWNER}"x != "x"; then
             echo -n "${OWNER}"

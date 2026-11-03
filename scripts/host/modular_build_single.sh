@@ -26,9 +26,16 @@
 # package destination inside the container, so a test build can leave its
 # packages in the container's /build instead of the published dpkgs.
 #
+# New packages go to an incoming directory beside the target's packages
+# first, and are installed in a clean container of the platform's
+# KISMET_TEST_IMAGE (see install_test.sh).  Only packages which pass replace
+# the target's packages; a failed test leaves the old ones in place.
+# INSTALL_TEST=0 skips the test.
+#
 # Exit codes:
 #   0   built, or no build needed
-#   1   build failed, or regenerating the docker image failed
+#   1   build failed, the install test failed, or regenerating the docker
+#       image failed
 #   2   no modular platform for this target
 
 if test $# -ne 3; then
@@ -53,6 +60,7 @@ if ! test -d "${BASE_DIR}/docker/${TARGET}"; then
 fi
 
 . "${BASE_DIR}/scripts/host/buildlog"
+. "${BASE_DIR}/scripts/host/platform"
 
 BUILD_START=$(date +%s)
 BUILD_OUT=$(mktemp) || exit 1
@@ -124,6 +132,10 @@ _BUILD_FINISH() {
 
     _BUILDLOG_WRITE
     rm -f "${BUILD_OUT}"
+
+    if test "${INCOMING_DIR}"x != "x"; then
+        rm -rf "${INCOMING_DIR}"
+    fi
 }
 
 trap _BUILD_FINISH EXIT
@@ -203,9 +215,30 @@ if test -f REGENERATE; then
     echo "*** Regenerated docker ${TARGET} ***"
 fi
 
+_PLATFORM_LOAD "${SCRIPTS}/platforms/${PLATFORM}"
+PKG_ARCH=$(_PLATFORM_PKG_ARCH "${PLATFORM_FORMAT}" "${TARGET_ARCH}")
+
+# The host directory the compose file mounts as the package destination
+HOST_PKG_DIR=$(grep -oE '\$\{BASE_DIR\}/[^:]+:/dpkgs' docker-compose.yaml | head -n 1 | sed -e "s#^\${BASE_DIR}#${BASE_DIR}#" -e 's#:/dpkgs$##')
+
 DPKG_ARGS=()
+INCOMING_DIR=""
+
 if test "${DPKG_DIR}"x != "x"; then
     DPKG_ARGS=(-e DPKG_DIR="${DPKG_DIR}")
+elif test "${HOST_PKG_DIR}"x = "x"; then
+    echo "*** No package directory mounted at /dpkgs in docker/${TARGET}/docker-compose.yaml ***"
+    exit 1
+else
+    # Made here so the host owns it and can move the packages out
+    mkdir -p "${HOST_PKG_DIR}" || exit 1
+    INCOMING=".incoming-${TARGET_ARCH}"
+    INCOMING_DIR="${HOST_PKG_DIR}/${INCOMING}"
+
+    rm -rf "${INCOMING_DIR}"
+    mkdir "${INCOMING_DIR}" || exit 1
+
+    DPKG_ARGS=(-e DPKG_INCOMING="${INCOMING}")
 fi
 
 # Override the compose command so builds use the modular launcher regardless
@@ -223,3 +256,48 @@ docker compose run --rm \
     kismet-build /scripts/launch/modular.sh 2>&1 | tee -a "${BUILD_OUT}"
 
 test ${PIPESTATUS[0]} -eq 0 || exit 1
+
+if test "${INCOMING_DIR}"x = "x" || grep -q "no build required" "${BUILD_OUT}"; then
+    exit 0
+fi
+
+# Scripts from older packaging tags put the packages in place themselves
+if ! compgen -G "${INCOMING_DIR}/*.${PLATFORM_FORMAT}" > /dev/null; then
+    echo "*** No packages in ${INCOMING}; these packaging scripts install them directly, without an install test ***"
+    _BUILDLOG_SET install_test none
+    exit 0
+fi
+
+if test "${INSTALL_TEST}" = "0" -o "${PLATFORM_TEST_IMAGE}"x = "x"; then
+    echo "*** Skipping the install test ***"
+    _BUILDLOG_SET install_test skipped
+else
+    TEST_START=$(date +%s)
+
+    "${BASE_DIR}/scripts/host/install_test.sh" "${PLATFORM_TEST_IMAGE}" "${PLATFORM_FORMAT}" \
+        "${TARGET_ARCH}" "${INCOMING_DIR}" 2>&1 | tee -a "${BUILD_OUT}"
+    TEST_RC=${PIPESTATUS[0]}
+
+    _BUILDLOG_SET install_s $(($(date +%s) - TEST_START))
+
+    if test ${TEST_RC} -ne 0; then
+        _BUILDLOG_SET install_test failed
+        echo "*** Keeping the previous ${TARGET} packages ***"
+        exit 1
+    fi
+
+    _BUILDLOG_SET install_test ok
+fi
+
+# Replace the target's packages with the tested ones
+if test "${CHECKOUT}"x = "HEADx"; then
+    echo "*** Cleaning old kismet git packages ***"
+    rm -vf "${HOST_PKG_DIR}"/$(_PLATFORM_GIT_PACKAGES "${PLATFORM_FORMAT}" "${PKG_ARCH}")
+fi
+
+mv -vf "${INCOMING_DIR}"/*.${PLATFORM_FORMAT} "${HOST_PKG_DIR}"/ || exit 1
+
+if test -f "${INCOMING_DIR}/.kismet_rev"; then
+    rm -f "${HOST_PKG_DIR}/last_kismet_git_${TARGET_ARCH}"
+    cp "${INCOMING_DIR}/.kismet_rev" "${HOST_PKG_DIR}/last_kismet_git_${TARGET_ARCH}" || exit 1
+fi

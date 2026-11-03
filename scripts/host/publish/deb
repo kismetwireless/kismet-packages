@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# apt repo publishing with aptly; sourced by publish_repos.sh, which sets
+# BASE_DIR, KIND (git or release), MATCH (the release version), and
+# KISMET_CREDS_DIR and KISMET_SIGNING_KEY.
+#
+# Each repo needs an aptly config, aptly/[repo]-[kind]-aptly.conf, which
+# publishes to repos-aptly/apt/[kind]/[repo].
+
+# _PUBLISH_DEB_REPO [repo]
+_PUBLISH_DEB_REPO() {
+    local repo=$1
+    local conf="${BASE_DIR}/aptly/${repo}-${KIND}-aptly.conf"
+    local pkgs
+    local aptly=(aptly --config "${conf}")
+
+    pkgs=$(_PLATFORM_PKG_DIR "${BASE_DIR}" deb "${repo}")
+
+    if ! test -f "${conf}"; then
+        echo "*** No aptly config aptly/${repo}-${KIND}-aptly.conf, skipping ${repo} ***"
+        return 0
+    fi
+
+    local add=()
+
+    if test "${KIND}" = "git"; then
+        add=("${pkgs}"/*git*.deb)
+
+        # Built outside the modular build and published with the nightly packages
+        if compgen -G "${pkgs}/*hak5-wifi-coconut*.deb" > /dev/null; then
+            add+=("${pkgs}"/*hak5-wifi-coconut*.deb)
+        fi
+    else
+        # A repo without this release's packages keeps its published repo;
+        # rebuilding it would publish an empty repo over the last release
+        if ! compgen -G "${pkgs}/*${MATCH}*.deb" > /dev/null; then
+            echo "*** No ${MATCH} packages in $(basename "${pkgs}"), keeping its published repo ***"
+            return 0
+        fi
+
+        add=("${pkgs}"/*${MATCH}*.deb)
+    fi
+
+    if ! test -e "${add[0]}"; then
+        echo "*** No ${KIND} packages in $(basename "${pkgs}"), skipping ${repo} ***"
+        return 0
+    fi
+
+    (
+        cd "${BASE_DIR}" || exit 1
+        echo "Working on ${KIND} ${repo}"
+
+        rm -rf "${BASE_DIR}/aptly/${repo}-${KIND}-aptly"
+        rm -rf "${BASE_DIR}/repos-aptly/apt/${KIND}/${repo}"
+
+        gpg-connect-agent reloadagent /bye > /dev/null
+
+        "${aptly[@]}" repo create "${repo}" || exit 1
+        "${aptly[@]}" repo add "${repo}" "${add[@]}" || exit 1
+
+        "${aptly[@]}" \
+            -batch \
+            -gpg-key="${KISMET_SIGNING_KEY}" \
+            -passphrase-file "${KISMET_CREDS_DIR}/passphrase" \
+            -distribution "${repo}" \
+            -origin Kismet \
+            -label Kismet \
+            publish repo "${repo}" "filesystem:${KIND}:${repo}" || exit 1
+    )
+}
+
+# _UPLOAD_DEB_REPOS
+_UPLOAD_DEB_REPOS() {
+    rsync -av --delete \
+        -e "ssh -F ${KISMET_CREDS_DIR}/ssh_config -i ${KISMET_CREDS_DIR}/id_rsa" \
+        "${BASE_DIR}/repos-aptly/apt/${KIND}/" "dragorn@kismetrepo:repos/apt/${KIND}/"
+}

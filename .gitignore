@@ -40,11 +40,14 @@ Packages
 Packages.gz
 version
 *.deb
+*.rpm
 *.db
 
 kali-debootstrap
 
 dpkgs-*/*
+rpms-*/*
+repos-rpm/*
 logs/*
 
 docker-staging/*

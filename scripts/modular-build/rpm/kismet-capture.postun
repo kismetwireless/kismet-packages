@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Kismet capture helper %postun, rendered by fpm --template-scripts.  On an
+# upgrade ($1 is 1 or more) the new package's %post has already set up the
+# udev rule, so only a removal takes it away.
+
+UDEV_RULE="<%= udev_rule %>"
+
+RULES_SRC=/usr/share/kismet/udev
+RULES_DIR=/etc/udev/rules.d
+
+if [ "$1" = "0" ] && [ "$UDEV_RULE" != "none" ]; then
+    if [ -L "$RULES_DIR/$UDEV_RULE" ] && [ "$(readlink "$RULES_DIR/$UDEV_RULE")" = "$RULES_SRC/$UDEV_RULE" ]; then
+        rm -f "$RULES_DIR/$UDEV_RULE"
+    fi
+
+    if [ -d /run/udev ] && command -v udevadm > /dev/null; then
+        udevadm control --reload-rules || true
+    fi
+fi
+
+exit 0

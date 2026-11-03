@@ -1,0 +1,87 @@
+#!/bin/bash
+
+# Read the packaging settings of a modular platform on the host; sourced by
+# the host build and publish scripts.
+#
+# Each platform file in scripts/modular-build/platforms sets:
+#
+#   KISMET_PKG_FORMAT   deb or rpm (deb when unset)
+#   KISMET_REPO         repo the packages are published to (the release name,
+#                       or kali for kali_rolling, when unset)
+#   KISMET_TEST_IMAGE   image the packages are test installed in (no install
+#                       test when unset)
+#
+# Platforms from older packaging tags set none of them, and get the defaults.
+
+# _PLATFORM_LOAD [platform file]
+# Set PLATFORM_FORMAT, PLATFORM_REPO, and PLATFORM_TEST_IMAGE
+_PLATFORM_LOAD() {
+    local name distro release vals
+
+    name=$(basename "$1")
+    IFS=_ read -r distro release <<< "${name}"
+
+    # Platform files only set variables, but source them in a subshell so
+    # nothing they set leaks into the caller
+    mapfile -t vals < <(
+        ARCH=amd64 ABI=x86_64-linux-gnu BUILD_CROSS=0
+        . "$1" > /dev/null 2>&1
+        printf '%s\n' "${KISMET_PKG_FORMAT}" "${KISMET_REPO}" "${KISMET_TEST_IMAGE}"
+        )
+
+    PLATFORM_FORMAT=${vals[0]:-deb}
+    PLATFORM_REPO=${vals[1]}
+    PLATFORM_TEST_IMAGE=${vals[2]}
+
+    if test "${PLATFORM_REPO}"x = "x"; then
+        if test "${distro}" = "kali"; then
+            PLATFORM_REPO=kali
+        else
+            PLATFORM_REPO=${release}
+        fi
+    fi
+}
+
+# _PLATFORM_PKG_DIR [base] [format] [repo]
+# Print the host directory holding a repo's packages
+_PLATFORM_PKG_DIR() {
+    if test "$2" = "rpm"; then
+        echo -n "$1/rpms-$3"
+    else
+        echo -n "$1/dpkgs-$3"
+    fi
+}
+
+# _PLATFORM_PKG_ARCH [format] [docker target arch]
+# Print the architecture as the package format names it
+_PLATFORM_PKG_ARCH() {
+    if test "$1" != "rpm"; then
+        echo -n "$2"
+        return 0
+    fi
+
+    case "$2" in
+        amd64)
+            echo -n x86_64
+            ;;
+        arm64)
+            echo -n aarch64
+            ;;
+        armhf)
+            echo -n armv7hl
+            ;;
+        *)
+            echo -n "$2"
+            ;;
+    esac
+}
+
+# _PLATFORM_GIT_PACKAGES [format] [package arch]
+# Print the glob matching a target's nightly git packages
+_PLATFORM_GIT_PACKAGES() {
+    if test "$1" = "rpm"; then
+        echo -n "kismet*git*.$2.rpm"
+    else
+        echo -n "kismet*git*_$2.deb"
+    fi
+}
