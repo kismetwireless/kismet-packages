@@ -13,7 +13,10 @@ export VERSION=$4
 
 export NCORES=$(nproc)
 
+. "${BASE_DIR}/scripts/host/platform"
+
 pushd ${BASE_DIR}/docker/$(basename "${5}")
+_PLATFORM_MAKE_PKG_DIR "${BASE_DIR}" docker-compose.yaml
 make kismet-release
 popd
 
