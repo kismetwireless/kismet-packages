@@ -52,6 +52,29 @@ _PLATFORM_PKG_DIR() {
     fi
 }
 
+# _PLATFORM_COMPOSE_PKG_DIR [base] [docker-compose.yaml]
+# Print the host directory a target's compose file mounts as its package
+# destination (/dpkgs), or nothing if it mounts none
+_PLATFORM_COMPOSE_PKG_DIR() {
+    grep -oE '\$\{BASE_DIR\}/[^:]+:/dpkgs' "$2" | head -n 1 | \
+        sed -e "s#^\${BASE_DIR}#$1#" -e 's#:/dpkgs$##'
+}
+
+# _PLATFORM_MAKE_PKG_DIR [base] [docker-compose.yaml]
+# Make the package destination a target mounts before its docker runs, so the
+# host user owns it instead of docker creating it as root
+_PLATFORM_MAKE_PKG_DIR() {
+    local dir
+    dir=$(_PLATFORM_COMPOSE_PKG_DIR "$1" "$2")
+
+    if test "${dir}"x = "x"; then
+        echo "*** No package directory mounted at /dpkgs in $2 ***"
+        return 1
+    fi
+
+    mkdir -p "${dir}"
+}
+
 # _PLATFORM_PKG_ARCH [format] [docker target arch]
 # Print the architecture as the package format names it
 _PLATFORM_PKG_ARCH() {

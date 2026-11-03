@@ -13,6 +13,8 @@ export VERSION=$4
 
 export NCORES=$(nproc)
 
+. "${BASE_DIR}/scripts/host/platform"
+
 if [ ! -d scripts/build-${VERSION} ]; then
     cp -rv scripts/build-master scripts/build-${VERSION}
     git add scripts/build-${VERSION}
@@ -31,6 +33,7 @@ for d in ${BASE_DIR}/docker/*; do
     echo
 
 	pushd $d
+    _PLATFORM_MAKE_PKG_DIR "${BASE_DIR}" docker-compose.yaml
     make kismet-release
 	popd
 done

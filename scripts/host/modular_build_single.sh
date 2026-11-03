@@ -218,20 +218,17 @@ fi
 _PLATFORM_LOAD "${SCRIPTS}/platforms/${PLATFORM}"
 PKG_ARCH=$(_PLATFORM_PKG_ARCH "${PLATFORM_FORMAT}" "${TARGET_ARCH}")
 
-# The host directory the compose file mounts as the package destination
-HOST_PKG_DIR=$(grep -oE '\$\{BASE_DIR\}/[^:]+:/dpkgs' docker-compose.yaml | head -n 1 | sed -e "s#^\${BASE_DIR}#${BASE_DIR}#" -e 's#:/dpkgs$##')
+# The host directory the compose file mounts as the package destination; made
+# here so the host owns it instead of docker creating it as root
+HOST_PKG_DIR=$(_PLATFORM_COMPOSE_PKG_DIR "${BASE_DIR}" docker-compose.yaml)
+_PLATFORM_MAKE_PKG_DIR "${BASE_DIR}" docker-compose.yaml || exit 1
 
 DPKG_ARGS=()
 INCOMING_DIR=""
 
 if test "${DPKG_DIR}"x != "x"; then
     DPKG_ARGS=(-e DPKG_DIR="${DPKG_DIR}")
-elif test "${HOST_PKG_DIR}"x = "x"; then
-    echo "*** No package directory mounted at /dpkgs in docker/${TARGET}/docker-compose.yaml ***"
-    exit 1
 else
-    # Made here so the host owns it and can move the packages out
-    mkdir -p "${HOST_PKG_DIR}" || exit 1
     INCOMING=".incoming-${TARGET_ARCH}"
     INCOMING_DIR="${HOST_PKG_DIR}/${INCOMING}"
 
