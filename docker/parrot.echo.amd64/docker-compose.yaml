@@ -1,0 +1,22 @@
+version: '2'
+services:
+    kismet-build:
+        build: .
+
+        environment:
+            - CHECKOUT=HEAD
+            - VERSION
+            - ARCH=amd64
+            - ABI=x86_64-linux-gnu
+            - BUILD_PLATFORM=parrot_echo
+            - BUILD_CROSS=0
+
+        command: /scripts/launch/modular.sh
+
+        tmpfs: 
+            - /build:exec,mode=777
+
+        volumes:
+            - ${BASE_DIR}/dpkgs-echo:/dpkgs
+            - ${BASE_DIR}/scripts:/scripts:ro
+            - ${SRC_DIR}:/kismet:ro
