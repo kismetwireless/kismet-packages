@@ -38,14 +38,26 @@ STEP_START=$(date +%s)
 
 echo "*** Configuring kismet ${ARCH}: ${KISMET_CONFIGURE_PARAMETERS[*]} ${KISMET_PLATFORM_CONFIGURE[*]} ***"
 
+# Platforms can set KISMET_CROSS_CC, KISMET_CROSS_CXX, KISMET_CROSS_AR,
+# KISMET_CROSS_RANLIB, and KISMET_CROSS_LDFLAGS for a cross toolchain other
+# than the multiarch gcc, and KISMET_CROSS_PKG_CONFIG_LIBDIR to search only
+# the sysroot for libraries
 if test "${BUILD_CROSS}" = "1"; then
     export PKG_CONFIG_DIR=""
     export PKG_CONFIG_PATH="/sysroot/usr/lib/pkgconfig:/sysroot/usr/share/pkgconfig:/sysroot/usr/lib/${ABI}/pkgconfig"
     export PKG_CONFIG_SYSROOT_DIR="/sysroot"
 
-    export AR=${ABI}-ar
-    export CC=${ABI}-gcc
-    export CXX=${ABI}-g++
+    if test "${KISMET_CROSS_PKG_CONFIG_LIBDIR}"x != "x"; then
+        export PKG_CONFIG_LIBDIR="${KISMET_CROSS_PKG_CONFIG_LIBDIR}"
+    fi
+
+    export AR="${KISMET_CROSS_AR:-${ABI}-ar}"
+    export CC="${KISMET_CROSS_CC:-${ABI}-gcc}"
+    export CXX="${KISMET_CROSS_CXX:-${ABI}-g++}"
+
+    if test "${KISMET_CROSS_RANLIB}"x != "x"; then
+        export RANLIB="${KISMET_CROSS_RANLIB}"
+    fi
 
     ./configure \
         --build=x86_64-linux \
@@ -53,7 +65,7 @@ if test "${BUILD_CROSS}" = "1"; then
         CFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
         CPPFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
         CXXFLAGS="-I/sysroot/usr/include -I/sysroot/usr/include/${ABI}" \
-        LDFLAGS="-L/sysroot/usr/lib/${ABI} --sysroot=/sysroot" \
+        LDFLAGS="-L/sysroot/usr/lib/${ABI} --sysroot=/sysroot ${KISMET_CROSS_LDFLAGS}" \
         --prefix=/usr \
         --sysconfdir=/etc/kismet \
         --disable-element-typesafety \

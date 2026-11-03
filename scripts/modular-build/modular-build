@@ -4,13 +4,18 @@
 #
 # Environment:
 #   BUILD_PLATFORM      platform file in platforms/ (required)
-#   ARCH, ABI           debian arch and toolchain ABI (required)
+#   ARCH, ABI           debian arch and toolchain ABI (required); rpm
+#                       platforms map ARCH to the rpm arch
 #   CHECKOUT            git ref to build; HEAD builds nightly git packages
 #   VERSION             release version, used when CHECKOUT is not HEAD
 #   BUILD_CROSS         1 when cross-compiling against /sysroot
 #   NCORES              parallel make jobs (defaults to nproc)
 #   SKIP_BUILD          1 to package an existing build tree without rebuilding
 #   DPKG_DIR            final package destination (defaults to /dpkgs)
+#   DPKG_INCOMING       directory under DPKG_DIR, made by the host, to leave
+#                       the packages in instead; the host tests them in the
+#                       target, then replaces the old packages and marks the
+#                       build complete itself
 #
 # Arguments:
 #   [package ...]       only build the named packages from the platform list
@@ -108,7 +113,7 @@ for p in "${KISMET_BUILD_PACKAGES[@]}"; do
 done
 
 _BUILDSTAT package_s=$(($(date +%s) - PACKAGE_START)) \
-    $(find "${PKG_OUT}" -name '*.deb' -printf '%s\n' | awk '{ n++; s += $1 } END { printf "debs=%d deb_kb=%d", n, s / 1024 }')
+    $(find "${PKG_OUT}" -name "*.${PKG_EXT}" -printf '%s\n' | awk '{ n++; s += $1 } END { printf "debs=%d deb_kb=%d", n, s / 1024 }')
 
 if test ${#FAILED_PACKAGES[@]} -ne 0; then
     _BUILDSTAT failed_packages=$(IFS=,; echo "${FAILED_PACKAGES[*]}")
@@ -119,12 +124,28 @@ if test "${BUILD_FAILED}" = 1; then
     exit 1
 fi
 
-if test "${CHECKOUT}"x = "HEADx"; then
-    echo "*** Cleaning old kismet git packages ***"
-    rm -vf "${DPKG_DIR}"/kismet*git*_${ARCH}.deb
+if test "${DPKG_INCOMING}"x != "x"; then
+    if ! test -d "${DPKG_DIR}/${DPKG_INCOMING}"; then
+        echo "*** Incoming package directory ${DPKG_INCOMING} does not exist ***"
+        exit 1
+    fi
+
+    mv -v "${PKG_OUT}"/*.${PKG_EXT} "${DPKG_DIR}/${DPKG_INCOMING}"/ || exit 1
+
+    # The revision the host marks complete once the packages pass
+    if test "${SKIP_BUILD}" != "1" -a "${CHECKOUT}"x = "HEADx"; then
+        echo -n "$(git -C "${KISMET_SRC}" rev-parse --short HEAD)" > "${DPKG_DIR}/${DPKG_INCOMING}/.kismet_rev"
+    fi
+
+    exit 0
 fi
 
-mv -v "${PKG_OUT}"/*.deb "${DPKG_DIR}"/ || exit 1
+if test "${CHECKOUT}"x = "HEADx"; then
+    echo "*** Cleaning old kismet git packages ***"
+    rm -vf "${DPKG_DIR}"/$(_KISMET_GIT_PACKAGE_GLOB)
+fi
+
+mv -v "${PKG_OUT}"/*.${PKG_EXT} "${DPKG_DIR}"/ || exit 1
 
 if test "${SKIP_BUILD}" != "1"; then
     _MARK_BUILD_COMPLETE "kismet" "${KISMET_SRC}"

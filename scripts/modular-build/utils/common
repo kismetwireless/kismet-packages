@@ -23,7 +23,7 @@ fi
 BUILD_NOT_NEEDED=100
 
 KISMET_SRC="${KISMET_SRC:-/build/kismet}"
-PKG_OUT="${PKG_OUT:-/build/debs}"
+PKG_OUT="${PKG_OUT:-/build/pkgs}"
 PKG_STAGE_ROOT="${PKG_STAGE_ROOT:-/build/stage}"
 PKG_LOG_DIR="${PKG_LOG_DIR:-/build/logs}"
 DPKG_DIR="${DPKG_DIR:-/dpkgs}"
@@ -42,6 +42,52 @@ _BUILDSTAT() {
 }
 
 . "${BUILD_SCRIPT_ROOT}/platforms/${BUILD_PLATFORM}"
+
+# Package format, from the platform; debian packages unless it says otherwise
+KISMET_PKG_FORMAT="${KISMET_PKG_FORMAT:-deb}"
+KISMET_SYSTEMD_UNIT_DIR="${KISMET_SYSTEMD_UNIT_DIR:-/lib/systemd/system}"
+
+# PKG_EXT is the package file extension and PKG_ARCH the architecture as the
+# package format names it
+case "${KISMET_PKG_FORMAT}" in
+    deb)
+        PKG_EXT=deb
+        PKG_ARCH="${ARCH}"
+        ;;
+    rpm)
+        PKG_EXT=rpm
+
+        case "${ARCH}" in
+            amd64)
+                PKG_ARCH=x86_64
+                ;;
+            arm64)
+                PKG_ARCH=aarch64
+                ;;
+            armhf)
+                PKG_ARCH=armv7hl
+                ;;
+            *)
+                echo "*** No rpm architecture for ${ARCH} ***"
+                exit 1
+                ;;
+        esac
+        ;;
+    *)
+        echo "*** Platform ${BUILD_PLATFORM} has unknown package format ${KISMET_PKG_FORMAT} ***"
+        exit 1
+        ;;
+esac
+
+# Nightly git packages for this architecture in the package directory
+_KISMET_GIT_PACKAGE_GLOB() {
+    if test "${KISMET_PKG_FORMAT}" = "rpm"; then
+        echo -n "kismet*git*.${PKG_ARCH}.rpm"
+    else
+        echo -n "kismet*git*_${PKG_ARCH}.deb"
+    fi
+}
+
 . "${BUILD_SCRIPT_ROOT}/utils/git"
 . "${BUILD_SCRIPT_ROOT}/utils/fpm"
 . "${BUILD_SCRIPT_ROOT}/utils/kismet"

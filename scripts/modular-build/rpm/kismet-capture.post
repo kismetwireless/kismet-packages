@@ -1,0 +1,157 @@
+#!/bin/sh
+
+# Kismet capture helper %post, rendered by fpm --template-scripts.
+#
+# rpm has no debconf, so the capture helpers take the debian defaults:
+#
+# access=suid    install with capabilities when caps are set, otherwise
+#                suid-root, executable by the kismet group
+# access=device  enable the udev rule
+# access=udev    enable the udev rule; never suid, for helpers which run
+#                external tools as the user
+#
+# To change them for every capture helper, set in /etc/sysconfig/kismet-capture:
+#
+#   KISMET_CAPTURE_SUID=no      leave suid helpers root only
+#   KISMET_DEVICE_ACCESS=suid   install device helpers suid-root instead of
+#                               enabling their udev rules
+#
+# then reinstall the capture packages: dnf reinstall 'kismet-capture-*'
+
+PROGRAM="<%= program %>"
+ACCESS="<%= access %>"
+CAPS="<%= caps %>"
+UDEV_RULE="<%= udev_rule %>"
+
+GROUP=kismet
+RULES_SRC=/usr/share/kismet/udev
+RULES_DIR=/etc/udev/rules.d
+SETTINGS=/etc/sysconfig/kismet-capture
+
+# Read a setting without running the file
+setting() {
+    if [ -r $SETTINGS ]; then
+        sed -n "s/^[[:space:]]*$1=[\"']\{0,1\}\([A-Za-z]*\)[\"']\{0,1\}[[:space:]]*\$/\1/p" $SETTINGS | tail -n 1
+    fi
+}
+
+add_group() {
+    if ! getent group $GROUP > /dev/null; then
+        if ! groupadd --system $GROUP; then
+            echo "Creating the $GROUP group failed; $PROGRAM can only be used as root."
+            return 1
+        fi
+    fi
+}
+
+reload_udev() {
+    if [ -d /run/udev ] && command -v udevadm > /dev/null; then
+        udevadm control --reload-rules || true
+        udevadm trigger --action=add --subsystem-match=usb --subsystem-match=tty || true
+    fi
+}
+
+enable_udev_rule() {
+    if [ -L "$RULES_DIR/$UDEV_RULE" ] || [ -e "$RULES_DIR/$UDEV_RULE" ]; then
+        if [ "$(readlink "$RULES_DIR/$UDEV_RULE")" != "$RULES_SRC/$UDEV_RULE" ]; then
+            echo "$RULES_DIR/$UDEV_RULE already exists and was not installed by Kismet; leaving it unchanged."
+        fi
+        return 0
+    fi
+
+    mkdir -p $RULES_DIR
+    ln -s "$RULES_SRC/$UDEV_RULE" "$RULES_DIR/$UDEV_RULE"
+}
+
+disable_udev_rule() {
+    if [ -L "$RULES_DIR/$UDEV_RULE" ] && [ "$(readlink "$RULES_DIR/$UDEV_RULE")" = "$RULES_SRC/$UDEV_RULE" ]; then
+        rm -f "$RULES_DIR/$UDEV_RULE"
+    fi
+}
+
+set_unprivileged() {
+    chown root:root $PROGRAM
+    chmod u=rwx,go=rx $PROGRAM
+
+    if command -v setcap > /dev/null; then
+        setcap -r $PROGRAM 2> /dev/null || true
+    fi
+}
+
+set_suid() {
+    chown root:$GROUP $PROGRAM
+    chmod u=rwxs,g=rx,o= $PROGRAM
+}
+
+set_caps() {
+    chown root:$GROUP $PROGRAM
+    chmod u=rwx,g=rx,o= $PROGRAM
+
+    if command -v setcap > /dev/null && setcap $CAPS=eip $PROGRAM; then
+        return 0
+    fi
+
+    echo "Setting capabilities on $PROGRAM failed; installing it suid-root instead."
+    set_suid
+}
+
+# MODE is one of udev, suid, or root
+if [ "$ACCESS" = "udev" ]; then
+    MODE=udev
+elif [ "$ACCESS" = "device" ]; then
+    if [ "$(setting KISMET_DEVICE_ACCESS)" = "suid" ]; then
+        MODE=suid
+    else
+        MODE=udev
+    fi
+else
+    if [ "$(setting KISMET_CAPTURE_SUID)" = "no" ]; then
+        MODE=root
+    else
+        MODE=suid
+    fi
+fi
+
+if [ "$MODE" != "root" ]; then
+    add_group || MODE=root
+fi
+
+if [ "$ACCESS" = "device" ] || [ "$ACCESS" = "udev" ]; then
+    if [ "$MODE" = "udev" ]; then
+        enable_udev_rule
+    else
+        disable_udev_rule
+    fi
+
+    reload_udev
+fi
+
+if [ -e "$PROGRAM" ]; then
+    case "$MODE" in
+        udev)
+            set_unprivileged
+            ;;
+        suid)
+            if [ "$CAPS" != "none" ]; then
+                set_caps
+            else
+                set_suid
+            fi
+            ;;
+        root)
+            echo "Kismet capture helpers are not being installed suid-root; this is less secure "
+            echo "because it means Kismet must be run as root at all times.  For more information "
+            echo "see the 'Suid-Install' section of the Kismet docs at "
+            echo "https://www.kismetwireless.net/docs/readme/intro/kismet/"
+            set_unprivileged
+            ;;
+    esac
+fi
+
+# Only on a new install, so upgrades stay quiet
+if [ "$MODE" != "root" ] && [ "$1" = "1" ]; then
+    echo "Users must be members of the '$GROUP' group to use $PROGRAM without root;"
+    echo "add them with: usermod -aG $GROUP <username>"
+fi
+
+exit 0

@@ -1,0 +1,35 @@
+FROM --platform=linux/arm64 fedora:45
+
+ENV ARCH arm64
+ENV ABI aarch64-redhat-linux
+
+# gcc and gcc-c++ provide the crt files, libgcc, and libstdc++ headers clang
+# links against
+RUN dnf -y install \
+        tar \
+        glibc-devel \
+        gcc \
+        gcc-c++ \
+        libwebsockets-devel \
+        zlib-ng-compat-devel \
+        libnl3-devel \
+        libcap-devel \
+        libpcap-devel \
+        NetworkManager-libnm-devel \
+        elfutils-devel \
+        sqlite-devel \
+        protobuf-devel \
+        protobuf-c-devel \
+        lm_sensors-devel \
+        glib2-devel \
+        rtl-sdr-devel \
+        libusb1-devel \
+        libzstd-devel \
+        xz-devel \
+        mosquitto-devel \
+        pcre2-devel \
+        openssl-devel \
+        libbtbb-devel \
+        ubertooth-devel \
+        && \
+    dnf clean all

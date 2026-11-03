@@ -1,0 +1,28 @@
+version: '2'
+
+volumes:
+  kismet_parrot_echo_arm64_sysroot:
+    external: true
+
+services:
+  kismet-build:
+    build: .
+
+    environment:
+      - CHECKOUT=HEAD
+      - VERSION
+      - ARCH=arm64
+      - ABI=aarch64-linux-gnu
+      - BUILD_PLATFORM=parrot_echo
+      - BUILD_CROSS=1
+
+    command: /scripts/launch/modular.sh
+
+    tmpfs: 
+            - /build:exec,mode=777
+
+    volumes:
+      - ${BASE_DIR}/dpkgs-echo:/dpkgs
+      - ${BASE_DIR}/scripts:/scripts:ro
+      - ${SRC_DIR}:/kismet:ro
+      - kismet_parrot_echo_arm64_sysroot:/sysroot:ro
