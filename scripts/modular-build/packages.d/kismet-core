@@ -26,6 +26,7 @@ KISMET_CONFIG_FILES=(
     "kismet_wardrive.conf"
     "kismet_zigbee.conf"
     "kismet_device_rules.conf"
+    "kismet_webhooks.conf"
     "kismet_device_rules.txt"
     "kismet_device_rules_highlights.txt"
     )
