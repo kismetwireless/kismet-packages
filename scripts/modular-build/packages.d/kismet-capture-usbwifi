@@ -24,6 +24,17 @@ pkg_stage() {
 
     # Firmware from linux-firmware (mediatek/, rtw88/), with its licenses, which
     # the userspace drivers load from /usr/share/kismet/firmware first, then from
-    # the system firmware directories
-    _KISMET_INSTALL_TREE capture_userspace_usb_wifi/firmware /usr/share/kismet/firmware || return 1
+    # the system firmware directories.  The vendored userspace-wifi tree also
+    # carries morse/, which belongs to kismet-capture-mm8108-halow.
+    local fw=capture_userspace_usb_wifi/userspace-wifi/firmware
+    if [ ! -d "${KISMET_SRC}/${fw}" ]; then
+        _KISMET_INSTALL_TREE capture_userspace_usb_wifi/firmware /usr/share/kismet/firmware || return 1
+        return 0
+    fi
+
+    _KISMET_INSTALL_TREE ${fw}/mediatek /usr/share/kismet/firmware/mediatek || return 1
+    _KISMET_INSTALL_TREE ${fw}/rtw88 /usr/share/kismet/firmware/rtw88 || return 1
+    # Links into mediatek/, kept as links
+    cp -P "${KISMET_SRC}/${fw}/mt7662.bin" "${KISMET_SRC}/${fw}/mt7662_rom_patch.bin" \
+        "$(_KISMET_STAGE_DIR)/usr/share/kismet/firmware/" || return 1
 }
